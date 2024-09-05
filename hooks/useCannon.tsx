@@ -1,15 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import * as CANNON from "cannon-es";
 import { WorldContext } from "@/context/PhysicsProvider";
-import { useFrame, PrimitiveProps } from "@react-three/fiber/native";
-import { Vector3, Quaternion } from "three";
+import { useFrame, MeshProps } from "@react-three/fiber/native";
+import { Vector3, Quaternion, Mesh, Object3D } from "three";
 
 export const useCannon = (
   { ...props }: any,
   fn: (body: CANNON.Body) => void,
   deps = []
 ) => {
-  const ref = useRef<PrimitiveProps>();
+  const ref = useRef<Mesh>(null);
   const world = useContext(WorldContext);
   const [body] = useState(() => new CANNON.Body(props));
 
@@ -17,6 +17,7 @@ export const useCannon = (
     // Call function so the user can add shapes, positions, etc. to the body
     fn(body);
     world?.addBody(body);
+
     return () => world?.removeBody(body);
   }, deps);
 

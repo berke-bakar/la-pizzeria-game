@@ -9,7 +9,7 @@ export const PhysicsProvider = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     world.broadphase = new CANNON.NaiveBroadphase();
-    world.gravity.set(0, 0, -10);
+    world.gravity.set(0, -10, 0);
   }, [world]);
 
   // Run world stepper every frame
