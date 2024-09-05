@@ -13,7 +13,10 @@ export const PhysicsProvider = ({ children }: React.PropsWithChildren) => {
   }, [world]);
 
   // Run world stepper every frame
-  useFrame(() => world.step(1 / 60));
+  useFrame(() => {
+    // world.step(1 / 60)
+    world.fixedStep(1 / 60, 20);
+  });
 
   return (
     <WorldContext.Provider value={world}>{children}</WorldContext.Provider>

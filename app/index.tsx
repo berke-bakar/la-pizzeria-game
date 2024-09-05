@@ -1,65 +1,77 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Platform, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Suspense } from "react";
+import { Ref, Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber/native";
-import { OrbitControls } from "@react-three/drei/native";
+import {
+  ContactShadows,
+  Grid,
+  Helper,
+  OrbitControls,
+  StatsGl,
+} from "@react-three/drei/native";
 import { PhysicsProvider } from "@/context/PhysicsProvider";
-import { useCannon } from "@/hooks/useCannon";
-import * as CANNON from "cannon-es";
 import { PhysicsBodyWireframes } from "@/components/PhysicsBodyWireframes";
-
-type BoxProps = {
-  position: [number, number, number];
-  width: number;
-  height: number;
-  depth: number;
-};
-
-const Box = ({ position, width, height, depth }: BoxProps) => {
-  const ref = useCannon({ mass: 10 }, (body) => {
-    body.addShape(
-      new CANNON.Box(new CANNON.Vec3(width * 0.5, height * 0.5, depth * 0.5))
-    );
-    body.position.set(...position);
-  });
-  return (
-    <mesh ref={ref}>
-      <boxGeometry attach="geometry" args={[width, height, depth]} />
-      <meshBasicMaterial attach="material" />
-    </mesh>
-  );
-};
-
-const Ground = () => {
-  const ref = useCannon({ mass: 0 }, (body) => {
-    const groundShape = new CANNON.Plane();
-    body.addShape(groundShape);
-    body.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-  });
-
-  return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[10, 10, 8, 8]} />
-      <meshBasicMaterial attach="material" />
-    </mesh>
-  );
-};
+import { DirectionalLightHelper, Vector3 } from "three";
+import Ground from "@/components/Ground";
+import Box from "@/components/Box";
+import { INGREDIENTS } from "@/constants/constants";
+import { generateRandomPos } from "@/utils/utils";
+import {
+  PizzaBaseInstances,
+  PizzaBaseModel,
+} from "@/components/models/PizzaBase";
 
 export default function Index() {
+  const [count, setCount] = useState(0);
   return (
     <View style={styles.container}>
       <Canvas camera={{ position: [-7.5, 5, 7.55], fov: 30 }}>
         <OrbitControls makeDefault />
+        <Grid infiniteGrid />
+        {Platform.OS === "web" && <StatsGl />}
+        <ambientLight intensity={10} />
+        <directionalLight position={[5, 5, 0]} intensity={5}>
+          <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
+        </directionalLight>
         <color attach="background" args={["#512da8"]} />
         <PhysicsProvider>
           <PhysicsBodyWireframes />
           <Suspense>
-            <Box position={[0, 1, 0]} width={1} height={1} depth={1} />
+            {/* <Box position={[0, 1, 0]} width={1} height={1} depth={1} /> */}
+            <PizzaBaseInstances>
+              <PizzaBaseModel position={new Vector3(0, 1, 0)} />
+            </PizzaBaseInstances>
+            {Object.keys(INGREDIENTS).map((val, ind) => {
+              const Instances = INGREDIENTS[val].Instances;
+              const Model = INGREDIENTS[val].Model;
+              return (
+                <Instances key={val}>
+                  {Array.from({
+                    length: count * Math.floor(Math.random() * 3),
+                  }).map((val, ind) => {
+                    return (
+                      <Model
+                        key={`${val}-${ind}`}
+                        position={generateRandomPos(1, 3)}
+                      />
+                    );
+                  })}
+                </Instances>
+              );
+            })}
             <Ground />
           </Suspense>
         </PhysicsProvider>
       </Canvas>
       <StatusBar style="auto" />
+      <View>
+        <Button
+          title="Spawn"
+          onPress={() => {
+            setCount((state) => state + 1);
+          }}
+        />
+      </View>
     </View>
   );
 }

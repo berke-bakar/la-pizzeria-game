@@ -14,8 +14,6 @@ import {
   Vector3,
   Quaternion,
   Scene,
-  Int32BufferAttribute,
-  Face,
   Float32BufferAttribute,
 } from "three";
 import * as CANNON from "cannon-es";
@@ -31,7 +29,7 @@ const cannonWireframeRenderer = (scene: Scene, world: CANNON.World) => {
   const _sphereGeometry = new SphereGeometry(1);
   const _boxGeometry = new BoxGeometry(1, 1, 1);
   const _planeGeometry = new PlaneGeometry(10, 10, 10, 10);
-  const _cylinderGeometry = new CylinderGeometry(0.5, 0.5, 1, 32);
+  // const _cylinderGeometry = new CylinderGeometry(0.5, 0.5, 1, 32);
 
   const _typeMatch = (mesh: Mesh, shape: CANNON.Shape) => {
     if (!mesh) {
@@ -79,6 +77,15 @@ const cannonWireframeRenderer = (scene: Scene, world: CANNON.World) => {
       }
 
       case CYLINDER: {
+        const radiusTop = (shape as CANNON.Cylinder).radiusTop;
+        const radiusBottom = (shape as CANNON.Cylinder).radiusBottom;
+        const height = (shape as CANNON.Cylinder).height;
+        const _cylinderGeometry = new CylinderGeometry(
+          radiusTop,
+          radiusBottom,
+          height,
+          32
+        );
         mesh = new Mesh(_cylinderGeometry, _material);
         break;
       }
