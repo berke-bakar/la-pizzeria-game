@@ -70,91 +70,109 @@ export const INGREDIENTS: Record<
     Instances: (props: any) => React.JSX.Element;
     Model: (props: any) => React.JSX.Element;
     icon: string;
+    price: number;
   }
 > = {
   anchovies: {
     Instances: AnchoviesInstances,
     Model: AnchoviesModel,
     icon: "🍞",
+    price: 0,
   },
   bacon: {
     Instances: BaconInstances,
     Model: BaconModel,
     icon: "🥓",
+    price: 0,
   },
   chicken: {
     Instances: ChickenInstances,
     Model: ChickenModel,
     icon: "🍗",
+    price: 0,
   },
   ham: {
     Instances: HamInstances,
     Model: HamModel,
     icon: "🍖",
+    price: 0,
   },
   mushroom: {
     Instances: MushroomInstances,
     Model: MushroomModel,
     icon: "🍄",
+    price: 0,
   },
   olive0: {
     Instances: Olive0Instances,
     Model: Olive0Model,
     icon: "⚫",
+    price: 0,
   },
   olive1: {
     Instances: Olive1Instances,
     Model: Olive1Model,
     icon: "⚫",
+    price: 0,
   },
   onion: {
     Instances: OnionInstances,
     Model: OnionModel,
     icon: "🧅",
+    price: 0,
   },
   pepper0: {
     Instances: Pepper0Instances,
     Model: Pepper0Model,
     icon: "🌶",
+    price: 0,
   },
   pepper1: {
     Instances: Pepper1Instances,
     Model: Pepper1Model,
     icon: "🌶",
+    price: 0,
   },
   pepper2: {
     Instances: Pepper2Instances,
     Model: Pepper2Model,
     icon: "🌶",
+    price: 0,
   },
   pickle: {
     Instances: PickleInstances,
     Model: PickleModel,
     icon: "🌶",
+    price: 0,
   },
   pineapple: {
     Instances: PineappleInstances,
     Model: PineappleModel,
     icon: "🌶",
+    price: 0,
   },
   salami: {
     Instances: SalamiInstances,
     Model: SalamiModel,
     icon: "🌶",
+    price: 0,
   },
   sausage: {
     Instances: SausageInstances,
     Model: SausageModel,
     icon: "🌶",
+    price: 0,
   },
   shrimp: {
     Instances: ShrimpInstances,
     Model: ShrimpModel,
     icon: "🌶",
+    price: 0,
   },
   tomato: {
     Instances: TomatoInstances,
     Model: TomatoModel,
     icon: "🌶",
+    price: 0,
   },
 };
