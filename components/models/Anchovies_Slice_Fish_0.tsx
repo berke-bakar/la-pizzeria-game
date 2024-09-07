@@ -47,29 +47,45 @@ export function AnchoviesInstances({
   );
 }
 
-export function AnchoviesModel(props: JSX.IntrinsicElements["group"]) {
+export function AnchoviesModel(
+  props: JSX.IntrinsicElements["group"] & { bodyId: number }
+) {
   const instances = React.useContext(context);
 
   const ref = useCannon(
     { mass: 1 },
     (body, setBodyAvailable) => {
       body.addShape(new CANNON.Box(new CANNON.Vec3(0.05, 0.05, 0.05)));
+      body.sleepSpeedLimit = 5;
       body.type = CANNON.BODY_TYPES.DYNAMIC;
       body.position.set(
         (props.position as THREE.Vector3).x,
         (props.position as THREE.Vector3).y,
         (props.position as THREE.Vector3).z
       );
+      body.angularDamping = 0.1;
+      body.applyTorque(
+        new CANNON.Vec3(Math.random(), Math.random(), Math.random())
+      );
+      body.id = props.bodyId;
+      const timeoutId = setTimeout(() => {
+        body.sleep();
+        body.type = CANNON.BODY_TYPES.STATIC;
+        setBodyAvailable(false);
+      }, 5000);
       const handleCollide = (event: CollisionEvent) => {
+        event.target.collisionResponse = false;
+        body.removeEventListener("collide", handleCollide);
+
         if (event.body.type === CANNON.BODY_TYPES.STATIC) {
+          clearTimeout(timeoutId);
+          event.target.sleep();
           event.target.type = CANNON.BODY_TYPES.STATIC;
           setBodyAvailable(false);
         }
       };
       body.addEventListener("collide", handleCollide);
-      // setTimeout(() => {
-      //   setBodyAvailable(false);
-      // }, 500);
+
       return () => {
         body.removeEventListener("collide", handleCollide);
       };

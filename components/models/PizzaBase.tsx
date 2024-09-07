@@ -1,6 +1,6 @@
 import * as CANNON from "cannon-es";
 import * as THREE from "three";
-import React from "react";
+import React, { useState } from "react";
 import { useGLTF, Merged } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
@@ -53,21 +53,33 @@ export function PizzaBaseInstances({
 
 export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
   const instances = React.useContext(context);
+  const [pizzaCollided, setPizzaCollided] = useState(false);
 
   const ref = useCannon(
-    { mass: 1 },
+    { mass: 100 },
     (body, setBodyAvailable) => {
-      body.addShape(new CANNON.Cylinder(0.45, 0.45, 0.1));
+      // body.addShape(new CANNON.Cylinder(0.82, 0.82, 0.15, 64));
+      body.addShape(new CANNON.Box(new CANNON.Vec3(1, 0.1, 1)));
       body.type = CANNON.BODY_TYPES.DYNAMIC;
       body.position.set(
         (props.position as THREE.Vector3).x,
         (props.position as THREE.Vector3).y,
         (props.position as THREE.Vector3).z
       );
+
       const handleCollide = (event: CollisionEvent) => {
-        if (event.body.type === CANNON.BODY_TYPES.STATIC) {
+        if (
+          event.body.type === CANNON.BODY_TYPES.STATIC &&
+          event.body.shapes[0].type === CANNON.SHAPE_TYPES.PLANE
+        ) {
           event.target.type = CANNON.BODY_TYPES.STATIC;
-          setBodyAvailable(false);
+          event.target.allowSleep = false;
+          event.target.sleepTimeLimit = 0;
+          setPizzaCollided(true);
+          // setBodyAvailable(false);
+        } else {
+          // console.log(event.body);
+          event.body.velocity.setZero();
         }
       };
 
@@ -83,6 +95,7 @@ export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
     <group
       ref={ref as React.Ref<THREE.Group<THREE.Object3DEventMap>>}
       {...props}
+      position={!pizzaCollided ? props.position : [0, 0, 0]}
       dispose={null}
     >
       <group rotation={[-Math.PI, 0, -Math.PI]} scale={[0.69, 0.869, 0.69]}>
