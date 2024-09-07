@@ -45,7 +45,9 @@ export function BaconInstances({
   );
 }
 
-export function BaconModel(props: JSX.IntrinsicElements["group"]) {
+export function BaconModel(
+  props: JSX.IntrinsicElements["group"] & { bodyId: number }
+) {
   const instances = React.useContext(context);
   const ref = useCannon(
     { mass: 1 },
@@ -57,6 +59,7 @@ export function BaconModel(props: JSX.IntrinsicElements["group"]) {
         (props.position as THREE.Vector3).y,
         (props.position as THREE.Vector3).z
       );
+      body.id = props.bodyId;
       const handleCollide = (event: CollisionEvent) => {
         if (event.body.type === CANNON.BODY_TYPES.STATIC) {
           event.target.type = CANNON.BODY_TYPES.STATIC;
