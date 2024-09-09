@@ -1,49 +1,89 @@
-import { Float, RoundedBox, Text3D } from "@react-three/drei/native";
+import {
+  Float,
+  Outlines,
+  RoundedBox,
+  Sparkles,
+  Text3D,
+} from "@react-three/drei/native";
 import { ThreeEvent } from "@react-three/fiber/native";
 import React, { useRef, useState } from "react";
-import { Mesh, Vector3 } from "three";
+import { Mesh, MeshStandardMaterial, Vector3 } from "three";
 import fontPath from "../assets/fonts/Poppins_Bold.json";
+import { useSpring, a } from "@react-spring/three";
+
+const AnimatedRoundedBox = a(RoundedBox);
 
 type Button3DProps = {
   position?: [number, number, number];
-  onClick?: ((event: ThreeEvent<MouseEvent>) => void) | undefined;
+  onPointerDown?: ((event: ThreeEvent<PointerEvent>) => void) | undefined;
   color: string;
   height?: number;
   width?: number;
   depth?: number;
+  textScale?: number;
 } & React.PropsWithChildren;
 
 export default function Button3D({
   position = [0, 0, 0],
-  onClick,
   children,
   color,
   height = 1,
   width = 1,
   depth = 1,
+  textScale = 1,
+  onPointerDown,
+  ...props
 }: Button3DProps & JSX.IntrinsicElements["group"]) {
+  const [springProps, api] = useSpring(
+    () => ({
+      scale: 1,
+      color: color,
+    }),
+    []
+  );
+  function handleClick(e: ThreeEvent<PointerEvent>) {
+    api.start({
+      to: {
+        scale: 1.25,
+        color: "#ff00ff",
+      },
+      onRest: (result, spring) => {
+        spring.start({
+          to: {
+            scale: 1,
+            color: color,
+          },
+          config: { duration: 200 },
+        });
+      },
+      config: { duration: 200 },
+    });
+    if (onPointerDown) onPointerDown(e);
+  }
+
   return (
-    <group>
-      <RoundedBox
+    <a.group {...props} scale={springProps.scale} onPointerDown={handleClick}>
+      <AnimatedRoundedBox
         position={new Vector3(...position)}
         args={[width, height, depth]}
-        radius={0.3}
-        smoothness={4}
+        radius={0.1}
+        smoothness={3}
         bevelSegments={4}
         creaseAngle={0.8}
       >
-        <meshBasicMaterial color={color} />
+        <a.meshStandardMaterial color={springProps.color} />
+        <Outlines thickness={0.01} color={"#ff7d4e"} />
         <Text3D
           font={fontPath}
-          scale={0.1}
+          scale={textScale}
           bevelSegments={3}
           bevelEnabled
           bevelThickness={0.001}
-          position={[-0.2, -0.1, 0.5]}
+          position={[-width / 4 + 0.1, 0, depth / 2 + 0.001]}
         >
           {children}
         </Text3D>
-      </RoundedBox>
-    </group>
+      </AnimatedRoundedBox>
+    </a.group>
   );
 }
