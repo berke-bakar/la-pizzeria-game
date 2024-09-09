@@ -63,6 +63,7 @@ import {
   TomatoInstances,
   TomatoModel,
 } from "@/components/models/Tomato_Slice_Tomato_0";
+import { atom } from "jotai";
 
 export const INGREDIENTS: Record<
   string,
@@ -176,3 +177,7 @@ export const INGREDIENTS: Record<
     price: 0,
   },
 };
+
+export const cameraAnimationAtom = atom(false);
+export const currentSceneAtom = atom<"menu" | "game">("menu");
+export const progressAtom = atom(0);

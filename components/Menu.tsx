@@ -4,18 +4,20 @@ import { Billboard, Float } from "@react-three/drei/native";
 const Menu = (props: JSX.IntrinsicElements["group"]) => {
   const MENU_ITEM_SPACING = 0.2;
   return (
-    <group {...props} onClick={() => console.log("onClick")}>
-      <Float>
+    <group {...props}>
+      <Float floatIntensity={1.5}>
         <Billboard>
-          {React.Children.map(props.children, (child, ind) => {
-            if (React.isValidElement(child)) {
-              return React.cloneElement(child, {
-                key: ind,
-                // @ts-ignore
-                position: [0, -ind * (MENU_ITEM_SPACING + 0.75), 0],
-              });
-            }
-          })}
+          {React.Children.toArray(props.children)
+            .toReversed()
+            .map((child, ind) => {
+              if (React.isValidElement(child)) {
+                return React.cloneElement(child, {
+                  key: ind,
+                  // @ts-ignore
+                  "position-y": ind * (MENU_ITEM_SPACING + 0.5) + 0.25,
+                });
+              }
+            })}
         </Billboard>
       </Float>
     </group>
