@@ -44,8 +44,8 @@ export const useCannon = (
       const { position, quaternion } = body;
       const { x: px, y: py, z: pz } = position;
       const { x: qx, y: qy, z: qz, w: qw } = quaternion;
-      ref.current.position.copy(new Vector3(px, Math.max(py, 0), pz));
-      ref.current.quaternion.copy(new Quaternion(qx, qy, qz, qw));
+      ref.current.position.set(px, Math.max(py, 0), pz);
+      ref.current.quaternion.set(qx, qy, qz, qw);
     }
   });
 
