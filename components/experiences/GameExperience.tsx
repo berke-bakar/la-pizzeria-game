@@ -1,13 +1,16 @@
 import { View, Text, Platform } from "react-native";
-import React, { Suspense, useContext } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import { Helper, StatsGl } from "@react-three/drei/native";
-import { DirectionalLightHelper, Vector3 } from "three";
+import { DirectionalLightHelper, PerspectiveCamera, Vector3 } from "three";
 import { PhysicsProvider, WorldContext } from "@/context/PhysicsProvider";
-import { PizzaBaseInstances, PizzaBaseModel } from "./models/PizzaBase";
+import { PizzaBaseInstances, PizzaBaseModel } from "../models/PizzaBase";
 import { INGREDIENTS } from "@/constants/constants";
 import { useToppings } from "@/hooks/useToppings";
-import Ground from "./Ground";
-import SuspenseProgress from "./SuspenseProgress";
+import Ground from "../Ground";
+import SuspenseProgress from "../SuspenseProgress";
+import { PhysicsBodyWireframes } from "@/components/PhysicsBodyWireframes";
+import { useThree } from "@react-three/fiber/native";
+import { Restaurant } from "../models/Restraunt";
 
 type Props = {};
 
@@ -18,21 +21,26 @@ const GameExperience = (props: Props) => {
     state.toppings,
   ]);
   const world = useContext(WorldContext);
+  const { camera } = useThree();
+
+  useEffect(() => {
+    console.log("attached");
+    (camera as PerspectiveCamera).fov = 40;
+    camera.updateProjectionMatrix();
+    camera.lookAt(0, 0, 3);
+  }, []);
+
   return (
     <>
       {Platform.OS === "web" && <StatsGl />}
-      <ambientLight intensity={1} />
-      <directionalLight position={[-5, 5, 0]} intensity={5}>
-        <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
-      </directionalLight>
       <color attach="background" args={["#512da8"]} />
-      {/* <color attach="background" args={["#f4511e"]} /> */}
       <PhysicsProvider>
-        {/* {Platform.OS === "web" && <PhysicsBodyWireframes />} */}
+        {Platform.OS === "web" && <PhysicsBodyWireframes />}
         <Suspense fallback={<SuspenseProgress />}>
-          <PizzaBaseInstances>
+          {/* <PizzaBaseInstances>
             <PizzaBaseModel position={new Vector3(0, 1, 0)} scale={[2, 2, 2]} />
-          </PizzaBaseInstances>
+          </PizzaBaseInstances> */}
+          <Restaurant position={[3, 0.25, 8]} />
           {Object.keys(INGREDIENTS).map((val, ind) => {
             const Instances = INGREDIENTS[val].Instances;
             const Model = INGREDIENTS[val].Model;
@@ -60,7 +68,7 @@ const GameExperience = (props: Props) => {
               </Instances>
             );
           })}
-          <Ground />
+          {/* <Ground /> */}
         </Suspense>
       </PhysicsProvider>
     </>
