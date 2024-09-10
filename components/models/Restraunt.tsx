@@ -114,7 +114,7 @@ export function Restaurant(props: JSX.IntrinsicElements["group"]) {
           onClick={handleClick}
           ref={instancedMeshRef}
         />
-        <instancedMesh
+        {/* <instancedMesh
           args={[nodes.Mesh_slice5.geometry, materials.PaletteMaterial001, 8]}
           castShadow
           receiveShadow
@@ -131,7 +131,7 @@ export function Restaurant(props: JSX.IntrinsicElements["group"]) {
           castShadow
           receiveShadow
           instanceMatrix={nodes.Mesh_slice5_2.instanceMatrix}
-        />
+        /> */}
         {selectedInstanceId !== null && (
           <Outlines
             color="aquamarine"

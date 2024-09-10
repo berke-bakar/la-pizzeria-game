@@ -72,7 +72,7 @@ export default function Button3D({
   return (
     <a.group {...props} scale={springProps.scale} onPointerDown={handleClick}>
       <AnimatedRoundedBox
-        position={new Vector3(...position)}
+        position={position}
         args={[width, height, depth]}
         radius={0.1}
         smoothness={3}

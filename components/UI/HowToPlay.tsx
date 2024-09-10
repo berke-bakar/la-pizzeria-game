@@ -59,7 +59,7 @@ const HowToPlay = (props: Props) => {
           make a lot of customers sad, of course, however they will still pay at
           least a fair amount. Keep in mind that sad customers usually don't
           return to place of their sadness and lost hope. This will result in
-          running a lonely, customerless and slowly growing pizzaria in a fast
+          running a lonely, customerless and slowly growing pizzeria in a fast
           manner.
         </CustomText>
       </View>

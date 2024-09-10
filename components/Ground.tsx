@@ -9,11 +9,14 @@ import {
   Object3DEventMap,
 } from "three";
 
-const Ground = () => {
+const Ground = (props: JSX.IntrinsicElements["mesh"]) => {
   const ref = useCannon({ mass: 0 }, (body) => {
     const groundShape = new CANNON.Plane();
     body.addShape(groundShape);
     body.type = CANNON.BODY_TYPES.STATIC;
+    if (props.position)
+      body.position.set(...(props.position as [number, number, number]));
+    // body.position.set(0, 0.32, 2);
     body.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
   });
 
