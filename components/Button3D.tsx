@@ -87,7 +87,7 @@ export default function Button3D({
           bevelSegments={3}
           bevelEnabled
           bevelThickness={0.001}
-          position={[-width / 4 + 0.1, 0, depth / 2 + 0.001]}
+          position={[-width / 3.5 + 0.1, -0.01, depth / 2 + 0.001]}
         >
           {children}
         </Text3D>

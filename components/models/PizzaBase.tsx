@@ -78,7 +78,6 @@ export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
           setPizzaCollided(true);
           // setBodyAvailable(false);
         } else {
-          // console.log(event.body);
           event.body.velocity.setZero();
         }
       };

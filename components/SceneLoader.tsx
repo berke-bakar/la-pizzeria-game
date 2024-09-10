@@ -6,16 +6,16 @@ import LoadingText from "./LoadingText";
 import SuspenseProgress from "./SuspenseProgress";
 
 type Props = {
-  scenes: Record<string, React.JSX.Element>;
+  scenes: Record<string, (props: any) => React.JSX.Element>;
 };
 
 const SceneLoader = ({ scenes }: Props) => {
-  const [currentScene, setCurrentScene] = useAtom(currentSceneAtom);
-
+  const [currentSceneInfo, setCurrentSceneInfo] = useAtom(currentSceneAtom);
+  const CurrentScene = scenes[currentSceneInfo.currentScene];
   return (
     <>
       <Suspense fallback={<SuspenseProgress />}>
-        {scenes[currentScene]}
+        <CurrentScene />
       </Suspense>
     </>
   );
