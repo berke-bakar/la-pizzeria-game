@@ -28,7 +28,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-font",
+        {
+          "fonts": "./node_modules/@expo-google-fonts/bungee/Bungee_400Regular.ttf"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
