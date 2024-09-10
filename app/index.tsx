@@ -1,35 +1,54 @@
 import { Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { Suspense, useEffect, useRef, useState } from "react";
-import { Canvas, EventManager, RootState } from "@react-three/fiber/native";
+import { Canvas } from "@react-three/fiber/native";
 import { Leva } from "leva";
 import StagePrep from "@/components/StagePrep";
-import MenuExperience from "@/components/MenuExperience";
-import useControls from "r3f-native-orbitcontrols";
-import * as THREE from "three";
+import MenuExperience from "@/components/experiences/MenuExperience";
 import SceneLoader from "@/components/SceneLoader";
-import GameExperience from "@/components/GameExperience";
+import GameExperience from "@/components/experiences/GameExperience";
 import LoadingText from "@/components/LoadingText";
+import OverlayTextPresenter from "@/components/OverlayTextPresenter";
+import { Bungee_400Regular, useFonts } from "@expo-google-fonts/bungee";
+import { SplashScreen } from "expo-router";
+import { useEffect } from "react";
+import { Asset } from "expo-asset";
+import CustomText from "@/components/CustomText";
 
-export const EXPERIENCES: Record<string, React.JSX.Element> = {
-  game: <GameExperience />,
-  menu: <MenuExperience />,
+export const EXPERIENCES: Record<string, (props: any) => React.JSX.Element> = {
+  game: GameExperience,
+  menu: MenuExperience,
 };
 
+SplashScreen.preventAutoHideAsync();
+
 export default function Index() {
+  let [loaded, error] = useFonts({
+    Bungee_400Regular: Asset.fromModule(Bungee_400Regular),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
     <View style={{ ...styles.container }}>
       {Platform.OS === "web" && <Leva />}
       <Canvas camera={{ position: [0, 2, 10], fov: 30 }}>
         <StagePrep showGrid />
-        <axesHelper />
         <SceneLoader scenes={EXPERIENCES} />
       </Canvas>
       <StatusBar style="auto" />
       <SafeAreaView style={styles.footer}>
-        <Text style={styles.footerText}>Made with 💖 for 🍕</Text>
+        <CustomText style={styles.footerText}>Made with 💖 for 🍕</CustomText>
       </SafeAreaView>
       <LoadingText />
+      <OverlayTextPresenter />
     </View>
   );
 }

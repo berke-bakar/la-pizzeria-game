@@ -6,10 +6,11 @@ import {
   Text3D,
 } from "@react-three/drei/native";
 import { ThreeEvent } from "@react-three/fiber/native";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Mesh, MeshStandardMaterial, Vector3 } from "three";
-import fontPath from "../assets/fonts/Poppins_Bold.json";
-import { useSpring, a } from "@react-spring/three";
+// import fontPath from "../assets/fonts/Poppins_Bold.json";
+import fontPath from "../assets/fonts/BungeeSpice_Regular.json";
+import { useSpring, a, config } from "@react-spring/three";
 
 const AnimatedRoundedBox = a(RoundedBox);
 
@@ -22,6 +23,11 @@ type Button3DProps = {
   depth?: number;
   textScale?: number;
 } & React.PropsWithChildren;
+
+const animConfig = {
+  ...config.wobbly,
+  duration: 120,
+};
 
 export default function Button3D({
   position = [0, 0, 0],
@@ -53,12 +59,14 @@ export default function Button3D({
             scale: 1,
             color: color,
           },
-          config: { duration: 200 },
+          config: animConfig,
+          onResolve: () => {
+            if (onPointerDown) onPointerDown(e);
+          },
         });
       },
-      config: { duration: 200 },
+      config: animConfig,
     });
-    if (onPointerDown) onPointerDown(e);
   }
 
   return (

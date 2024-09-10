@@ -179,5 +179,15 @@ export const INGREDIENTS: Record<
 };
 
 export const cameraAnimationAtom = atom(false);
-export const currentSceneAtom = atom<"menu" | "game">("menu");
+export const currentSceneAtom = atom<{
+  currentScene: "game" | "menu";
+  transitionNeeded: boolean;
+}>({ currentScene: "menu", transitionNeeded: true });
 export const progressAtom = atom(0);
+export const overlayTextAtom = atom<{
+  show: boolean;
+  OverlayItem: ((props: any) => JSX.Element) | null;
+}>({
+  show: false,
+  OverlayItem: null,
+});

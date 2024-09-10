@@ -1,14 +1,15 @@
-import { View, Text, StyleSheet, Animated } from "react-native";
+import { View, Text, StyleSheet, Animated, Platform } from "react-native";
 import React, { useEffect, useRef } from "react";
 import { useProgress } from "@react-three/drei/native";
 import { createPortal } from "@react-three/fiber";
-import { progressAtom } from "@/constants/constants";
-import { useAtom } from "jotai";
+import { currentSceneAtom, progressAtom } from "@/constants/constants";
+import { useAtom, useAtomValue } from "jotai";
 
 type Props = {};
 
 const LoadingText = (props: Props) => {
-  const [progress] = useAtom(progressAtom);
+  const progress = useAtomValue(progressAtom);
+  const currentSceneInfo = useAtomValue(currentSceneAtom);
   // Initial value for opacity: 0
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // Initial value for width: 0
@@ -29,7 +30,6 @@ const LoadingText = (props: Props) => {
     ]);
     const loopAnim = Animated.loop(animation, {
       resetBeforeIteration: true,
-      // iterations: 10,
     });
     loopAnim.start();
 
@@ -51,10 +51,25 @@ const LoadingText = (props: Props) => {
       prevAnim.stop();
     };
   }, [progress]);
+  if (!currentSceneInfo.transitionNeeded) return null;
 
   return (
     <View style={{ ...styles.loadingContainer }}>
-      <Animated.Text style={{ ...styles.loadingText, opacity: fadeAnim }}>
+      <Animated.Text
+        style={{
+          ...styles.loadingText,
+          opacity: fadeAnim,
+          fontFamily: Platform.select({
+            android: "Bungee_400Regular",
+            ios: "Bungee-Regular",
+            web: "Bungee_400Regular",
+          }),
+          fontSize: Platform.select({
+            native: 40,
+            web: 50,
+          }),
+        }}
+      >
         Loading...{progress.toFixed(0)}%
       </Animated.Text>
       <Animated.View
@@ -63,10 +78,14 @@ const LoadingText = (props: Props) => {
         <Animated.View
           style={{
             ...styles.loadingProgressIndicator,
-            width: progressAnim.interpolate({
-              inputRange: [0, 100],
-              outputRange: ["0%", "100%"],
-            }),
+            transform: [
+              {
+                scaleX: progressAnim.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: [0, 1],
+                }),
+              },
+            ],
           }}
         ></Animated.View>
       </Animated.View>
@@ -85,12 +104,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     textAlign: "center",
     gap: 10,
+    opacity: 1,
   },
 
   loadingText: {
-    fontSize: 50,
     color: "white",
-    fontWeight: "bold",
   },
 
   loadingProgressContainer: {
