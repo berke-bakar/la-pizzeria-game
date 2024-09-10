@@ -65,9 +65,15 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
       ref={group as React.Ref<THREE.Group<THREE.Object3DEventMap>>}
       {...props}
       dispose={null}
+      castShadow
     >
-      <group name="Scene">
-        <group name="Armature" rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
+      <group name="Scene" castShadow>
+        <group
+          name="Armature"
+          rotation={[Math.PI / 2, 0, 0]}
+          scale={0.01}
+          castShadow
+        >
           <primitive object={nodes.mixamorigHips} />
         </group>
         <skinnedMesh
@@ -77,6 +83,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_11.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_12"
@@ -85,6 +92,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_12.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_13"
@@ -93,6 +101,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_13.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_14"
@@ -101,6 +110,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_14.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_18"
@@ -109,6 +119,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_18.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_19"
@@ -117,6 +128,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_19.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_21"
@@ -125,6 +137,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_21.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_22"
@@ -133,6 +146,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_22.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_24"
@@ -141,6 +155,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_24.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_28"
@@ -149,6 +164,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_28.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_32"
@@ -157,6 +173,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_32.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_34"
@@ -165,6 +182,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_34.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_36"
@@ -173,6 +191,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_36.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_38"
@@ -181,6 +200,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_38.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_40"
@@ -189,6 +209,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_40.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_42"
@@ -197,6 +218,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_42.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_44"
@@ -205,6 +227,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_44.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_46"
@@ -213,6 +236,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_46.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_48"
@@ -221,6 +245,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_48.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_50"
@@ -229,6 +254,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_50.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_7"
@@ -237,6 +263,7 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_7.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <skinnedMesh
           name="Object_9"
@@ -245,41 +272,48 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
           skeleton={nodes.Object_9.skeleton}
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         />
         <group
           name="Trainers_Cube001"
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         >
           <skinnedMesh
             name="Trainers_Cube025_1001"
             geometry={nodes.Trainers_Cube025_1001.geometry}
             material={materials.PaletteMaterial001}
             skeleton={nodes.Trainers_Cube025_1001.skeleton}
+            castShadow
           />
           <skinnedMesh
             name="Trainers_Cube025_1001_1"
             geometry={nodes.Trainers_Cube025_1001_1.geometry}
             material={materials.PaletteMaterial001}
             skeleton={nodes.Trainers_Cube025_1001_1.skeleton}
+            castShadow
           />
         </group>
         <group
           name="Trainers_Cube025"
           rotation={[Math.PI / 2, 0, 0]}
           scale={0.01}
+          castShadow
         >
           <skinnedMesh
             name="Trainers_Cube025_1"
             geometry={nodes.Trainers_Cube025_1.geometry}
             material={materials.PaletteMaterial001}
             skeleton={nodes.Trainers_Cube025_1.skeleton}
+            castShadow
           />
           <skinnedMesh
             name="Trainers_Cube025_1_1"
             geometry={nodes.Trainers_Cube025_1_1.geometry}
             material={materials.PaletteMaterial001}
             skeleton={nodes.Trainers_Cube025_1_1.skeleton}
+            castShadow
           />
         </group>
       </group>
