@@ -1,7 +1,6 @@
 import { useCannon } from "@/hooks/useCannon";
-import { useTexture } from "@react-three/drei/native";
 import * as CANNON from "cannon-es";
-import { Ref, useEffect } from "react";
+import { Ref } from "react";
 import {
   BufferGeometry,
   Material,
@@ -9,7 +8,6 @@ import {
   NormalBufferAttributes,
   Object3DEventMap,
 } from "three";
-import { Asset } from "expo-asset";
 
 const Ground = () => {
   const ref = useCannon({ mass: 0 }, (body) => {
@@ -18,17 +16,6 @@ const Ground = () => {
     body.type = CANNON.BODY_TYPES.STATIC;
     body.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
   });
-
-  const [map, disp, arm, normal] = useTexture([
-    Asset.fromModule(require("../assets/textures/oak_veneer_01_diff_1k.jpg"))
-      .uri,
-    Asset.fromModule(require("../assets/textures/oak_veneer_01_disp_1k.jpg"))
-      .uri,
-    Asset.fromModule(require("../assets/textures/oak_veneer_01_arm_1k.jpg"))
-      .uri,
-    Asset.fromModule(require("../assets/textures/oak_veneer_01_nor_gl_1k.jpg"))
-      .uri,
-  ]);
 
   return (
     <mesh
@@ -45,12 +32,9 @@ const Ground = () => {
     >
       <planeGeometry args={[10, 10, 8, 8]} />
       <meshStandardMaterial
-        map={map}
         attach="material"
-        aoMap={arm}
-        roughnessMap={arm}
-        metalnessMap={arm}
-        normalMap={normal}
+        transparent={true}
+        opacity={0.1}
       />
     </mesh>
   );

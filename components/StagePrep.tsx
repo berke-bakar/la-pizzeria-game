@@ -24,11 +24,12 @@ const StagePrep = ({ showGrid }: Props) => {
 
   return (
     <>
-      <Grid visible={showGrid} infiniteGrid />
+      {/* <Grid visible={showGrid} infiniteGrid /> */}
       {Platform.OS === "web" && <StatsGl />}
       <ambientLight intensity={1} />
+      {/* <axesHelper /> */}
       <directionalLight position={[-5, 5, 5]} intensity={5}>
-        <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
+        {/* <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} /> */}
       </directionalLight>
       {/* <color attach="background" args={["#512da8"]} /> */}
       <color attach="background" args={["#f4511e"]} />
