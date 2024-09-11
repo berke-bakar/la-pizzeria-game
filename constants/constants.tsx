@@ -64,6 +64,9 @@ import {
   TomatoModel,
 } from "@/components/models/Tomato_Slice_Tomato_0";
 import { atom } from "jotai";
+import { atomWithReset } from "jotai/utils";
+import { State } from "./types";
+import { MathUtils } from "three";
 
 export const INGREDIENTS: Record<
   string,
@@ -178,7 +181,40 @@ export const INGREDIENTS: Record<
   },
 };
 
-export const cameraAnimationAtom = atom(false);
+export const cameraStates: Record<string, Array<State>> = {
+  menu: [
+    // initial position
+    { position: [0, 2, 10], rotation: { x: 0, y: 0, z: 0 } },
+  ],
+  game: [
+    // Order taking
+    { position: [0, 4, 0], rotation: { x: 0, y: 0, z: 0 } },
+    // Pizza making
+    {
+      position: [2.5, 4, 0],
+      rotation: { x: -MathUtils.DEG2RAD * 22.5, y: 0, z: 0 },
+    },
+    // Oven
+    {
+      position: [5, 4, 0],
+      rotation: {
+        x: 0,
+        y: MathUtils.DEG2RAD * 180,
+        z: 0,
+      },
+    },
+    // Packaging and reaction
+    {
+      position: [8, 4, 0],
+      rotation: {
+        x: -MathUtils.DEG2RAD * 22.5,
+        y: 0,
+        z: 0,
+      },
+    },
+  ],
+};
+
 export const currentSceneAtom = atom<{
   currentScene: "game" | "menu";
   transitionNeeded: boolean;
@@ -191,3 +227,23 @@ export const overlayTextAtom = atom<{
   show: false,
   OverlayItem: null,
 });
+
+// Index for current stage's camera FSM
+export const cameraStateIndexAtom = atomWithReset(0);
+
+// Current camera state, CameraController consumes this to move and rotate camera
+export const currentCameraStateAtom = atom(
+  (get) => {
+    const { currentScene } = get(currentSceneAtom);
+    const index = get(cameraStateIndexAtom);
+    return cameraStates[currentScene][index];
+  },
+  (get, set, action) => {
+    if (action === "advance") {
+      const index = get(cameraStateIndexAtom);
+      const { currentScene } = get(currentSceneAtom);
+      const newIndex = (index + 1) % cameraStates[currentScene].length;
+      set(cameraStateIndexAtom, newIndex);
+    }
+  }
+);

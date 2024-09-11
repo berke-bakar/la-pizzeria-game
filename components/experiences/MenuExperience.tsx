@@ -8,14 +8,20 @@ import { ThreeEvent } from "@react-three/fiber/native";
 import { Helper, Svg, Text3D } from "@react-three/drei/native";
 import fontPath from "../../assets/fonts/PlaywriteCU_Regular.json";
 import { useAtom, useSetAtom } from "jotai";
-import { currentSceneAtom, overlayTextAtom } from "@/constants/constants";
+import {
+  cameraStateIndexAtom,
+  currentSceneAtom,
+  overlayTextAtom,
+} from "@/constants/constants";
 import { Asset } from "expo-asset";
 import HowToPlay from "../UI/HowToPlay";
 import { DirectionalLightHelper } from "three";
+import { useResetAtom } from "jotai/utils";
 
 const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
   const setCurrentScene = useSetAtom(currentSceneAtom);
   const setOverlayText = useSetAtom(overlayTextAtom);
+  const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
   // const {
   //   chefPos,
   //   chefRot,
@@ -58,7 +64,8 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
 
   function handleStartClick(evt: ThreeEvent<PointerEvent>) {
     evt.stopPropagation();
-    setCurrentScene({ currentScene: "game", transitionNeeded: false });
+    setCurrentScene({ currentScene: "game", transitionNeeded: true });
+    resetCameraStateIndex();
   }
 
   function handleHowToClick(evt: ThreeEvent<PointerEvent>) {

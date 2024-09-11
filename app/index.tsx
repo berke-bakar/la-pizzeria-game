@@ -13,6 +13,7 @@ import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import { Asset } from "expo-asset";
 import CustomText from "@/components/CustomText";
+import CameraController from "@/components/CameraController";
 
 export const EXPERIENCES: Record<string, (props: any) => React.JSX.Element> = {
   game: GameExperience,
@@ -42,6 +43,7 @@ export default function Index() {
       <Canvas camera={{ position: [0, 2, 10], fov: 30 }}>
         <StagePrep debug />
         <SceneLoader scenes={EXPERIENCES} />
+        <CameraController />
       </Canvas>
       <StatusBar style="auto" />
       <SafeAreaView style={styles.footer}>
