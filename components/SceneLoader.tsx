@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { currentSceneAtom } from "@/constants/constants";
 import LoadingText from "./LoadingText";
 import SuspenseProgress from "./SuspenseProgress";
+import { PhysicsProvider } from "@/context/PhysicsProvider";
 
 type Props = {
   scenes: Record<string, (props: any) => React.JSX.Element>;

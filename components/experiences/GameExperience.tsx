@@ -1,29 +1,17 @@
-import { View, Text, Platform } from "react-native";
-import React, { Suspense, useContext, useEffect, useRef } from "react";
-import {
-  Environment,
-  Helper,
-  OrbitControls,
-  StatsGl,
-} from "@react-three/drei/native";
-import {
-  DirectionalLightHelper,
-  Euler,
-  PerspectiveCamera,
-  Vector3,
-} from "three";
+import React, { Suspense, useContext, useEffect } from "react";
+import { Environment, Helper, OrbitControls } from "@react-three/drei/native";
+import { DirectionalLightHelper, PerspectiveCamera, Vector3 } from "three";
 import { PhysicsProvider, WorldContext } from "@/context/PhysicsProvider";
 import { PizzaBaseInstances, PizzaBaseModel } from "../models/PizzaBase";
-import { INGREDIENTS } from "@/constants/constants";
+import { currentCameraStateAtom, INGREDIENTS } from "@/constants/constants";
 import { useToppings } from "@/hooks/useToppings";
 import Ground from "../Ground";
 import SuspenseProgress from "../SuspenseProgress";
 import { PhysicsBodyWireframes } from "@/components/PhysicsBodyWireframes";
-import { useFrame, useThree } from "@react-three/fiber/native";
-import { Restaurant } from "../models/Restraunt";
-import { damp3 } from "maath/easing";
-import { useControls } from "leva";
+import { useThree } from "@react-three/fiber/native";
 import { RestrauntUpdated } from "../models/RestrauntUpdated";
+import { useSetAtom } from "jotai";
+import { generateRandomPos } from "@/utils/utils";
 
 type Props = {};
 
@@ -35,55 +23,33 @@ const GameExperience = (props: Props) => {
   ]);
   const world = useContext(WorldContext);
   const { camera } = useThree();
+  const advanceCamera = useSetAtom(currentCameraStateAtom);
 
-  // const cameraTarget1 = useRef(new Vector3(2, 2, 9));
-  // [0, 2, 10]
   useEffect(() => {
-    (camera as PerspectiveCamera).fov = 40;
-    camera.position.set(-2, 4.5, 6);
+    (camera as PerspectiveCamera).fov = 50;
     camera.updateProjectionMatrix();
-    // camera.lookAt(-2, 2, -1);
   }, []);
-
-  const { cameraTarget, lookAtTarget } = useControls({
-    cameraTarget: {
-      value: [0, 2, 10],
-      joystick: true,
-      step: 0.1,
-    },
-    lookAtTarget: {
-      value: [0, 0, 3],
-      joystick: true,
-      step: 0.1,
-    },
-  });
-
-  useFrame((state) => {
-    // damp3(state.camera.position, cameraTarget, 0.25);
-    // state.camera.lookAt(...lookAtTarget);
-  });
 
   return (
     <>
-      {Platform.OS === "web" && <StatsGl />}
-      <Environment
-        preset="warehouse"
-        environmentIntensity={0.5}
-        // environmentRotation={new Euler(0, 0.5, 0)}
-        background
-      />
+      <Environment preset="city" environmentIntensity={0.5} />
       {/* <OrbitControls makeDefault /> */}
       <directionalLight position={[2, 5, 2]} intensity={3}>
         <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
       </directionalLight>
-      <PhysicsProvider>
-        {Platform.OS === "web" && <PhysicsBodyWireframes />}
-        <Suspense fallback={<SuspenseProgress />}>
+      <color attach="background" args={["#f4511e"]} />
+      {/* {Platform.OS === "web" && <PhysicsBodyWireframes />} */}
+      <Suspense fallback={<SuspenseProgress />}>
+        <PhysicsProvider>
           <PizzaBaseInstances>
-            <PizzaBaseModel position={[2.25, 2, 6]} scale={[1, 1, 1]} />
+            <PizzaBaseModel position={{ x: 2.5, y: 4, z: -3.2 } as Vector3} />
           </PizzaBaseInstances>
-          {/* <Restaurant position={[3, 0.25, 8]} /> */}
-          <RestrauntUpdated />
+          <RestrauntUpdated
+            onPointerDown={() => {
+              // advanceCamera("advance");
+              // addTopping("peppers", new Vector3(2.5, 6, -3.2), 3);
+            }}
+          />
           {Object.keys(INGREDIENTS).map((val, ind) => {
             const Instances = INGREDIENTS[val].Instances;
             const Model = INGREDIENTS[val].Model;
@@ -92,7 +58,14 @@ const GameExperience = (props: Props) => {
                 {toppings[val] &&
                   toppings[val].map((topping, toppingIndex) => {
                     let position = topping.initialPos;
-                    if (topping.id !== lastAddedTopping?.id && world) {
+                    if (Array.isArray(topping.id) && world) {
+                      const body = world.bodies.find(
+                        (body) => body.id === topping.id[0]
+                      );
+                      if (body) {
+                        position.copy(body.position);
+                      }
+                    } else if (topping.id !== lastAddedTopping?.id && world) {
                       const body = world.bodies.find(
                         (body) => body.id === topping.id
                       );
@@ -111,9 +84,9 @@ const GameExperience = (props: Props) => {
               </Instances>
             );
           })}
-          <Ground position={[0, 0.32, 2]} />
-        </Suspense>
-      </PhysicsProvider>
+          <Ground position={[0, 2.55, 0]} />
+        </PhysicsProvider>
+      </Suspense>
     </>
   );
 };

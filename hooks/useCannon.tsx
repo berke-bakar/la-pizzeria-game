@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import * as CANNON from "cannon-es";
 import { WorldContext } from "@/context/PhysicsProvider";
-import { useFrame, MeshProps } from "@react-three/fiber/native";
-import { Vector3, Quaternion, Mesh, Object3D, Group } from "three";
+import { useFrame } from "@react-three/fiber/native";
+import { Mesh, Group } from "three";
 
 export const useCannon = (
   { ...props }: any,
@@ -20,8 +20,9 @@ export const useCannon = (
   useEffect(() => {
     // Call function so the user can add shapes, positions, etc. to the body
     const callback = fn(body, setBodyAvailable);
-    if (world?.bodies.find((val) => val.id === body.id) === undefined)
+    if (world?.bodies.find((val) => val.id === body.id) === undefined) {
       world?.addBody(body);
+    }
 
     return () => {
       if (callback) callback();
@@ -44,7 +45,11 @@ export const useCannon = (
       const { position, quaternion } = body;
       const { x: px, y: py, z: pz } = position;
       const { x: qx, y: qy, z: qz, w: qw } = quaternion;
-      ref.current.position.set(px, Math.max(py, 0), pz);
+      ref.current.position.set(
+        px,
+        body.type == CANNON.BODY_TYPES.STATIC ? py : py + 0.1,
+        pz
+      );
       ref.current.quaternion.set(qx, qy, qz, qw);
     }
   });

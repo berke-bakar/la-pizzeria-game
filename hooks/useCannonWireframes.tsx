@@ -324,11 +324,8 @@ const cannonWireframeRenderer = (scene: Scene, world: CANNON.World) => {
         const mesh = meshes[meshIndex];
 
         if (mesh) {
-          body.quaternion.vmult(body.shapeOffsets[j], shapeWorldPosition);
-          body.position.vadd(shapeWorldPosition, shapeWorldPosition);
-          body.quaternion.mult(body.shapeOrientations[j], shapeWorldQuaternion);
-          mesh.position.copy(shapeWorldPosition as unknown as Vector3);
-          mesh.quaternion.copy(shapeWorldQuaternion as unknown as Quaternion);
+          mesh.position.set(body.position.x, body.position.y, body.position.z);
+          mesh.quaternion.copy(body.quaternion);
         }
 
         meshIndex++;

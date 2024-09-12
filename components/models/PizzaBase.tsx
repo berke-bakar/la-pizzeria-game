@@ -1,11 +1,12 @@
 import * as CANNON from "cannon-es";
 import * as THREE from "three";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, Merged } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
 import { useCannon } from "@/hooks/useCannon";
 import { CollisionEvent } from "@/constants/types";
+import { useFrame } from "@react-three/fiber";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -47,30 +48,23 @@ export function PizzaBaseInstances({
 
 export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
   const instances = React.useContext(context);
-  const [pizzaCollided, setPizzaCollided] = useState(false);
 
   const ref = useCannon(
-    { mass: 100 },
+    { mass: 1 },
     (body, setBodyAvailable) => {
-      body.addShape(new CANNON.Box(new CANNON.Vec3(1, 0.1, 1)));
+      body.addShape(new CANNON.Box(new CANNON.Vec3(1, 0.15, 1)));
       body.type = CANNON.BODY_TYPES.DYNAMIC;
-      body.position.set(
-        (props.position as THREE.Vector3).x,
-        (props.position as THREE.Vector3).y,
-        (props.position as THREE.Vector3).z
-      );
-
+      if (props.position)
+        body.position.set(
+          (props.position as THREE.Vector3).x,
+          (props.position as THREE.Vector3).y,
+          (props.position as THREE.Vector3).z
+        );
       const handleCollide = (event: CollisionEvent) => {
-        if (
-          event.body.type === CANNON.BODY_TYPES.STATIC &&
-          event.body.shapes[0].type === CANNON.SHAPE_TYPES.PLANE
-        ) {
+        if (event.body.type === CANNON.BODY_TYPES.STATIC) {
           event.target.type = CANNON.BODY_TYPES.STATIC;
-          event.target.allowSleep = false;
-          event.target.sleepTimeLimit = 0;
-          setPizzaCollided(true);
-        } else {
-          event.body.velocity.setZero();
+          event.target.mass = 0;
+          body.removeEventListener("collide", handleCollide);
         }
       };
 
@@ -87,7 +81,7 @@ export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
       {...props}
       dispose={null}
       ref={ref as React.Ref<THREE.Group<THREE.Object3DEventMap>>}
-      position={!pizzaCollided ? props.position : [0, 0, 0]}
+      position={props.position}
     >
       <instances.Node scale={[0.356, 1, 0.356]} />
     </group>

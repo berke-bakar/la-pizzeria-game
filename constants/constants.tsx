@@ -16,29 +16,9 @@ import {
   MushroomModel,
 } from "@/components/models/Mushroom_Slice_Mushroom_0";
 import {
-  Olive0Instances,
-  Olive0Model,
-} from "@/components/models/Olive_Slice_Oilives_0";
-import {
-  Olive1Instances,
-  Olive1Model,
-} from "@/components/models/Olive_Slice_Oilives_0_001";
-import {
   OnionInstances,
   OnionModel,
 } from "@/components/models/Onion_Slice_Onion_0";
-import {
-  Pepper0Instances,
-  Pepper0Model,
-} from "@/components/models/Pepper_Slice_Pepper_0";
-import {
-  Pepper1Instances,
-  Pepper1Model,
-} from "@/components/models/Pepper_Slice_Pepper_0_001";
-import {
-  Pepper2Instances,
-  Pepper2Model,
-} from "@/components/models/Pepper_Slice_Pepper_0_002";
 import {
   PickleInstances,
   PickleModel,
@@ -67,6 +47,8 @@ import { atom } from "jotai";
 import { atomWithReset } from "jotai/utils";
 import { State } from "./types";
 import { MathUtils } from "three";
+import { PeppersInstances, PeppersModel } from "@/components/models/Peppers";
+import { OlivesInstances, OlivesModel } from "@/components/models/Olives";
 
 export const INGREDIENTS: Record<
   string,
@@ -107,15 +89,9 @@ export const INGREDIENTS: Record<
     icon: "🍄",
     price: 0,
   },
-  olive0: {
-    Instances: Olive0Instances,
-    Model: Olive0Model,
-    icon: "⚫",
-    price: 0,
-  },
-  olive1: {
-    Instances: Olive1Instances,
-    Model: Olive1Model,
+  olives: {
+    Instances: OlivesInstances,
+    Model: OlivesModel,
     icon: "⚫",
     price: 0,
   },
@@ -125,21 +101,9 @@ export const INGREDIENTS: Record<
     icon: "🧅",
     price: 0,
   },
-  pepper0: {
-    Instances: Pepper0Instances,
-    Model: Pepper0Model,
-    icon: "🌶",
-    price: 0,
-  },
-  pepper1: {
-    Instances: Pepper1Instances,
-    Model: Pepper1Model,
-    icon: "🌶",
-    price: 0,
-  },
-  pepper2: {
-    Instances: Pepper2Instances,
-    Model: Pepper2Model,
+  peppers: {
+    Instances: PeppersInstances,
+    Model: PeppersModel,
     icon: "🌶",
     price: 0,
   },

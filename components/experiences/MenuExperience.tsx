@@ -64,7 +64,7 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
 
   function handleStartClick(evt: ThreeEvent<PointerEvent>) {
     evt.stopPropagation();
-    setCurrentScene({ currentScene: "game", transitionNeeded: true });
+    setCurrentScene({ currentScene: "game", transitionNeeded: false });
     resetCameraStateIndex();
   }
 

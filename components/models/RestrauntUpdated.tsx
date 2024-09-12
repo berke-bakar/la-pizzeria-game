@@ -6,7 +6,6 @@ import { Asset } from "expo-asset";
 
 type GLTFResult = GLTF & {
   nodes: {
-    Node005: THREE.Mesh;
     Plane: THREE.Mesh;
     group82117970: THREE.Mesh;
     group89637921: THREE.Mesh;
@@ -112,7 +111,6 @@ type GLTFResult = GLTF & {
     pizzaBox: THREE.Mesh;
   };
   materials: {
-    ["lambert5SG.001"]: THREE.MeshStandardMaterial;
     yellow: THREE.MeshStandardMaterial;
     mat15: THREE.MeshStandardMaterial;
     mat22: THREE.MeshStandardMaterial;
@@ -137,6 +135,7 @@ type GLTFResult = GLTF & {
     ["mat16.001"]: THREE.MeshStandardMaterial;
     ["mat15.001"]: THREE.MeshStandardMaterial;
     ["mat24.001"]: THREE.MeshStandardMaterial;
+    ["lambert5SG.001"]: THREE.MeshStandardMaterial;
     _defaultMat: THREE.MeshStandardMaterial;
   };
 };
@@ -150,18 +149,9 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
       <mesh
         castShadow
         receiveShadow
-        geometry={nodes.Node005.geometry}
-        material={materials["lambert5SG.001"]}
-        position={[1.676, 2.529, 7.972]}
-        rotation={[0, 1.571, 0]}
-        scale={[0.356, 1, 0.356]}
-      />
-      <mesh
-        castShadow
-        receiveShadow
         geometry={nodes.Plane.geometry}
         material={materials.yellow}
-        position={[-0.903, -0.025, -3.049]}
+        position={[1.497, -0.025, -8.049]}
         scale={[1, 1, 1.031]}
       />
       <mesh
@@ -169,44 +159,44 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group82117970.geometry}
         material={materials.mat15}
-        position={[8.312, 2.773, 9.063]}
+        position={[10.712, 2.773, 4.063]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group89637921.geometry}
         material={materials.mat22}
-        position={[-4.805, 1.889, 3.379]}
+        position={[-2.405, 1.598, -1.335]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group111804077.geometry}
         material={materials.mat22}
-        position={[-4.174, 0.95, 3.838]}
+        position={[-1.774, 0.659, -0.876]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group151101300.geometry}
         material={materials.mat19}
-        position={[-1.962, 1.19, 2.425]}
+        position={[0.438, 1.19, -2.575]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group155036193.geometry}
         material={materials.mat22}
-        position={[5.186, 2.585, 8.933]}
+        position={[7.586, 2.585, 3.933]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group203751680.geometry}
         material={materials.mat20}
-        position={[6.164, 0.877, 3.237]}
+        position={[8.564, 0.877, -1.763]}
       />
-      <group position={[8.582, 5.622, 8.312]}>
+      <group position={[10.982, 5.622, 3.312]}>
         <mesh
           castShadow
           receiveShadow
@@ -225,17 +215,17 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group230377105.geometry}
         material={materials.mat18}
-        position={[7.001, 1.509, 3.129]}
+        position={[9.401, 1.509, -1.871]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group258196573.geometry}
         material={materials.mat22}
-        position={[-7.697, 1.801, 3.96]}
+        position={[-5.297, 1.51, -0.754]}
       />
       <group
-        position={[-4.043, 3.766, 1.503]}
+        position={[-1.643, 3.766, -3.497]}
         rotation={[Math.PI, -0.436, Math.PI]}
       >
         <mesh
@@ -262,79 +252,79 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group289584945.geometry}
         material={materials.mat23}
-        position={[-4.782, 1.679, 3.352]}
+        position={[-2.382, 1.388, -1.362]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group374344625.geometry}
         material={materials.mat23}
-        position={[3.62, 1.318, 7.739]}
+        position={[6.02, 1.318, 2.739]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group413354371.geometry}
         material={materials.mat22}
-        position={[9.071, 6.825, 8.755]}
+        position={[11.471, 6.825, 3.755]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group457263712.geometry}
         material={materials.mat12}
-        position={[4.512, 4.387, 9.054]}
+        position={[6.912, 4.387, 4.054]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group582095594.geometry}
         material={materials.mat21}
-        position={[4.214, 4.325, 9.075]}
+        position={[6.614, 4.325, 4.075]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group588249960.geometry}
         material={materials.mat22}
-        position={[4.579, 0.887, 7.879]}
+        position={[6.979, 0.887, 2.879]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group782781842.geometry}
         material={materials.mat23}
-        position={[8.798, 2.287, 7.605]}
+        position={[11.198, 2.287, 2.605]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group804660210.geometry}
         material={materials.mat21}
-        position={[-1.981, 2.362, 2.866]}
+        position={[0.419, 2.362, -2.134]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group837453337.geometry}
         material={materials.mat15}
-        position={[6.368, 2.53, 8.334]}
+        position={[8.768, 2.53, 3.334]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group868746569.geometry}
         material={materials.mat15}
-        position={[8.442, 2.271, 7.725]}
+        position={[10.842, 2.271, 2.725]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group871399932.geometry}
         material={materials.mat22}
-        position={[8.249, 6.789, 8.795]}
+        position={[10.649, 6.789, 3.795]}
       />
-      <group position={[2.779, 1.335, -5.708]}>
+      <group position={[5.179, 1.335, -10.708]}>
         <mesh
           castShadow
           receiveShadow
@@ -353,65 +343,65 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group899477785.geometry}
         material={materials.mat22}
-        position={[-4.785, 2.961, 2.997]}
+        position={[-2.385, 2.67, -1.718]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group942987327.geometry}
         material={materials.mat23}
-        position={[10.013, 2.287, 7.605]}
+        position={[12.413, 2.287, 2.605]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group947786005.geometry}
         material={materials.mat20}
-        position={[5.329, 0.715, 3.256]}
+        position={[7.729, 0.715, -1.744]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1013365616.geometry}
         material={materials.mat18}
-        position={[6.882, 0.829, 3.109]}
+        position={[9.282, 0.829, -1.891]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1155477327.geometry}
         material={materials.mat20}
-        position={[-7.637, 1.436, 3.292]}
+        position={[-5.237, 1.145, -1.423]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1160868208.geometry}
         material={materials.mat16}
-        position={[-6.908, 2.469, 2.563]}
+        position={[-4.508, 2.178, -2.152]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1169870396.geometry}
         material={materials.mat18}
-        position={[4.793, 4.07, 9.192]}
+        position={[7.193, 4.07, 4.192]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1239501184.geometry}
         material={materials.mat18}
-        position={[-7.333, 1.861, 3.413]}
+        position={[-4.933, 1.571, -1.301]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1352653514.geometry}
         material={materials.mat24}
-        position={[9.47, 1.479, 8.146]}
+        position={[11.87, 1.479, 3.146]}
       />
-      <group position={[-0.894, 3.955, 9.427]}>
+      <group position={[1.506, 3.955, 4.427]}>
         <mesh
           castShadow
           receiveShadow
@@ -430,7 +420,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group1400917886.geometry}
         material={materials["mat21.001"]}
-        position={[-4.113, 2.778, 1.408]}
+        position={[-1.713, 2.778, -3.592]}
         rotation={[Math.PI, -0.436, Math.PI]}
       />
       <mesh
@@ -438,16 +428,16 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group1514811710.geometry}
         material={materials.mat21}
-        position={[5.535, 4.45, 9.017]}
+        position={[7.935, 4.45, 4.017]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1519458107.geometry}
         material={materials.mat19}
-        position={[-9.884, 4.595, 8.151]}
+        position={[-7.484, 4.595, 3.151]}
       />
-      <group position={[3.654, 1.373, 8.742]}>
+      <group position={[6.054, 1.373, 3.742]}>
         <mesh
           castShadow
           receiveShadow
@@ -466,140 +456,140 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group1593933401.geometry}
         material={materials.mat22}
-        position={[-9.58, 1.376, 7.848]}
+        position={[-7.18, 1.376, 2.848]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1598448926.geometry}
         material={materials.mat23}
-        position={[7.461, 2.287, 7.605]}
+        position={[9.861, 2.287, 2.605]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1621815010.geometry}
         material={materials.mat22}
-        position={[-9.763, 4.231, 7.119]}
+        position={[-7.363, 4.231, 2.119]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1649154586.geometry}
         material={materials.mat22}
-        position={[-8.669, 1.801, 3.96]}
+        position={[-6.269, 1.51, -0.754]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1665736462.geometry}
         material={materials.mat23}
-        position={[8.433, 2.287, 7.605]}
+        position={[10.833, 2.287, 2.605]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1690989685.geometry}
         material={materials.mat7}
-        position={[4.63, 4.535, 9.059]}
+        position={[7.03, 4.535, 4.059]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1706430347.geometry}
         material={materials.mat19}
-        position={[-9.945, 5.688, 8.091]}
+        position={[-7.545, 5.688, 3.091]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1723768818.geometry}
         material={materials.mat23}
-        position={[8.251, 2.287, 8.637]}
+        position={[10.651, 2.287, 3.637]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1729645765.geometry}
         material={materials.mat12}
-        position={[5.464, 4.158, 8.956]}
+        position={[7.864, 4.158, 3.956]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1751452465.geometry}
         material={materials.mat24}
-        position={[9.41, 0.534, 8.27]}
+        position={[11.81, 0.534, 3.27]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1771706762.geometry}
         material={materials.mat19}
-        position={[-9.823, 3.502, 8.151]}
+        position={[-7.423, 3.502, 3.151]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1791783657.geometry}
         material={materials.mat22}
-        position={[5.253, 1.887, 8.369]}
+        position={[7.653, 1.887, 3.369]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1830093567.geometry}
         material={materials.mat22}
-        position={[-5.996, 1.801, 3.96]}
+        position={[-3.596, 1.51, -0.754]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1832824718.geometry}
         material={materials.mat19}
-        position={[-10.249, 1.376, 6.329]}
+        position={[-7.849, 1.376, 1.329]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1873420653.geometry}
         material={materials.mat22}
-        position={[6.005, 0.887, 7.879]}
+        position={[8.405, 0.887, 2.879]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1887801654.geometry}
         material={materials.mat23}
-        position={[9.648, 2.287, 7.605]}
+        position={[12.048, 2.287, 2.605]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1940092288.geometry}
         material={materials.mat22}
-        position={[-5.511, 0.95, 3.838]}
+        position={[-3.111, 0.659, -0.876]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group1987141327.geometry}
         material={materials.mat23}
-        position={[-0.473, 1.664, 8.397]}
+        position={[1.927, 1.664, 3.397]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2018543394.geometry}
         material={materials.mat22}
-        position={[5.231, 3.031, 8.777]}
+        position={[7.631, 3.031, 3.777]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2069866459.geometry}
         material={materials.mat21}
-        position={[-4.115, 3.318, 1.46]}
+        position={[-1.715, 3.318, -3.54]}
         rotation={[Math.PI, -0.436, Math.PI]}
       />
       <mesh
@@ -607,44 +597,44 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.group2081224890.geometry}
         material={materials.mat15}
-        position={[9.466, 1.254, 8.492]}
+        position={[11.866, 1.254, 3.492]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2086790902.geometry}
         material={materials.mat22}
-        position={[-4.743, 2.543, 2.85]}
+        position={[-2.343, 2.252, -1.864]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2118802549.geometry}
         material={materials.mat23}
-        position={[7.097, 2.287, 7.605]}
+        position={[9.497, 2.287, 2.605]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2131526348.geometry}
         material={materials.mat15}
-        position={[7.452, 1.232, 8.522]}
+        position={[9.852, 1.232, 3.522]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2134067596.geometry}
         material={materials.mat15}
-        position={[10.377, 2.53, 8.394]}
+        position={[12.777, 2.53, 3.394]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.group2136125216.geometry}
         material={materials.mat24}
-        position={[7.457, 1.45, 8.172]}
+        position={[9.857, 1.45, 3.172]}
       />
-      <group position={[-12.627, 3.955, -1.849]} rotation={[0, -1.57, 0]}>
+      <group position={[-10.227, 3.955, -6.849]} rotation={[0, -1.57, 0]}>
         <mesh
           castShadow
           receiveShadow
@@ -663,7 +653,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.board_cutting_board001_Cube117.geometry}
         material={materials["Solid.092"]}
-        position={[-2.259, 2.569, 1.848]}
+        position={[0.141, 2.569, -3.152]}
         scale={0.214}
       />
       <mesh
@@ -671,7 +661,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes["wall-window-wide-square001"].geometry}
         material={materials.colormap}
-        position={[-0.806, -0.023, -13.295]}
+        position={[1.594, -0.023, -18.295]}
         rotation={[0, -1.571, 0]}
         scale={[1.782, 3.287, 2.317]}
       >
@@ -693,7 +683,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes["wall-window-wide-square003"].geometry}
         material={materials["colormap.001"]}
-        position={[-0.806, -0.023, -13.295]}
+        position={[1.594, -0.023, -18.295]}
         rotation={[0, -1.571, 0]}
         scale={[1.782, 3.287, 2.317]}
       />
@@ -702,7 +692,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes["wall-window-wide-square002"].geometry}
         material={materials.colormap}
-        position={[-0.806, -0.023, -13.295]}
+        position={[1.594, -0.023, -18.295]}
         rotation={[0, -1.571, 0]}
         scale={[1.782, 3.287, 2.317]}
       />
@@ -711,7 +701,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes["wall-window-wide-square004"].geometry}
         material={materials["colormap.001"]}
-        position={[-0.806, -0.023, -13.295]}
+        position={[1.594, -0.023, -18.295]}
         rotation={[0, -1.571, 0]}
         scale={[1.782, 3.287, 2.317]}
       />
@@ -720,14 +710,14 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube.geometry}
         material={materials.Material}
-        position={[-0.844, 2.711, 0.411]}
+        position={[1.556, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube001.geometry}
         material={materials.Material}
-        position={[-0.844, 3.016, 0.005]}
+        position={[1.556, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
       <mesh
@@ -735,49 +725,49 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube002.geometry}
         material={materials.Material}
-        position={[-0.519, 2.711, 0.411]}
+        position={[1.881, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube003.geometry}
         material={materials.Material}
-        position={[-0.194, 2.711, 0.411]}
+        position={[2.206, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube004.geometry}
         material={materials.Material}
-        position={[0.131, 2.711, 0.411]}
+        position={[2.531, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube005.geometry}
         material={materials.Material}
-        position={[0.456, 2.711, 0.411]}
+        position={[2.856, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube006.geometry}
         material={materials.Material}
-        position={[0.781, 2.711, 0.411]}
+        position={[3.181, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube007.geometry}
         material={materials.Material}
-        position={[1.106, 2.711, 0.411]}
+        position={[3.506, 2.711, -4.589]}
       />
       <mesh
         castShadow
         receiveShadow
         geometry={nodes.Cube008.geometry}
         material={materials.Material}
-        position={[-0.519, 3.016, 0.005]}
+        position={[1.881, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
       <mesh
@@ -785,7 +775,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube009.geometry}
         material={materials.Material}
-        position={[-0.194, 3.016, 0.005]}
+        position={[2.206, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
       <mesh
@@ -793,7 +783,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube010.geometry}
         material={materials.Material}
-        position={[0.131, 3.016, 0.005]}
+        position={[2.531, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
       <mesh
@@ -801,7 +791,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube011.geometry}
         material={materials.Material}
-        position={[0.456, 3.016, 0.005]}
+        position={[2.856, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
       <mesh
@@ -809,7 +799,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube012.geometry}
         material={materials.Material}
-        position={[0.781, 3.016, 0.005]}
+        position={[3.181, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
       <mesh
@@ -817,10 +807,10 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Cube013.geometry}
         material={materials.Material}
-        position={[1.106, 3.016, 0.005]}
+        position={[3.506, 3.016, -4.995]}
         rotation={[Math.PI / 6, 0, 0]}
       />
-      <group position={[1.688, 2.868, 8.091]} scale={[3.235, 3.924, 3.219]}>
+      <group position={[4.088, 2.868, 3.091]} scale={[3.235, 3.924, 3.219]}>
         <mesh
           castShadow
           receiveShadow
@@ -841,7 +831,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         />
       </group>
       <group
-        position={[2.726, 3.466, 6.949]}
+        position={[5.126, 3.466, 1.949]}
         rotation={[-Math.PI, -1.015, Math.PI / 2]}
         scale={[3.924, 3.235, 2.232]}
       >
@@ -863,7 +853,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Node002.geometry}
         material={materials["mat16.001"]}
-        position={[1.736, 3.106, 8.091]}
+        position={[4.136, 3.106, 3.091]}
         scale={[3.262, 3.235, 3.219]}
       />
       <mesh
@@ -871,7 +861,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Node003.geometry}
         material={materials["mat16.001"]}
-        position={[1.736, 2.132, 8.091]}
+        position={[4.136, 2.132, 3.091]}
         scale={[3.262, 3.235, 3.219]}
       />
       <mesh
@@ -879,7 +869,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Node004.geometry}
         material={materials["mat16.001"]}
-        position={[1.736, 1.261, 8.091]}
+        position={[4.136, 1.261, 3.091]}
         scale={[3.262, 3.235, 3.219]}
       />
       <mesh
@@ -887,7 +877,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.Node006.geometry}
         material={materials["lambert5SG.001"]}
-        position={[3.647, 2.601, 1.527]}
+        position={[6.047, 2.601, -3.473]}
         rotation={[0, -1.571, 0]}
         scale={[0.356, 1, 0.356]}
       />
@@ -896,7 +886,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.lid.geometry}
         material={materials._defaultMat}
-        position={[3.692, 2.657, 0.41]}
+        position={[6.092, 2.657, -4.59]}
         rotation={[-0.262, -Math.PI / 2, 0]}
         scale={2.457}
       />
@@ -905,7 +895,7 @@ export function RestrauntUpdated(props: JSX.IntrinsicElements["group"]) {
         receiveShadow
         geometry={nodes.pizzaBox.geometry}
         material={materials._defaultMat}
-        position={[3.647, 2.481, 1.499]}
+        position={[6.047, 2.481, -3.501]}
         rotation={[0, -1.571, 0]}
         scale={2.457}
       />
