@@ -23,7 +23,6 @@ const GameExperience = (props: Props) => {
   ]);
   const world = useContext(WorldContext);
   const { camera } = useThree();
-  const advanceCamera = useSetAtom(currentCameraStateAtom);
 
   useEffect(() => {
     (camera as PerspectiveCamera).fov = 50;
@@ -47,7 +46,7 @@ const GameExperience = (props: Props) => {
           <RestrauntUpdated
             onPointerDown={() => {
               // advanceCamera("advance");
-              // addTopping("peppers", new Vector3(2.5, 6, -3.2), 3);
+              // addTopping("olives", new Vector3(2.5, 6, -3.2), 2);
             }}
           />
           {Object.keys(INGREDIENTS).map((val, ind) => {

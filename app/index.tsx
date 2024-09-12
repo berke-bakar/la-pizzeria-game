@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { Asset } from "expo-asset";
 import CustomText from "@/components/CustomText";
 import CameraController from "@/components/CameraController";
+import HUD from "@/components/UI/HUD";
 
 export const EXPERIENCES: Record<string, (props: any) => React.JSX.Element> = {
   game: GameExperience,
@@ -51,6 +52,7 @@ export default function Index() {
       </SafeAreaView>
       <LoadingText />
       <OverlayTextPresenter />
+      <HUD />
     </View>
   );
 }
