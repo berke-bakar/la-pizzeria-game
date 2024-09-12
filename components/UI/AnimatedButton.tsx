@@ -36,7 +36,9 @@ const AnimatedButton = (
       }}
       onPointerDown={handleClick}
     >
-      <CustomText style={{ color: "white" }}>{props.children}</CustomText>
+      <CustomText style={{ color: "white", userSelect: "none" }}>
+        {props.children}
+      </CustomText>
     </Animated.View>
   );
 };
@@ -52,5 +54,7 @@ const styles = StyleSheet.create({
     borderWidth: 8,
     borderRadius: 10,
     backgroundColor: "#820300",
+    userSelect: "none",
+    cursor: "pointer",
   },
 });

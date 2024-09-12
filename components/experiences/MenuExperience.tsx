@@ -4,7 +4,7 @@ import Menu from "../Menu";
 // import { useControls } from "leva";
 import Button3D from "../Button3D";
 import { BuildingsScene } from "../models/BuildingsScene";
-import { ThreeEvent } from "@react-three/fiber/native";
+import { ThreeEvent, useThree } from "@react-three/fiber/native";
 import { Helper, Svg, Text3D } from "@react-three/drei/native";
 import fontPath from "../../assets/fonts/PlaywriteCU_Regular.json";
 import { useAtom, useSetAtom } from "jotai";
@@ -15,52 +15,14 @@ import {
 } from "@/constants/constants";
 import { Asset } from "expo-asset";
 import HowToPlay from "../UI/HowToPlay";
-import { DirectionalLightHelper } from "three";
+import { DirectionalLightHelper, PerspectiveCamera } from "three";
 import { useResetAtom } from "jotai/utils";
 
 const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
+  const { camera } = useThree();
   const setCurrentScene = useSetAtom(currentSceneAtom);
   const setOverlayText = useSetAtom(overlayTextAtom);
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
-  // const {
-  //   chefPos,
-  //   chefRot,
-  //   chefScale,
-  //   menuExpPos,
-  //   buildingsPos,
-  //   buildingsRot,
-  //   buildingsScale,
-  // } = useControls({
-  //   chefPos: { value: [0.8, 0, 0], step: 0.2 },
-  //   chefRot: {
-  //     value: [0, -0.15, 0],
-  //     joystick: true,
-  //     step: 0.01,
-  //     min: -3.14,
-  //     max: 3.14,
-  //   },
-  //   chefScale: {
-  //     value: 2,
-  //     step: 0.1,
-  //     min: 0,
-  //     max: 10,
-  //   },
-  //   menuExpPos: { value: [-1, 0.2, 0], step: 0.2 },
-  //   buildingsPos: { value: [0, 0, -8], step: 0.2 },
-  //   buildingsRot: {
-  //     value: [0, 0, 0],
-  //     joystick: true,
-  //     step: 0.2,
-  //     min: 0,
-  //     max: Math.PI * 2,
-  //   },
-  //   buildingsScale: {
-  //     value: 2,
-  //     step: 0.1,
-  //     min: 0,
-  //     max: 10,
-  //   },
-  // });
 
   function handleStartClick(evt: ThreeEvent<PointerEvent>) {
     evt.stopPropagation();
@@ -72,6 +34,11 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
     evt.stopPropagation();
     setOverlayText({ OverlayItem: HowToPlay, show: true });
   }
+
+  useEffect(() => {
+    (camera as PerspectiveCamera).fov = 30;
+    camera.updateProjectionMatrix();
+  }, []);
 
   return (
     <>

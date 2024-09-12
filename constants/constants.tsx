@@ -148,7 +148,10 @@ export const INGREDIENTS: Record<
 export const cameraStates: Record<string, Array<State>> = {
   menu: [
     // initial position
-    { position: [0, 2, 10], rotation: { x: 0, y: 0, z: 0 } },
+    {
+      position: [0, 2, 10],
+      rotation: { x: -0.2, y: 0, z: 0 },
+    },
   ],
   game: [
     // Order taking
@@ -207,6 +210,13 @@ export const currentCameraStateAtom = atom(
       const index = get(cameraStateIndexAtom);
       const { currentScene } = get(currentSceneAtom);
       const newIndex = (index + 1) % cameraStates[currentScene].length;
+      set(cameraStateIndexAtom, newIndex);
+    } else if (action === "retreat") {
+      const index = get(cameraStateIndexAtom);
+      const { currentScene } = get(currentSceneAtom);
+      const newIndex =
+        (index - 1 + cameraStates[currentScene].length) %
+        cameraStates[currentScene].length;
       set(cameraStateIndexAtom, newIndex);
     }
   }

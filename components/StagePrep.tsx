@@ -6,7 +6,6 @@ import {
   Helper,
   StatsGl,
 } from "@react-three/drei/native";
-import { DirectionalLightHelper } from "three";
 
 type Props = {
   debug: boolean;
