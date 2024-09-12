@@ -41,7 +41,9 @@ export default function Index() {
   return (
     <View style={{ ...styles.container }}>
       {Platform.OS === "web" && <Leva />}
-      <Canvas camera={{ position: [0, 2, 10], fov: 30 }}>
+      <Canvas
+        camera={{ position: [0, 2, 10], fov: 30, rotation: [-0.1, 0, 0] }}
+      >
         <StagePrep debug />
         <SceneLoader scenes={EXPERIENCES} />
         <CameraController />

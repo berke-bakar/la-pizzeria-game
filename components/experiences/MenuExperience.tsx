@@ -17,6 +17,7 @@ import { Asset } from "expo-asset";
 import HowToPlay from "../UI/HowToPlay";
 import { DirectionalLightHelper, PerspectiveCamera } from "three";
 import { useResetAtom } from "jotai/utils";
+import Store from "../UI/Store";
 
 const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
   const { camera } = useThree();
@@ -28,6 +29,11 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
     evt.stopPropagation();
     setCurrentScene({ currentScene: "game", transitionNeeded: false });
     resetCameraStateIndex();
+  }
+
+  function handleStoreClick(evt: ThreeEvent<PointerEvent>) {
+    evt.stopPropagation();
+    setOverlayText({ OverlayItem: Store, show: true });
   }
 
   function handleHowToClick(evt: ThreeEvent<PointerEvent>) {
@@ -47,20 +53,8 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
       </directionalLight>
       <color attach="background" args={["#f4511e"]} />
       <group {...props}>
-        {/* <BuildingsScene
-        scale={buildingsScale}
-        position={buildingsPos}
-        rotation={buildingsRot}
-      /> */}
         <BuildingsScene scale={2} position={[0, 0, -8]} rotation={[0, 0, 0]} />
-        {/* <Chef scale={chefScale} position={chefPos} rotation={chefRot} /> */}
         <Chef scale={2} position={[0.8, 0, 0]} rotation={[0, -0.15, 0]} />
-        {/* <mesh scale={0.01} rotation={[0, 0, 0]} position={[1.2, 2.5, 0]}>
-        <Svg
-          src={Asset.fromModule("../assets/images/speech_bubble.svg").uri}
-          position={[0, 0, 0]}
-        />
-      </mesh> */}
         <Menu position={[-1, 0.2, 0]}>
           <Text3D
             font={fontPath}
@@ -82,6 +76,16 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
             onPointerDown={handleStartClick}
           >
             Start Game
+          </Button3D>
+          <Button3D
+            color="#512da8"
+            width={1.1}
+            height={0.5}
+            depth={0.01}
+            textScale={0.05}
+            onPointerDown={handleStoreClick}
+          >
+            {"       Store"}
           </Button3D>
           <Button3D
             color="#512da8"

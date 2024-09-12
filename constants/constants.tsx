@@ -150,7 +150,7 @@ export const cameraStates: Record<string, Array<State>> = {
     // initial position
     {
       position: [0, 2, 10],
-      rotation: { x: -0.2, y: 0, z: 0 },
+      rotation: { x: -0.1, y: 0, z: 0 },
     },
   ],
   game: [
