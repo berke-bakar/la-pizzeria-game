@@ -103,5 +103,6 @@ const styles = StyleSheet.create({
   hudText: {
     fontSize: 50,
     color: "white",
+    userSelect: "none",
   },
 });

@@ -1,25 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import Chef from "../models/Chef";
 import Menu from "../Menu";
-// import { useControls } from "leva";
 import Button3D from "../Button3D";
 import { BuildingsScene } from "../models/BuildingsScene";
 import { ThreeEvent, useThree } from "@react-three/fiber/native";
-import { Helper, Svg, Text3D } from "@react-three/drei/native";
+import { Helper, Text3D } from "@react-three/drei/native";
 import fontPath from "../../assets/fonts/PlaywriteCU_Regular.json";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import {
   cameraStateIndexAtom,
   currentSceneAtom,
   overlayTextAtom,
 } from "@/constants/constants";
-import { Asset } from "expo-asset";
 import HowToPlay from "../UI/HowToPlay";
 import { DirectionalLightHelper, PerspectiveCamera } from "three";
 import { useResetAtom } from "jotai/utils";
 import Store from "../UI/Store";
 
-const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
+const MenuExperience = ({
+  visible,
+  ...props
+}: JSX.IntrinsicElements["group"]) => {
   const { camera } = useThree();
   const setCurrentScene = useSetAtom(currentSceneAtom);
   const setOverlayText = useSetAtom(overlayTextAtom);
@@ -42,17 +43,20 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
   }
 
   useEffect(() => {
-    (camera as PerspectiveCamera).fov = 30;
-    camera.updateProjectionMatrix();
-  }, []);
+    if (visible) {
+      (camera as PerspectiveCamera).fov = 30;
+      camera.updateProjectionMatrix();
+    }
+  }, [visible]);
 
   return (
     <>
-      <directionalLight position={[-5, 5, 5]} intensity={5}>
-        {<Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />}
-      </directionalLight>
       <color attach="background" args={["#f4511e"]} />
-      <group {...props}>
+      <group visible={visible} {...props}>
+        <directionalLight position={[-5, 5, 5]} intensity={5}>
+          {<Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />}
+        </directionalLight>
+
         <BuildingsScene scale={2} position={[0, 0, -8]} rotation={[0, 0, 0]} />
         <Chef scale={2} position={[0.8, 0, 0]} rotation={[0, -0.15, 0]} />
         <Menu position={[-1, 0.2, 0]}>
@@ -73,7 +77,7 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
             height={0.5}
             depth={0.01}
             textScale={0.05}
-            onPointerDown={handleStartClick}
+            onPointerDown={visible ? handleStartClick : undefined}
           >
             Start Game
           </Button3D>
@@ -83,7 +87,7 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
             height={0.5}
             depth={0.01}
             textScale={0.05}
-            onPointerDown={handleStoreClick}
+            onPointerDown={visible ? handleStoreClick : undefined}
           >
             {"       Store"}
           </Button3D>
@@ -93,7 +97,7 @@ const MenuExperience = (props: JSX.IntrinsicElements["group"]) => {
             height={0.5}
             depth={0.01}
             textScale={0.05}
-            onPointerDown={handleHowToClick}
+            onPointerDown={visible ? handleHowToClick : undefined}
           >
             Learn How
           </Button3D>

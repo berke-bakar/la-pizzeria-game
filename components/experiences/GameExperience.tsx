@@ -3,19 +3,20 @@ import { Environment, Helper, OrbitControls } from "@react-three/drei/native";
 import { DirectionalLightHelper, PerspectiveCamera, Vector3 } from "three";
 import { PhysicsProvider, WorldContext } from "@/context/PhysicsProvider";
 import { PizzaBaseInstances, PizzaBaseModel } from "../models/PizzaBase";
-import { currentCameraStateAtom, INGREDIENTS } from "@/constants/constants";
+import { INGREDIENTS } from "@/constants/constants";
 import { useToppings } from "@/hooks/useToppings";
 import Ground from "../Ground";
 import SuspenseProgress from "../SuspenseProgress";
-import { PhysicsBodyWireframes } from "@/components/PhysicsBodyWireframes";
+import { PhysicsBodyWireframes } from "@/components/debug/PhysicsBodyWireframes";
 import { useThree } from "@react-three/fiber/native";
 import { RestrauntUpdated } from "../models/RestrauntUpdated";
-import { useSetAtom } from "jotai";
-import { generateRandomPos } from "@/utils/utils";
+import CustomerPath from "@/components/debug/CustomerPath";
 
-type Props = {};
-
-const GameExperience = (props: Props) => {
+const GameExperience = ({
+  debug = false,
+  visible,
+  ...props
+}: JSX.IntrinsicElements["group"] & { debug: boolean }) => {
   const [addTopping, lastAddedTopping, toppings] = useToppings((state) => [
     state.addTopping,
     state.lastAddedTopping,
@@ -25,30 +26,27 @@ const GameExperience = (props: Props) => {
   const { camera } = useThree();
 
   useEffect(() => {
-    (camera as PerspectiveCamera).fov = 50;
-    camera.updateProjectionMatrix();
-  }, []);
+    if (visible) {
+      (camera as PerspectiveCamera).fov = 50;
+      camera.updateProjectionMatrix();
+    }
+  }, [visible]);
 
   return (
-    <>
+    <group visible={visible} {...props}>
       <Environment preset="city" environmentIntensity={0.5} />
-      {/* <OrbitControls makeDefault /> */}
+      {debug && <OrbitControls makeDefault position={[0, 4, -20]} />}
       <directionalLight position={[2, 5, 2]} intensity={3}>
-        <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
+        {debug && <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />}
       </directionalLight>
       <color attach="background" args={["#f4511e"]} />
-      {/* {Platform.OS === "web" && <PhysicsBodyWireframes />} */}
       <Suspense fallback={<SuspenseProgress />}>
         <PhysicsProvider>
+          {debug && <PhysicsBodyWireframes />}
           <PizzaBaseInstances>
             <PizzaBaseModel position={{ x: 2.5, y: 4, z: -3.2 } as Vector3} />
           </PizzaBaseInstances>
-          <RestrauntUpdated
-            onPointerDown={() => {
-              // advanceCamera("advance");
-              // addTopping("olives", new Vector3(2.5, 6, -3.2), 2);
-            }}
-          />
+          <RestrauntUpdated />
           {Object.keys(INGREDIENTS).map((val, ind) => {
             const Instances = INGREDIENTS[val].Instances;
             const Model = INGREDIENTS[val].Model;
@@ -85,8 +83,9 @@ const GameExperience = (props: Props) => {
           })}
           <Ground position={[0, 2.55, 0]} />
         </PhysicsProvider>
+        <CustomerPath debug={debug} />
       </Suspense>
-    </>
+    </group>
   );
 };
 

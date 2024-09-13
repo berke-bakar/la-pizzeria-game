@@ -5,7 +5,13 @@ import { damp3, dampQ } from "maath/easing";
 import { useEffect, useRef } from "react";
 import { Euler, Quaternion, Vector3 } from "three";
 
-const CameraController = () => {
+type CameraControllerProps = {
+  debug: boolean;
+};
+
+const CameraController = ({ debug }: CameraControllerProps) => {
+  if (debug) return null;
+
   const cameraState = useAtomValue(currentCameraStateAtom);
   const statePosVector = useRef(
     new Vector3().fromArray(cameraState.position)

@@ -1,14 +1,6 @@
-import {
-  Float,
-  Outlines,
-  RoundedBox,
-  Sparkles,
-  Text3D,
-} from "@react-three/drei/native";
+import { Outlines, RoundedBox, Text3D } from "@react-three/drei/native";
 import { ThreeEvent } from "@react-three/fiber/native";
-import React, { useMemo, useRef, useState } from "react";
-import { Mesh, MeshStandardMaterial, Vector3 } from "three";
-// import fontPath from "../assets/fonts/Poppins_Bold.json";
+import React from "react";
 import fontPath from "../assets/fonts/BungeeSpice_Regular.json";
 import { useSpring, a, config } from "@react-spring/three";
 

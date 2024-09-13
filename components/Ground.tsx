@@ -16,7 +16,6 @@ const Ground = (props: JSX.IntrinsicElements["mesh"]) => {
     body.type = CANNON.BODY_TYPES.STATIC;
     if (props.position)
       body.position.set(...(props.position as [number, number, number]));
-    // body.position.set(0, 0.32, 2);
     body.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
   });
 

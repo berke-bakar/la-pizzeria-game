@@ -1,22 +1,24 @@
-import { View, Text } from "react-native";
-import React, { Suspense, useEffect, useState } from "react";
-import { useAtom } from "jotai";
+import React, { Suspense } from "react";
+import { useAtomValue } from "jotai";
 import { currentSceneAtom } from "@/constants/constants";
-import LoadingText from "./LoadingText";
 import SuspenseProgress from "./SuspenseProgress";
-import { PhysicsProvider } from "@/context/PhysicsProvider";
+import MenuExperience from "./experiences/MenuExperience";
+import GameExperience from "./experiences/GameExperience";
 
 type Props = {
-  scenes: Record<string, (props: any) => React.JSX.Element>;
+  debug: boolean;
 };
 
-const SceneLoader = ({ scenes }: Props) => {
-  const [currentSceneInfo, setCurrentSceneInfo] = useAtom(currentSceneAtom);
-  const CurrentScene = scenes[currentSceneInfo.currentScene];
+const SceneLoader = ({ debug }: Props) => {
+  const currentSceneInfo = useAtomValue(currentSceneAtom);
   return (
     <>
       <Suspense fallback={<SuspenseProgress />}>
-        <CurrentScene />
+        <MenuExperience visible={currentSceneInfo.currentScene === "menu"} />
+        <GameExperience
+          visible={currentSceneInfo.currentScene === "game"}
+          debug={debug}
+        />
       </Suspense>
     </>
   );
