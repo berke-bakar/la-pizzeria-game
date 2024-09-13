@@ -1,21 +1,24 @@
 import { SafeAreaView, StyleSheet } from "react-native";
 import React from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   currentCameraStateAtom,
   currentSceneAtom,
+  overlayTextAtom,
 } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
 import PizzaCoin from "./PizzaCoin";
 import CustomText from "../CustomText";
 import useGameStore from "@/hooks/useGameStore";
+import BackToHome from "./BackToHome";
 
 type Props = {};
 
 const HUD = (props: Props) => {
-  const [currentSceneInfo, setCurrentSceneInfo] = useAtom(currentSceneAtom);
+  const currentSceneInfo = useAtomValue(currentSceneAtom);
   const advanceCamera = useSetAtom(currentCameraStateAtom);
   const { money, dayCount } = useGameStore();
+  const setOverLayText = useSetAtom(overlayTextAtom);
 
   if (currentSceneInfo.currentScene != "game") {
     return null;
@@ -26,10 +29,7 @@ const HUD = (props: Props) => {
       <SafeAreaView style={styles.upper}>
         <AnimatedButton
           onPointerDown={() => {
-            setCurrentSceneInfo({
-              currentScene: "menu",
-              transitionNeeded: false,
-            });
+            setOverLayText({ OverlayItem: BackToHome, show: true });
           }}
         >
           Home
