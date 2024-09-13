@@ -37,7 +37,7 @@ const HUD = (props: Props) => {
         <CustomText style={styles.hudText}>DAY #{dayCount}</CustomText>
         <SafeAreaView style={styles.pizzaCoinContainer}>
           <PizzaCoin height={"100%"} width={100} />
-          <CustomText style={styles.hudText}>{money}$</CustomText>
+          <CustomText style={styles.hudText}>${money}</CustomText>
         </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.lower}>

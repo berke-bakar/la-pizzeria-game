@@ -43,105 +43,123 @@ import {
   TomatoInstances,
   TomatoModel,
 } from "@/components/models/Tomato_Slice_Tomato_0";
+import AnchoviesIcon from "../assets/images/toppings/anchovies.svg";
+import BaconIcon from "../assets/images/toppings/bacon.svg";
+import ChickenIcon from "../assets/images/toppings/chicken.svg";
+import HamIcon from "../assets/images/toppings/ham.svg";
+import MushroomIcon from "../assets/images/toppings/mushroom.svg";
+import OlivesIcon from "../assets/images/toppings/olives.svg";
+import OnionIcon from "../assets/images/toppings/onion.svg";
+import PeppersIcon from "../assets/images/toppings/peppers.svg";
+import PickleIcon from "../assets/images/toppings/pickle.svg";
+import PineappleIcon from "../assets/images/toppings/pineapple.svg";
+import SalamiIcon from "../assets/images/toppings/salami.svg";
+import SausageIcon from "../assets/images/toppings/sausage.svg";
+import ShrimpIcon from "../assets/images/toppings/shrimp.svg";
+import TomatoIcon from "../assets/images/toppings/tomato.svg";
+
 import { atom } from "jotai";
 import { atomWithReset } from "jotai/utils";
 import { State } from "./types";
 import { MathUtils } from "three";
 import { PeppersInstances, PeppersModel } from "@/components/models/Peppers";
 import { OlivesInstances, OlivesModel } from "@/components/models/Olives";
+import { Asset } from "expo-asset";
+import { SvgProps } from "react-native-svg";
 
 export const INGREDIENTS: Record<
   string,
   {
     Instances: (props: any) => React.JSX.Element;
     Model: (props: any) => React.JSX.Element;
-    icon: string;
+    icon: React.FC<SvgProps>;
     price: number;
   }
 > = {
   anchovies: {
     Instances: AnchoviesInstances,
     Model: AnchoviesModel,
-    icon: "🍞",
+    icon: AnchoviesIcon,
     price: 0,
   },
   bacon: {
     Instances: BaconInstances,
     Model: BaconModel,
-    icon: "🥓",
-    price: 0,
+    icon: BaconIcon,
+    price: 10,
   },
   chicken: {
     Instances: ChickenInstances,
     Model: ChickenModel,
-    icon: "🍗",
-    price: 0,
+    icon: ChickenIcon,
+    price: 10,
   },
   ham: {
     Instances: HamInstances,
     Model: HamModel,
-    icon: "🍖",
-    price: 0,
+    icon: HamIcon,
+    price: 10,
   },
   mushroom: {
     Instances: MushroomInstances,
     Model: MushroomModel,
-    icon: "🍄",
-    price: 0,
+    icon: MushroomIcon,
+    price: 10,
   },
   olives: {
     Instances: OlivesInstances,
     Model: OlivesModel,
-    icon: "⚫",
-    price: 0,
+    icon: OlivesIcon,
+    price: 10,
   },
   onion: {
     Instances: OnionInstances,
     Model: OnionModel,
-    icon: "🧅",
-    price: 0,
+    // icon: Asset.fromModule(require("../assets/images/toppings/onion.svg")).uri,
+    icon: OnionIcon,
+    price: 10,
   },
   peppers: {
     Instances: PeppersInstances,
     Model: PeppersModel,
-    icon: "🌶",
-    price: 0,
+    icon: PeppersIcon,
+    price: 10,
   },
   pickle: {
     Instances: PickleInstances,
     Model: PickleModel,
-    icon: "🌶",
-    price: 0,
+    icon: PickleIcon,
+    price: 20,
   },
   pineapple: {
     Instances: PineappleInstances,
     Model: PineappleModel,
-    icon: "🌶",
-    price: 0,
+    icon: PineappleIcon,
+    price: 30,
   },
   salami: {
     Instances: SalamiInstances,
     Model: SalamiModel,
-    icon: "🌶",
-    price: 0,
+    icon: SalamiIcon,
+    price: 40,
   },
   sausage: {
     Instances: SausageInstances,
     Model: SausageModel,
-    icon: "🌶",
-    price: 0,
+    icon: SausageIcon,
+    price: 50,
   },
   shrimp: {
     Instances: ShrimpInstances,
     Model: ShrimpModel,
-    icon: "🌶",
-    price: 0,
+    icon: ShrimpIcon,
+    price: 60,
   },
   tomato: {
     Instances: TomatoInstances,
     Model: TomatoModel,
-    icon: "🌶",
-    price: 0,
+    icon: TomatoIcon,
+    price: 70,
   },
 };
 

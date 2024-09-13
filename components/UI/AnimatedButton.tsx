@@ -7,11 +7,14 @@ import {
 } from "react-native";
 import CustomText from "../CustomText";
 
-const AnimatedButton = (
-  props: React.JSX.IntrinsicAttributes &
-    React.JSX.IntrinsicClassAttributes<PressableProps> &
-    Readonly<PressableProps> & { children: string }
-) => {
+type AnimatedButtonProps = React.JSX.IntrinsicAttributes &
+  React.JSX.IntrinsicClassAttributes<PressableProps> &
+  Readonly<PressableProps> & { children: string; disabled?: boolean };
+
+const AnimatedButton = ({
+  disabled = false,
+  ...props
+}: AnimatedButtonProps) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handleClick = (event: PointerEvent) => {
@@ -30,10 +33,11 @@ const AnimatedButton = (
 
   return (
     <Animated.View
-      style={{
-        ...styles.button,
-        transform: [{ scale: scaleAnim }],
-      }}
+      style={[
+        styles.button,
+        { transform: [{ scale: scaleAnim }] },
+        disabled ? styles.buttonDisabled : styles.buttonActive,
+      ]}
       onPointerDown={handleClick}
     >
       <CustomText style={{ color: "white", userSelect: "none" }}>
@@ -47,14 +51,22 @@ export default AnimatedButton;
 
 const styles = StyleSheet.create({
   button: {
-    borderColor: "#f4511e",
     borderStyle: "dashed",
     paddingHorizontal: 50,
     paddingVertical: 20,
     borderWidth: 8,
     borderRadius: 10,
-    backgroundColor: "#820300",
     userSelect: "none",
+  },
+
+  buttonActive: {
+    borderColor: "#f4511e",
+    backgroundColor: "#820300",
     cursor: "pointer",
+  },
+
+  buttonDisabled: {
+    borderColor: "#565656dc",
+    backgroundColor: "#7d7d7d",
   },
 });
