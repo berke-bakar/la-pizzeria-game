@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { useProgress } from "@react-three/drei";
-import { useAtom, useSetAtom } from "jotai";
-import { currentSceneAtom, progressAtom } from "@/constants/constants";
+import { useSetAtom } from "jotai";
+import {
+  cameraStateIndexAtom,
+  currentSceneAtom,
+  progressAtom,
+} from "@/constants/constants";
+import { useResetAtom } from "jotai/utils";
 
 type Props = {};
 
@@ -9,6 +14,7 @@ const SuspenseProgress = (props: Props) => {
   const { progress } = useProgress();
   const setProgress = useSetAtom(progressAtom);
   const setCurrentScene = useSetAtom(currentSceneAtom);
+  const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
   useEffect(() => {
     if (progress) {
       if (
@@ -19,6 +25,7 @@ const SuspenseProgress = (props: Props) => {
           currentScene: prev.currentScene,
           transitionNeeded: false,
         }));
+        resetCameraStateIndex();
         setProgress(0);
       } else {
         setProgress(progress);
