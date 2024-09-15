@@ -14,7 +14,10 @@ const SceneLoader = ({ debug }: Props) => {
   return (
     <>
       <Suspense fallback={<SuspenseProgress />}>
-        <MenuExperience visible={currentSceneInfo.currentScene === "menu"} />
+        <MenuExperience
+          visible={currentSceneInfo.currentScene === "menu"}
+          debug={debug}
+        />
         <GameExperience
           visible={currentSceneInfo.currentScene === "game"}
           debug={debug}

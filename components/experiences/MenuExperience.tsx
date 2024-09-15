@@ -19,8 +19,9 @@ import Store from "../UI/Store";
 
 const MenuExperience = ({
   visible,
+  debug,
   ...props
-}: JSX.IntrinsicElements["group"]) => {
+}: JSX.IntrinsicElements["group"] & { debug: boolean }) => {
   const { camera } = useThree();
   const setCurrentScene = useSetAtom(currentSceneAtom);
   const setOverlayText = useSetAtom(overlayTextAtom);
@@ -54,7 +55,9 @@ const MenuExperience = ({
       <color attach="background" args={["#f4511e"]} />
       <group visible={visible} {...props}>
         <directionalLight position={[-5, 5, 5]} intensity={5}>
-          {<Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />}
+          {debug && (
+            <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
+          )}
         </directionalLight>
 
         <BuildingsScene scale={2} position={[0, 0, -8]} rotation={[0, 0, 0]} />
