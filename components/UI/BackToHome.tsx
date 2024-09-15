@@ -5,6 +5,7 @@ import { useSetAtom } from "jotai";
 import {
   cameraStateIndexAtom,
   currentSceneAtom,
+  gamePhaseControllerAtom,
   overlayTextAtom,
 } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
@@ -15,6 +16,7 @@ const BackToHome = (props: Props) => {
   const setOverlayText = useSetAtom(overlayTextAtom);
   const setCurrentSceneInfo = useSetAtom(currentSceneAtom);
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
+  const updateGamePhase = useSetAtom(gamePhaseControllerAtom);
   const animRef = useRef(new Animated.Value(0.5)).current;
   const closeOverlay = useCallback(() => {
     return setOverlayText((prev) => ({ ...prev, show: false }));
@@ -49,6 +51,7 @@ const BackToHome = (props: Props) => {
               transitionNeeded: false,
             });
             resetCameraStateIndex();
+            updateGamePhase("reset");
             closeOverlay();
           }}
         >
