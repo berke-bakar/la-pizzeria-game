@@ -12,3 +12,10 @@ export type State = {
   position: [number, number, number];
   rotation: Vector3Like;
 };
+
+export type GamePhase = {
+  phase: string;
+  subphase: string;
+  specialButtonText?: string;
+  nextButtonText?: string;
+};
