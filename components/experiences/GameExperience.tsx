@@ -9,8 +9,10 @@ import Ground from "../Ground";
 import SuspenseProgress from "../SuspenseProgress";
 import { PhysicsBodyWireframes } from "@/components/debug/PhysicsBodyWireframes";
 import { useThree } from "@react-three/fiber/native";
-import { RestrauntUpdated } from "../models/RestrauntUpdated";
-import CustomerPath from "@/components/debug/CustomerPath";
+import { Customer } from "../models/Customer";
+import { Restraunt } from "../models/Restraunt";
+import { Oven } from "../models/Oven";
+import AnimationPath from "../debug/AnimationPaths";
 
 const GameExperience = ({
   debug = false,
@@ -28,6 +30,7 @@ const GameExperience = ({
   useEffect(() => {
     if (visible) {
       (camera as PerspectiveCamera).fov = 50;
+      if (debug) camera.position.set(0, 0, -30);
       camera.updateProjectionMatrix();
     }
   }, [visible]);
@@ -42,11 +45,13 @@ const GameExperience = ({
       <color attach="background" args={["#f4511e"]} />
       <Suspense fallback={<SuspenseProgress />}>
         <PhysicsProvider>
-          {debug && <PhysicsBodyWireframes />}
+          {/* {debug && <PhysicsBodyWireframes />}
           <PizzaBaseInstances>
             <PizzaBaseModel position={{ x: 2.5, y: 4, z: -3.2 } as Vector3} />
-          </PizzaBaseInstances>
-          <RestrauntUpdated />
+          </PizzaBaseInstances> */}
+          {/* <RestrauntUpdated /> */}
+          <Restraunt />
+          <Oven />
           {Object.keys(INGREDIENTS).map((val, ind) => {
             const Instances = INGREDIENTS[val].Instances;
             const Model = INGREDIENTS[val].Model;
@@ -82,8 +87,9 @@ const GameExperience = ({
             );
           })}
           <Ground position={[0, 2.55, 0]} />
+          <Customer scale={1.25} />
         </PhysicsProvider>
-        <CustomerPath debug={debug} />
+        <AnimationPath debug={debug} />
       </Suspense>
     </group>
   );
