@@ -11,12 +11,14 @@ import PizzaCoin from "./PizzaCoin";
 import CustomText from "../CustomText";
 import useGameStore from "@/hooks/useGameStore";
 import BackToHome from "./BackToHome";
+import SpecialButton from "./SpecialButton";
+import NextButton from "./NextButton";
 
 type Props = {};
 
 const HUD = (props: Props) => {
   const currentSceneInfo = useAtomValue(currentSceneAtom);
-  const advanceCamera = useSetAtom(currentCameraStateAtom);
+
   const { money, dayCount } = useGameStore();
   const setOverLayText = useSetAtom(overlayTextAtom);
 
@@ -43,18 +45,13 @@ const HUD = (props: Props) => {
       <SafeAreaView style={styles.lower}>
         <AnimatedButton
           onPointerDown={() => {
-            advanceCamera("retreat");
+            // advanceCamera("retreat");
           }}
         >
           Prev
         </AnimatedButton>
-        <AnimatedButton
-          onPointerDown={() => {
-            advanceCamera("advance");
-          }}
-        >
-          Next
-        </AnimatedButton>
+        <SpecialButton />
+        <NextButton />
       </SafeAreaView>
     </>
   );
@@ -75,7 +72,6 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     justifyContent: "space-between",
     alignItems: "center",
-    // backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
 
   lower: {
@@ -90,7 +86,6 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
     justifyContent: "space-between",
     alignItems: "center",
-    // backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
 
   pizzaCoinContainer: {
