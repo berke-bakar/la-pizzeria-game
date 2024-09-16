@@ -19,3 +19,5 @@ export type GamePhase = {
   specialButtonText?: string;
   nextButtonText?: string;
 };
+
+export type ToppingType = { id: number | number[]; initialPos: Vector3 };

@@ -41,11 +41,16 @@ export const useToppings = create<{
         usedId = results;
       }
 
+      let currentToppings = { ...state.toppings };
+      if (key === "pizzaBase" && currentToppings[key]) {
+        currentToppings[key] = [];
+      }
+
       return {
         toppings: {
-          ...state.toppings,
+          ...currentToppings,
           [key]: [
-            ...(state.toppings[key] || []),
+            ...(currentToppings[key] || []),
             {
               id: usedId,
               initialPos: initialPos,
@@ -56,7 +61,7 @@ export const useToppings = create<{
           id: usedId,
           initialPos: initialPos,
         },
-        total: state.total + INGREDIENTS[key].price,
+        total: state.total + (INGREDIENTS[key] ? INGREDIENTS[key].price : 0),
       };
     });
   },

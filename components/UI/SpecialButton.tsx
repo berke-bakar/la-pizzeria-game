@@ -7,6 +7,7 @@ import {
   gamePhaseControllerAtom,
 } from "@/constants/constants";
 import { useToppings } from "@/hooks/useToppings";
+import { Vector3 } from "three";
 
 type Props = {};
 
@@ -27,7 +28,8 @@ const SpecialButton = (props: Props) => {
     } else if (currentGamePhase.specialButtonText === "Spawn Pizza") {
       // TODO: Add spawn pizza logic
       clearToppings();
-      // TODO: Remove this later
+      addTopping("pizzaBase", new Vector3(2.5, 4, -3.2));
+
       updateGamePhase("advancePhase");
     } else if (currentGamePhase.specialButtonText == "Ready") {
       updateGamePhase("advancePhase");
