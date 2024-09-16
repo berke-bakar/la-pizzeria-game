@@ -318,12 +318,28 @@ const GAME_PHASES: Array<GamePhase> = [
   },
   {
     phase: "pizzaTakeOut",
+    subphase: "customerWalk",
+  },
+  {
+    phase: "pizzaTakeOut",
+    subphase: "packaging",
+  },
+  {
+    phase: "pizzaTakeOut",
     subphase: "nextButtonActive",
     nextButtonText: "Deliver",
   },
   {
     phase: "delivery",
+    subphase: "pizzaReveal",
+  },
+  {
+    phase: "delivery",
     subphase: "reaction",
+  },
+  {
+    phase: "delivery",
+    subphase: "getPaid",
   },
   {
     phase: "delivery",
