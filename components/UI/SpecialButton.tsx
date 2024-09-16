@@ -26,7 +26,6 @@ const SpecialButton = (props: Props) => {
     if (currentGamePhase.specialButtonText === "Take Order") {
       updateGamePhase("advancePhase");
     } else if (currentGamePhase.specialButtonText === "Spawn Pizza") {
-      // TODO: Add spawn pizza logic
       clearToppings();
       addTopping("pizzaBase", new Vector3(2.5, 4, -3.2));
 

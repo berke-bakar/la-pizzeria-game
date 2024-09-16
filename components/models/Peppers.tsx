@@ -28,7 +28,7 @@ const context = React.createContext({} as ContextType);
 export function PeppersInstances({
   children,
   ...props
-}: JSX.IntrinsicElements["group"] & { bodyId: number }) {
+}: JSX.IntrinsicElements["group"]) {
   const { nodes } = useGLTF(
     Asset.fromModule(require("../../assets/models/peppers.glb")).uri
   ) as GLTFResult;
