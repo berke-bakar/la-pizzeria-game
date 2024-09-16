@@ -149,8 +149,11 @@ export function Customer(props: JSX.IntrinsicElements["group"]) {
 
   const currentPath = useMemo(() => {
     if (currentGamePhase.subphase === "customerWalk")
-      return currentGamePhase.phase === "start" ? paths.path1 : paths.path3;
-    else if (currentGamePhase.subphase === "pizzaToBox") return paths.path2;
+      return currentGamePhase.phase === "start"
+        ? paths.path1
+        : currentGamePhase.phase === "pizzaTakeOut"
+        ? paths.path2
+        : paths.path3;
     return null;
   }, [currentGamePhase]);
 
@@ -173,39 +176,35 @@ export function Customer(props: JSX.IntrinsicElements["group"]) {
     }
 
     changeAnimation(currentGamePhase);
-
-    // return () => {
-    //   // mixer.stopAllAction();
-    // };
   }, [currentGamePhase, actions, mixer]);
 
   const resetCharacter = () => {
-    const randomIndex = Math.floor(Math.random() * characters.length);
+    // Preventing the same character to be generated twice
+    const availableChars =
+      selectedCharacter !== ""
+        ? characters.filter((val) => val !== selectedCharacter)
+        : characters;
+    const randomIndex = Math.floor(Math.random() * availableChars.length);
+
     if (group.current) {
       group.current.visible = false;
       group.current.position.set(0, 0, -18);
       group.current.rotation.set(0, 0, 0);
     }
-    setSelectedCharacter(characters[randomIndex]);
+    setSelectedCharacter(availableChars[randomIndex]);
   };
 
   const changeAnimation = (phaseIndex: GamePhase) => {
-    // mixer.stopAllAction();
     const prevAnim = currentAnimation.current;
     currentAnimation.current = actions["Idle"];
 
-    if (
-      phaseIndex.phase === "start" &&
-      phaseIndex.subphase === "customerWalk"
-    ) {
+    if (phaseIndex.subphase === "customerWalk") {
       currentAnimation.current = actions["Walking"];
     } else if (
       phaseIndex.phase === "takingOrder" &&
       phaseIndex.subphase === "takeOrderDialogue"
     ) {
       currentAnimation.current = actions["Ordering3"];
-    } else if (phaseIndex.subphase === "pizzaToBox") {
-      currentAnimation.current = actions["Walking"];
     }
     // Change animation, only when needed
     if (currentAnimation.current && currentAnimation.current !== prevAnim) {
