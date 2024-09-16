@@ -22,7 +22,7 @@ const NextButton = (props: Props) => {
   const handleClick = useCallback(() => {
     updateGamePhase("advancePhase");
     if (currentGamePhase.nextButtonText !== "Deliver") advanceCamera("advance");
-  }, [updateGamePhase, advanceCamera]);
+  }, [updateGamePhase, advanceCamera, currentGamePhase]);
 
   return (
     <AnimatedButton
