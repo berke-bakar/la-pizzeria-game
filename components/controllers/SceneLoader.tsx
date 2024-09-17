@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
 import { useAtomValue } from "jotai";
 import { currentSceneAtom } from "@/constants/constants";
-import SuspenseProgress from "./SuspenseProgress";
-import MenuExperience from "./experiences/MenuExperience";
-import GameExperience from "./experiences/GameExperience";
+import SuspenseProgress from "../SuspenseProgress";
+import MenuExperience from "../experiences/MenuExperience";
+import GameExperience from "../experiences/GameExperience";
 
 type Props = {
   debug: boolean;

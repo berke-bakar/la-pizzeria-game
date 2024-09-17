@@ -1,11 +1,4 @@
-import {
-  Animated,
-  Easing,
-  PointerEvent,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Animated, Easing, StyleSheet, View } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
@@ -13,14 +6,12 @@ import { INGREDIENTS, overlayTextAtom } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
 import PizzaCoin from "./PizzaCoin";
 import useGameStore from "@/hooks/useGameStore";
-import { SvgUri } from "react-native-svg";
-import { Asset } from "expo-asset";
 import StoreCard from "../StoreCard";
 type Props = {};
 
 const Store = (props: Props) => {
   const setOverlayText = useSetAtom(overlayTextAtom);
-  const { money, boughtToppings } = useGameStore();
+  const { wallet, boughtToppings } = useGameStore();
   const animRef = useRef(new Animated.Value(0.5)).current;
 
   useEffect(() => {
@@ -50,7 +41,7 @@ const Store = (props: Props) => {
         <CustomText style={styles.header}>Store</CustomText>
         <View style={styles.pizzaCoinContainer}>
           <PizzaCoin height={"100%"} width={100} />
-          <CustomText style={styles.currencyText}>${money}</CustomText>
+          <CustomText style={styles.currencyText}>${wallet}</CustomText>
         </View>
         <CustomText style={styles.info}>
           Surprise your customers with new delicious toppings...

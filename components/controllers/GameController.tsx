@@ -1,5 +1,5 @@
 import { RefObject, useContext, useEffect, useMemo, useRef } from "react";
-import AudioManager from "../AudioManager";
+import AudioManager from "./AudioManager";
 import { useAtom } from "jotai";
 import { gamePhaseControllerAtom } from "@/constants/constants";
 import { CustomerRefProps } from "../models/Customer";

@@ -37,7 +37,6 @@ const AnimationPath = ({ debug }: { debug: boolean }) => {
     }),
     []
   );
-  console.log(paths.customerPath1.getPoints(10));
 
   return (
     <>

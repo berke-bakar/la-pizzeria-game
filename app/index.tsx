@@ -3,14 +3,14 @@ import { StatusBar } from "expo-status-bar";
 import { Canvas } from "@react-three/fiber/native";
 import { Leva } from "leva";
 import StagePrep from "@/components/StagePrep";
-import SceneLoader from "@/components/SceneLoader";
+import SceneLoader from "@/components/controllers/SceneLoader";
 import LoadingText from "@/components/LoadingText";
-import OverlayTextPresenter from "@/components/OverlayTextPresenter";
+import OverlayTextPresenter from "@/components/controllers/OverlayTextPresenter";
 import { Bungee_400Regular, useFonts } from "@expo-google-fonts/bungee";
 import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
 import { Asset } from "expo-asset";
-import CameraController from "@/components/CameraController";
+import CameraController from "@/components/controllers/CameraController";
 import HUD from "@/components/UI/HUD";
 import Footer from "@/components/Footer";
 

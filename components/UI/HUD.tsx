@@ -1,11 +1,7 @@
 import { SafeAreaView, StyleSheet } from "react-native";
 import React from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import {
-  currentCameraStateAtom,
-  currentSceneAtom,
-  overlayTextAtom,
-} from "@/constants/constants";
+import { currentSceneAtom, overlayTextAtom } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
 import PizzaCoin from "./PizzaCoin";
 import CustomText from "../CustomText";
@@ -19,7 +15,7 @@ type Props = {};
 const HUD = (props: Props) => {
   const currentSceneInfo = useAtomValue(currentSceneAtom);
 
-  const { money, dayCount } = useGameStore();
+  const { wallet, dayCount } = useGameStore();
   const setOverLayText = useSetAtom(overlayTextAtom);
 
   if (currentSceneInfo.currentScene != "game") {
@@ -39,7 +35,7 @@ const HUD = (props: Props) => {
         <CustomText style={styles.hudText}>DAY #{dayCount}</CustomText>
         <SafeAreaView style={styles.pizzaCoinContainer}>
           <PizzaCoin height={"100%"} width={100} />
-          <CustomText style={styles.hudText}>${money}</CustomText>
+          <CustomText style={styles.hudText}>${wallet}</CustomText>
         </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.lower}>
