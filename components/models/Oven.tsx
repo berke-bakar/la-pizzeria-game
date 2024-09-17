@@ -1,10 +1,8 @@
 import * as THREE from "three";
-import React, { useEffect, useRef } from "react";
+import React, { forwardRef, Ref, useImperativeHandle, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
-import { gamePhaseControllerAtom } from "@/constants/constants";
-import { useAtom } from "jotai";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -24,46 +22,32 @@ type GLTFResult = GLTF & {
 interface GLTFAction extends THREE.AnimationClip {
   name: "Open" | "Close";
 }
+export type OvenRefProps = {
+  actions: Record<"Open" | "Close", THREE.AnimationAction | null>;
+  mixer: THREE.AnimationMixer;
+};
+export type OvenRef = Ref<OvenRefProps>;
 
-export function Oven(props: JSX.IntrinsicElements["group"]) {
+type OvenProps = Omit<JSX.IntrinsicElements["group"], "ref">;
+
+export const Oven = forwardRef<OvenRefProps, OvenProps>(function Oven(
+  props,
+  ref
+) {
   const group = useRef<THREE.Group>();
   const { nodes, materials, animations } = useGLTF(
     Asset.fromModule(require("../../assets/models/oven.glb")).uri
   ) as GLTFResult;
   const { actions, mixer } = useAnimations(animations as GLTFAction[], group);
-  const [currentGamePhase, updateGamePhase] = useAtom(gamePhaseControllerAtom);
 
-  function onAnimFinish() {
-    updateGamePhase("advancePhase");
-  }
-
-  useEffect(() => {
-    mixer.addEventListener("finished", onAnimFinish);
-    return () => mixer.removeEventListener("finished", onAnimFinish);
-  }, [mixer]);
-
-  useEffect(() => {
-    if (currentGamePhase.subphase === "ovenClose") {
-      const action = actions["Close"];
-      if (action) {
-        action.reset().setLoop(THREE.LoopOnce, 1).play();
-        action.clampWhenFinished = true;
-      }
-    } else if (currentGamePhase.subphase === "ovenOpen") {
-      const action = actions["Open"];
-      if (action) {
-        action.clampWhenFinished = true;
-        action
-          .crossFadeFrom(actions["Open"]!, 0.5, false)
-          .setLoop(THREE.LoopOnce, 1)
-          .play();
-      }
-    } else if (currentGamePhase.subphase === "waiting") {
-      setTimeout(() => {
-        updateGamePhase("advancePhase");
-      }, 3000);
-    }
-  }, [currentGamePhase]);
+  useImperativeHandle(
+    ref,
+    () => ({
+      mixer,
+      actions,
+    }),
+    [actions, mixer]
+  );
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -104,6 +88,6 @@ export function Oven(props: JSX.IntrinsicElements["group"]) {
       </group>
     </group>
   );
-}
+});
 
 useGLTF.preload(Asset.fromModule(require("../../assets/models/oven.glb")).uri);

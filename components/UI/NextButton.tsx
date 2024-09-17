@@ -21,7 +21,8 @@ const NextButton = (props: Props) => {
 
   const handleClick = useCallback(() => {
     updateGamePhase("advancePhase");
-    if (currentGamePhase.nextButtonText !== "Deliver") advanceCamera("advance");
+    advanceCamera("advance");
+    // if (currentGamePhase.nextButtonText !== "Deliver") advanceCamera("advance");
   }, [updateGamePhase, advanceCamera, currentGamePhase]);
 
   return (

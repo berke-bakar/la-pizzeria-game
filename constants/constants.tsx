@@ -192,11 +192,20 @@ export const CAMERA_STATES: Record<string, Array<State>> = {
         z: 0,
       },
     },
-    // Packaging and reaction
+    // Packaging
     {
       position: [8, 4, 0],
       rotation: {
         x: -MathUtils.DEG2RAD * 22.5,
+        y: 0,
+        z: 0,
+      },
+    },
+    // Reaction
+    {
+      position: [8, 4, 0],
+      rotation: {
+        x: MathUtils.DEG2RAD * 22.5,
         y: 0,
         z: 0,
       },
@@ -358,13 +367,10 @@ export const gamePhaseControllerAtom = atom(
     console.log("Current phase", GAME_PHASES[currentPhaseIndex]);
     return GAME_PHASES[currentPhaseIndex % GAME_PHASES.length];
   },
-  (get, set, action) => {
+  (get, set, action: "advancePhase" | "retreatPhase" | "reset") => {
     const currentPhaseIndex = get(currentPhaseIndexAtom);
     if (action === "advancePhase") {
-      set(
-        currentPhaseIndexAtom,
-        Math.min(currentPhaseIndex + 1, GAME_PHASES.length - 1)
-      );
+      set(currentPhaseIndexAtom, (currentPhaseIndex + 1) % GAME_PHASES.length);
     } else if (action === "retreatPhase") {
       set(currentPhaseIndexAtom, Math.max(currentPhaseIndex - 1, 0));
     } else if (action === "reset") {
