@@ -35,12 +35,12 @@ const MenuExperience = ({
 
   function handleStoreClick(evt: ThreeEvent<PointerEvent>) {
     evt.stopPropagation();
-    setOverlayText({ OverlayItem: Store, show: true });
+    setOverlayText({ OverlayItem: Store, show: true, closeable: true });
   }
 
   function handleHowToClick(evt: ThreeEvent<PointerEvent>) {
     evt.stopPropagation();
-    setOverlayText({ OverlayItem: HowToPlay, show: true });
+    setOverlayText({ OverlayItem: HowToPlay, show: true, closeable: true });
   }
 
   useEffect(() => {

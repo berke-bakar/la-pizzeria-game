@@ -239,9 +239,11 @@ export const progressAtom = atom(0);
 export const overlayTextAtom = atom<{
   show: boolean;
   OverlayItem: ((props: any) => JSX.Element) | null;
+  closeable?: boolean;
 }>({
   show: false,
   OverlayItem: null,
+  closeable: true,
 });
 /** Atom for controlling footer visibility */
 export const showFooterAtom = atom(true);
@@ -383,6 +385,10 @@ const GAME_PHASES: Array<GamePhase> = [
     phase: "delivery",
     subphase: "nextButtonActive",
     nextButtonText: "New Customer",
+  },
+  {
+    phase: "endGame",
+    subphase: "endGame",
   },
 ];
 

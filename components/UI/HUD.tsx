@@ -27,7 +27,11 @@ const HUD = (props: Props) => {
       <SafeAreaView style={styles.upper}>
         <AnimatedButton
           onPointerDown={() => {
-            setOverLayText({ OverlayItem: BackToHome, show: true });
+            setOverLayText({
+              OverlayItem: BackToHome,
+              show: true,
+              closeable: true,
+            });
           }}
         >
           Home

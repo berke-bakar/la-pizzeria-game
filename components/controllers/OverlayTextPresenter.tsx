@@ -3,17 +3,16 @@ import React, { useCallback } from "react";
 import { useAtom } from "jotai";
 import { overlayTextAtom } from "@/constants/constants";
 
-type Props = {};
-
-const OverlayTextPresenter = (props: Props) => {
+const OverlayTextPresenter = () => {
   const [overlayText, setOverlayText] = useAtom(overlayTextAtom);
 
   const handleClick = useCallback(
     (e: PointerEvent) => {
       e.stopPropagation();
-      setOverlayText((prev) => ({ ...prev, show: false }));
+      if (overlayText.closeable)
+        setOverlayText((prev) => ({ ...prev, show: false }));
     },
-    [setOverlayText]
+    [setOverlayText, overlayText]
   );
 
   if (!overlayText.OverlayItem) {

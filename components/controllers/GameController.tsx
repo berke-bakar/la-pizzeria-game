@@ -4,6 +4,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   customerOrderAtom,
   gamePhaseControllerAtom,
+  overlayTextAtom,
   showFooterAtom,
   typingFinishedAtom,
 } from "@/constants/constants";
@@ -28,6 +29,7 @@ import { useToppings } from "@/hooks/useToppings";
 import { SHAPE_TYPES } from "cannon-es";
 import { generateRandomPos } from "@/utils/utils";
 import { selectedToppingAtom } from "../models/ToppingsContainer";
+import EndOfDay from "../UI/EndOfDay";
 
 type GameControllerProps = {
   pizzaMakerRef: RefObject<PizzaMakerRefProps>;
@@ -68,7 +70,11 @@ const GameController = ({
   const { clearToppings } = useToppings();
   const setShowFooter = useSetAtom(showFooterAtom);
   const setCustomerOrder = useSetAtom(customerOrderAtom);
+  const setOverlayText = useSetAtom(overlayTextAtom);
   const typingFinished = useAtomValue(typingFinishedAtom);
+
+  const todaysCustomerCount = useRef(0);
+  const currentCustomerIndex = useRef(0);
 
   const customerPaths = useMemo(
     () => ({
@@ -158,7 +164,8 @@ const GameController = ({
   };
 
   const resetCharacter = () => {
-    // Preventing the same character to be generated twice
+    // Preventing the same character to be generated twice.
+    currentCustomerIndex.current = currentCustomerIndex.current + 1;
     customerRef.current?.setSelectedCharacter((selectedCharacter) => {
       const availableChars =
         selectedCharacter !== ""
@@ -223,11 +230,13 @@ const GameController = ({
 
   useEffect(() => {
     if (gameSceneVisible) {
-      audioManager
-        .loadAudio("../../assets/sounds/ShakeAndBake.mp3", "bgMusic")
-        .then(() => {
-          audioManager.playSection("bgMuisc", 0, 116);
-        });
+      // audioManager
+      //   .loadAudio("../../assets/sounds/ShakeAndBake.mp3", "bgMusic")
+      //   .then(() => {
+      //     audioManager.playSection("bgMusic", 0, 116);
+      //   });
+      todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
+      currentCustomerIndex.current = 0;
       setShowFooter(false);
     } else {
       setShowFooter(true);
@@ -355,6 +364,17 @@ const GameController = ({
         // TODO: Calculate toppings worth with a max value
         // TODO: Calculate emotional damage and increase decrease value according to that.
         updateGamePhase("advancePhase");
+      } else if (currentGamePhase.phase === "endGame") {
+        // Check if it is end of day, otherwise serve new customer
+        if (todaysCustomerCount.current === currentCustomerIndex.current) {
+          setOverlayText({
+            OverlayItem: EndOfDay,
+            show: true,
+            closeable: false,
+          });
+        } else {
+          updateGamePhase("advancePhase");
+        }
       }
 
       changeAnimation(currentGamePhase);
