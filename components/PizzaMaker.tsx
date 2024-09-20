@@ -5,6 +5,7 @@ import React, {
   RefObject,
   useContext,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -43,13 +44,14 @@ import {
 import { ShrimpInstances, ShrimpModel } from "./models/Shrimp_Slice_Shrimp_0";
 import { TomatoInstances, TomatoModel } from "./models/Tomato_Slice_Tomato_0";
 import { ThreeEvent } from "@react-three/fiber/native";
+import { useAtom, useAtomValue } from "jotai";
+import { gamePhaseControllerAtom } from "@/constants/constants";
+import { selectedToppingAtom } from "./models/ToppingsContainer";
+import { generateRandomPos } from "@/utils/utils";
 
 export type PizzaMakerRefProps = {
   group: RefObject<Group<Object3DEventMap> | undefined>;
   setFrustumCulled: React.Dispatch<React.SetStateAction<boolean>>;
-  handlePointerDown: MutableRefObject<
-    ((event: ThreeEvent<PointerEvent>) => void) | undefined
-  >;
 };
 export type PizzaMakerRef = Ref<PizzaMakerRefProps>;
 
@@ -57,11 +59,14 @@ type PizzaMakerProps = Omit<JSX.IntrinsicElements["group"], "ref">;
 
 const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
   function PizzaMaker(props, ref) {
-    const [lastAddedTopping, toppings] = useToppings((state) => [
+    const [lastAddedTopping, toppings, addTopping] = useToppings((state) => [
       state.lastAddedTopping,
       state.toppings,
+      state.addTopping,
     ]);
+    const selectedTopping = useAtomValue(selectedToppingAtom);
     const world = useContext(WorldContext);
+    const currentGamePhase = useAtomValue(gamePhaseControllerAtom);
     const group = useRef<Group>();
     const [frustumCulled, setFrustumCulled] = useState(false);
 
@@ -74,10 +79,21 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
       () => ({
         group: group,
         setFrustumCulled: setFrustumCulled,
-        handlePointerDown: handlePointerDown,
       }),
       [group, setFrustumCulled, handlePointerDown.current]
     );
+
+    const handleToppingAdd = useMemo(() => {
+      if (currentGamePhase.specialButtonText === "Ready") {
+        return (e: ThreeEvent<PointerEvent>) => {
+          addTopping(
+            selectedTopping,
+            generateRandomPos(1, 1, [2.5, 2.5, -3.2])
+          );
+        };
+      }
+      return undefined;
+    }, [currentGamePhase, selectedTopping]);
 
     const renderToppingsModels = (
       toppingType: string,
@@ -114,7 +130,7 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
     return (
       <group ref={group} dispose={null}>
         <PizzaBaseInstances
-          onPointerDown={handlePointerDown.current}
+          onPointerDown={handleToppingAdd}
           frustumCulled={false}
         >
           {renderToppingsModels(

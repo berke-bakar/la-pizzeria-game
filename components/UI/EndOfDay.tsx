@@ -20,13 +20,19 @@ import {
 import AnimatedButton from "./AnimatedButton";
 import { useResetAtom } from "jotai/utils";
 import useGameStore from "@/hooks/useGameStore";
+import { useToppings } from "@/hooks/useToppings";
 type Props = {};
 
 const EndOfDay = (props: Props) => {
   const setOverlayText = useSetAtom(overlayTextAtom);
-  const [dayCount, incrementDay] = useGameStore((state) => [
+  const [dayCount, incrementDay, addMoney] = useGameStore((state) => [
     state.dayCount,
     state.incrementDay,
+    state.addMoney,
+  ]);
+  const [total, clearTotal] = useToppings((state) => [
+    state.total,
+    state.clearTotal,
   ]);
   const animRef = useRef(new Animated.Value(0.5)).current;
   const closeOverlay = useCallback(() => {
@@ -60,7 +66,10 @@ const EndOfDay = (props: Props) => {
         }}
       >
         <CustomText style={styles.header}>End of Day #{dayCount}</CustomText>
-        <CustomText style={styles.info}>The day ended.</CustomText>
+        <CustomText style={styles.info}>
+          The day ended. Let's close the pizzeria
+        </CustomText>
+        <CustomText style={styles.info}>You earned ${total} today!</CustomText>
       </View>
       <AnimatedButton
         onPointerDown={() => {
@@ -71,6 +80,8 @@ const EndOfDay = (props: Props) => {
           });
           resetCameraStateIndex();
           updateGamePhase("reset");
+          addMoney(total);
+          clearTotal();
           incrementDay();
         }}
       >

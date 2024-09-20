@@ -1,4 +1,4 @@
-import { INGREDIENTS } from "@/constants/constants";
+import { INGREDIENTS, IngredientType } from "@/constants/constants";
 import { create } from "zustand";
 import * as THREE from "three";
 import { hashStringToNumber } from "@/utils/utils";
@@ -16,6 +16,8 @@ export const useToppings = create<{
     bodyCount?: number
   ) => void;
   clearToppings: () => void;
+  addToTotal: (amount: number) => void;
+  clearTotal: () => void;
 }>()((set) => ({
   toppings: {},
   lastAddedTopping: null,
@@ -61,10 +63,12 @@ export const useToppings = create<{
           id: usedId,
           initialPos: initialPos,
         },
-        total: state.total + (INGREDIENTS[key] ? INGREDIENTS[key].price : 0),
       };
     });
   },
   clearToppings: () =>
-    set((state) => ({ toppings: {}, lastAddedTopping: null, total: 0 })),
+    set((state) => ({ toppings: {}, lastAddedTopping: null })),
+  addToTotal: (amount: number) =>
+    set((state) => ({ total: state.total + amount })),
+  clearTotal: () => set(() => ({ total: 0 })),
 }));

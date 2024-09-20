@@ -4,6 +4,8 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   customerOrderAtom,
   gamePhaseControllerAtom,
+  INGREDIENTS,
+  IngredientType,
   overlayTextAtom,
   showFooterAtom,
   typingFinishedAtom,
@@ -27,7 +29,6 @@ import { PizzaBoxRefProps } from "../models/PizzaBox";
 import { OvenRefProps } from "../models/Oven";
 import { useToppings } from "@/hooks/useToppings";
 import { SHAPE_TYPES } from "cannon-es";
-import { generateRandomPos } from "@/utils/utils";
 import { selectedToppingAtom } from "../models/ToppingsContainer";
 import EndOfDay from "../UI/EndOfDay";
 
@@ -47,6 +48,8 @@ const characters = [
   "suitWoman",
   "worker",
 ];
+const MAX_TOPPING_COUNT = 5;
+const MIN_EARNING_PER_CUSTOMER = 10;
 
 const GameController = ({
   pizzaMakerRef,
@@ -57,9 +60,15 @@ const GameController = ({
 }: GameControllerProps) => {
   const world = useContext(WorldContext);
   const audioManager = useMemo(() => AudioManager.getInstance(), []);
-  const selectedTopping = useAtomValue(selectedToppingAtom);
   const [currentGamePhase, updateGamePhase] = useAtom(gamePhaseControllerAtom);
-  const addTopping = useToppings((state) => state.addTopping);
+  const [toppings, addTopping, clearToppings, addToTotal] = useToppings(
+    (state) => [
+      state.toppings,
+      state.addTopping,
+      state.clearToppings,
+      state.addToTotal,
+    ]
+  );
 
   const currentCustomerType = useRef<
     "casualMan" | "casualWoman" | "punk" | "suitMan" | "suitWoman" | "worker"
@@ -67,14 +76,14 @@ const GameController = ({
   const currentCustomerAnimTime = useRef(0);
   const currentPizzaAnimTime = useRef(0);
   const currentCustomerAnimation = useRef(customerRef.current?.actions["Idle"]);
-  const { clearToppings } = useToppings();
   const setShowFooter = useSetAtom(showFooterAtom);
-  const setCustomerOrder = useSetAtom(customerOrderAtom);
+  const [customerOrderInfo, setCustomerOrder] = useAtom(customerOrderAtom);
   const setOverlayText = useSetAtom(overlayTextAtom);
   const typingFinished = useAtomValue(typingFinishedAtom);
 
   const todaysCustomerCount = useRef(0);
   const currentCustomerIndex = useRef(0);
+  const currentCustomerRating = useRef(0);
 
   const customerPaths = useMemo(
     () => ({
@@ -193,8 +202,15 @@ const GameController = ({
     currentCustomerAnimation.current = customerRef.current?.actions["Idle"];
 
     if (phaseIndex.subphase === "customerWalk") {
-      currentCustomerAnimation.current =
-        customerRef.current?.actions["Walking"];
+      if (phaseIndex.phase === "delivery") {
+        currentCustomerAnimation.current =
+          currentCustomerRating.current < 2
+            ? customerRef.current?.actions["GoofyRun"]
+            : customerRef.current?.actions["Walking"];
+      } else {
+        currentCustomerAnimation.current =
+          customerRef.current?.actions["Walking"];
+      }
     } else if (
       phaseIndex.phase === "takingOrder" &&
       phaseIndex.subphase === "takeOrderDialogue"
@@ -202,8 +218,50 @@ const GameController = ({
       currentCustomerAnimation.current =
         customerRef.current?.actions["Ordering3"];
     } else if (phaseIndex.subphase === "reaction") {
-      currentCustomerAnimation.current =
-        customerRef.current?.actions["Surprised"];
+      let requestedToppingCount = 0;
+      Object.entries(toppings).forEach(([key, val], ind) => {
+        if (key === "pizzaBase") return;
+        if (
+          customerOrderInfo.order.includes(key as IngredientType) &&
+          val.length > 0
+        ) {
+          requestedToppingCount++;
+        }
+      });
+      const pizzaRating = Math.floor(
+        Math.ceil(
+          (requestedToppingCount / customerOrderInfo.order.length) * 100
+        ) / 25
+      );
+      currentCustomerRating.current = pizzaRating;
+      switch (pizzaRating) {
+        case 0: // Terrified
+          currentCustomerAnimation.current =
+            customerRef.current?.actions["Terrified"];
+          break;
+        case 1: // Angry
+          currentCustomerAnimation.current =
+            customerRef.current?.actions["Angry"];
+          break;
+        case 2: // Unhappy
+          currentCustomerAnimation.current =
+            customerRef.current?.actions["Unhappy"];
+          break;
+        case 3: // A bit surprised
+          currentCustomerAnimation.current =
+            customerRef.current?.actions["Surprised"];
+          break;
+        case 4: // Surprised
+          currentCustomerAnimation.current =
+            customerRef.current?.actions["Surprised"];
+          break;
+        default:
+          // Shouldn't happen
+          currentCustomerAnimation.current =
+            customerRef.current?.actions["Idle"];
+          break;
+      }
+      // currentCustomerAnimation.current?.setDuration(2);
       currentCustomerAnimation.current!.clampWhenFinished = true;
     }
     // Change animation, only when needed
@@ -230,12 +288,8 @@ const GameController = ({
 
   useEffect(() => {
     if (gameSceneVisible) {
-      // audioManager
-      //   .loadAudio("../../assets/sounds/ShakeAndBake.mp3", "bgMusic")
-      //   .then(() => {
-      //     audioManager.playSection("bgMusic", 0, 116);
-      //   });
       todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
+      // todaysCustomerCount.current = 1;
       currentCustomerIndex.current = 0;
       setShowFooter(false);
     } else {
@@ -308,15 +362,7 @@ const GameController = ({
         pizzaBoxRef.current?.group.current?.rotation.set(0, 0, 0);
         pizzaBoxRef.current?.mixer.stopAllAction();
         setCustomerOrder((prev) => ({ ...prev, show: true }));
-      } else if (currentGamePhase.specialButtonText === "Ready") {
-        pizzaMakerRef.current!.handlePointerDown.current = (e) => {
-          addTopping(
-            selectedTopping,
-            generateRandomPos(1, 1, [2.5, 2.5, -3.2])
-          );
-        };
       } else if (currentGamePhase.nextButtonText === "Bake" && world) {
-        pizzaMakerRef.current!.handlePointerDown.current = undefined;
         [...world.bodies].forEach((val) =>
           val.shapes[0].type !== SHAPE_TYPES.PLANE
             ? world.removeBody(val)
@@ -360,9 +406,42 @@ const GameController = ({
           action.reset().play();
         }
       } else if (currentGamePhase.subphase === "getPaid") {
-        // TODO: Implement this part
-        // TODO: Calculate toppings worth with a max value
-        // TODO: Calculate emotional damage and increase decrease value according to that.
+        let sum = 0;
+        Object.entries(toppings).forEach(([key, val]) => {
+          if (key === "pizzaBase") return;
+          const maxEarningPerTopping =
+            INGREDIENTS[key as IngredientType].unitPrice *
+            Math.min(val.length, MAX_TOPPING_COUNT);
+          sum += maxEarningPerTopping;
+        });
+        let customerTipMultiplier = 1;
+        switch (currentCustomerRating.current) {
+          case 0: // Terrified
+            customerTipMultiplier = 0.5;
+            break;
+          case 1: // Angry
+            customerTipMultiplier = 0.85;
+            break;
+          case 2: // Unhappy
+            customerTipMultiplier = 1.0;
+            break;
+          case 3: // A bit surprised
+            customerTipMultiplier = 1.0;
+            break;
+          case 4: // Surprised
+            customerTipMultiplier = 1.3;
+            break;
+          default:
+            // Shouldn't happen
+            customerTipMultiplier = 1;
+            break;
+        }
+        const totalEarned = Math.max(
+          sum * customerTipMultiplier,
+          MIN_EARNING_PER_CUSTOMER
+        );
+        // console.log("Earned:", totalEarned, "rating:", pizzaRating);
+        addToTotal(totalEarned);
         updateGamePhase("advancePhase");
       } else if (currentGamePhase.phase === "endGame") {
         // Check if it is end of day, otherwise serve new customer
