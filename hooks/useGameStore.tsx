@@ -1,14 +1,14 @@
-import { INGREDIENTS } from "@/constants/constants";
+import { IngredientType } from "@/constants/constants";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface GameState {
   wallet: number;
   dayCount: number;
-  boughtToppings: string[];
+  boughtToppings: IngredientType[];
   addMoney: (amount: number) => void;
   incrementDay: () => void;
-  buyTopping: (topping: string, price: number) => void;
+  buyTopping: (topping: IngredientType, price: number) => void;
 }
 
 const useGameStore = create<GameState>()(

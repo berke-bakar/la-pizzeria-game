@@ -5,6 +5,7 @@ import React, {
   useContext,
   useImperativeHandle,
   useRef,
+  useState,
 } from "react";
 import { INGREDIENTS } from "@/constants/constants";
 import { PizzaBaseInstances, PizzaBaseModel } from "./models/PizzaBase";
@@ -42,9 +43,12 @@ import {
 } from "./models/Sausage_Slice_Sausage_0";
 import { ShrimpInstances, ShrimpModel } from "./models/Shrimp_Slice_Shrimp_0";
 import { TomatoInstances, TomatoModel } from "./models/Tomato_Slice_Tomato_0";
+import { useAtomValue } from "jotai";
+import { selectedToppingAtom } from "./models/ToppingsContainer";
 
 export type PizzaMakerRefProps = {
   group: RefObject<Group<Object3DEventMap> | undefined>;
+  setFrustumCulled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export type PizzaMakerRef = Ref<PizzaMakerRefProps>;
 
@@ -58,14 +62,17 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
       state.toppings,
     ]);
     const world = useContext(WorldContext);
+    const selectedTopping = useAtomValue(selectedToppingAtom);
     const group = useRef<Group>();
+    const [frustumCulled, setFrustumCulled] = useState(false);
 
     useImperativeHandle(
       ref,
       () => ({
         group: group,
+        setFrustumCulled: setFrustumCulled,
       }),
-      [group]
+      [group, setFrustumCulled]
     );
 
     const renderToppingsModels = (
@@ -104,11 +111,8 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
       <group ref={group} dispose={null}>
         <PizzaBaseInstances
           onPointerDown={() => {
-            const toppingList = Object.keys(INGREDIENTS);
-            const randomTopping =
-              toppingList[Math.floor(Math.random() * (toppingList.length - 1))];
             addTopping(
-              randomTopping,
+              selectedTopping,
               generateRandomPos(1, 1, [2.5, 2.5, -3.2])
             );
           }}
@@ -120,58 +124,58 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
             toppings["pizzaBase"]
           )}
         </PizzaBaseInstances>
-        <AnchoviesInstances frustumCulled={false}>
+        <AnchoviesInstances frustumCulled={frustumCulled}>
           {renderToppingsModels(
             "anchovies",
             AnchoviesModel,
             toppings["anchovies"]
           )}
         </AnchoviesInstances>
-        <BaconInstances frustumCulled={false}>
+        <BaconInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("bacon", BaconModel, toppings["bacon"])}
         </BaconInstances>
-        <ChickenInstances frustumCulled={false}>
+        <ChickenInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("chicken", ChickenModel, toppings["chicken"])}
         </ChickenInstances>
-        <HamInstances frustumCulled={false}>
+        <HamInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("ham", HamModel, toppings["ham"])}
         </HamInstances>
-        <MushroomInstances frustumCulled={false}>
+        <MushroomInstances frustumCulled={frustumCulled}>
           {renderToppingsModels(
             "mushroom",
             MushroomModel,
             toppings["mushroom"]
           )}
         </MushroomInstances>
-        <OlivesInstances frustumCulled={false}>
+        <OlivesInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("olives", OlivesModel, toppings["olives"])}
         </OlivesInstances>
-        <OnionInstances frustumCulled={false}>
+        <OnionInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("onion", OnionModel, toppings["onion"])}
         </OnionInstances>
-        <PeppersInstances frustumCulled={false}>
+        <PeppersInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("peppers", PeppersModel, toppings["peppers"])}
         </PeppersInstances>
-        <PickleInstances frustumCulled={false}>
+        <PickleInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("pickle", PickleModel, toppings["pickle"])}
         </PickleInstances>
-        <PineappleInstances frustumCulled={false}>
+        <PineappleInstances frustumCulled={frustumCulled}>
           {renderToppingsModels(
             "pineapple",
             PineappleModel,
             toppings["pineapple"]
           )}
         </PineappleInstances>
-        <SalamiInstances frustumCulled={false}>
+        <SalamiInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("salami", SalamiModel, toppings["salami"])}
         </SalamiInstances>
-        <SausageInstances frustumCulled={false}>
+        <SausageInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("sausage", SausageModel, toppings["sausage"])}
         </SausageInstances>
-        <ShrimpInstances frustumCulled={false}>
+        <ShrimpInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("shrimp", ShrimpModel, toppings["shrimp"])}
         </ShrimpInstances>
-        <TomatoInstances frustumCulled={false}>
+        <TomatoInstances frustumCulled={frustumCulled}>
           {renderToppingsModels("tomato", TomatoModel, toppings["tomato"])}
         </TomatoInstances>
       </group>

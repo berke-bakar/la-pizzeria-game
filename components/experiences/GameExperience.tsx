@@ -13,10 +13,11 @@ import AnimationPath from "../debug/AnimationPaths";
 import PizzaMaker, { PizzaMakerRef, PizzaMakerRefProps } from "../PizzaMaker";
 import { PizzaBox, PizzaBoxRefProps } from "../models/PizzaBox";
 import GameController from "../controllers/GameController";
+import { ToppingsContainer } from "../models/ToppingsContainer";
 
 const GameExperience = ({
   debug = false,
-  visible,
+  visible = false,
   ...props
 }: JSX.IntrinsicElements["group"] & { debug: boolean }) => {
   const { camera } = useThree();
@@ -48,6 +49,7 @@ const GameExperience = ({
       <PhysicsProvider>
         {debug && <PhysicsBodyWireframes />}
         <Restraunt />
+        <ToppingsContainer />
         <Ground position={[0, 2.55, 0]} />
         <PizzaMaker ref={pizzaMakerRef} />
         <Oven ref={ovenRef} />
@@ -58,6 +60,7 @@ const GameExperience = ({
           ovenRef={ovenRef}
           pizzaMakerRef={pizzaMakerRef}
           pizzaBoxRef={pizzaBoxRef}
+          gameSceneVisible={visible}
         />
       </PhysicsProvider>
       <AnimationPath debug={debug} />
