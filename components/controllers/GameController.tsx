@@ -31,6 +31,7 @@ import { useToppings } from "@/hooks/useToppings";
 import { SHAPE_TYPES } from "cannon-es";
 import { selectedToppingAtom } from "../models/ToppingsContainer";
 import EndOfDay from "../UI/EndOfDay";
+import useGameStore from "@/hooks/useGameStore";
 
 type GameControllerProps = {
   pizzaMakerRef: RefObject<PizzaMakerRefProps>;
@@ -69,6 +70,7 @@ const GameController = ({
       state.addToTotal,
     ]
   );
+  const boughtToppings = useGameStore((state) => state.boughtToppings);
 
   const currentCustomerType = useRef<
     "casualMan" | "casualWoman" | "punk" | "suitMan" | "suitWoman" | "worker"
@@ -163,10 +165,19 @@ const GameController = ({
     return null;
   }, [currentGamePhase]);
 
+  const generateOrder = () => {
+    const toppingCount = Math.floor(Math.random() * 5);
+    const order = [...boughtToppings]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, toppingCount);
+
+    return order;
+  };
+
   const resetOrder = () => {
-    // const order = generateOrder();
+    const order = generateOrder();
     setCustomerOrder({
-      order: ["anchovies", "bacon", "mushroom"],
+      order: order,
       selectedCharacter: currentCustomerType.current,
       show: false,
     });
