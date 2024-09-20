@@ -17,10 +17,7 @@ const SuspenseProgress = (props: Props) => {
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
   useEffect(() => {
     if (progress) {
-      if (
-        100 - Number.EPSILON <= progress &&
-        progress >= 100 + Number.EPSILON
-      ) {
+      if (progress === 100) {
         setCurrentScene((prev) => ({
           currentScene: prev.currentScene,
           transitionNeeded: false,
