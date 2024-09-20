@@ -1,10 +1,10 @@
 import * as THREE from "three";
-import React, { forwardRef, Ref, useEffect, useImperativeHandle } from "react";
+import React, { forwardRef, Ref, RefObject, useImperativeHandle } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
 
-type ActionName = "LidClose" | "LidOpen";
+type ActionName = "LidClose" | "LidOpen" | "Peek";
 
 interface GLTFAction extends THREE.AnimationClip {
   name: ActionName;
@@ -22,8 +22,9 @@ type GLTFResult = GLTF & {
 };
 
 export type PizzaBoxRefProps = {
-  actions: Record<"LidOpen" | "LidClose", THREE.AnimationAction | null>;
+  actions: Record<ActionName, THREE.AnimationAction | null>;
   mixer: THREE.AnimationMixer;
+  group: RefObject<THREE.Group<THREE.Object3DEventMap> | undefined>;
 };
 
 export type PizzaBoxRef = Ref<PizzaBoxRefProps>;
@@ -41,6 +42,7 @@ export const PizzaBox = forwardRef<PizzaBoxRefProps, PizzaBoxProps>(
     useImperativeHandle(
       ref,
       () => ({
+        group: group,
         actions: actions,
         mixer: mixer,
       }),
@@ -48,19 +50,18 @@ export const PizzaBox = forwardRef<PizzaBoxRefProps, PizzaBoxProps>(
     );
 
     return (
-      <group ref={group} {...props} dispose={null}>
+      <group ref={group} position={[8, 2.608, -3.2]} {...props} dispose={null}>
         <group name="Scene">
           <mesh
             name="lid"
             geometry={nodes.lid.geometry}
             material={materials._defaultMat}
-            position={[8, 2.764, -4.3]}
+            position={[0, 0.156, -1.1]}
           />
           <mesh
             name="pizzaBox"
             geometry={nodes.pizzaBox.geometry}
             material={materials._defaultMat}
-            position={[8, 2.608, -3.2]}
           />
         </group>
       </group>

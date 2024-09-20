@@ -1,18 +1,20 @@
 import { RefObject, useContext, useEffect, useMemo, useRef } from "react";
 import AudioManager from "./AudioManager";
-import { useAtom } from "jotai";
-import { gamePhaseControllerAtom } from "@/constants/constants";
+import { useAtom, useSetAtom } from "jotai";
+import { gamePhaseControllerAtom, showFooterAtom } from "@/constants/constants";
 import { CustomerRefProps } from "../models/Customer";
 import { GamePhase } from "@/constants/types";
 import {
+  AnimationAction,
   CatmullRomCurve3,
+  EulerOrder,
   LineCurve3,
   LoopOnce,
   LoopRepeat,
   Vector3,
 } from "three";
 import { useFrame } from "@react-three/fiber/native";
-import { damp3 } from "maath/easing";
+import { damp3, dampE, linear } from "maath/easing";
 import { WorldContext } from "@/context/PhysicsProvider";
 import { PizzaMakerRefProps } from "../PizzaMaker";
 import { PizzaBoxRefProps } from "../models/PizzaBox";
@@ -25,6 +27,7 @@ type GameControllerProps = {
   customerRef: RefObject<CustomerRefProps>;
   ovenRef: RefObject<OvenRefProps>;
   pizzaBoxRef: RefObject<PizzaBoxRefProps>;
+  gameSceneVisible: boolean;
 };
 
 const characters = [
@@ -41,6 +44,7 @@ const GameController = ({
   customerRef,
   ovenRef,
   pizzaBoxRef,
+  gameSceneVisible,
 }: GameControllerProps) => {
   const world = useContext(WorldContext);
   const audioManager = useMemo(() => AudioManager.getInstance(), []);
@@ -49,19 +53,20 @@ const GameController = ({
   const currentPizzaAnimTime = useRef(0);
   const currentCustomerAnimation = useRef(customerRef.current?.actions["Idle"]);
   const { clearToppings } = useToppings();
+  const setShowFooter = useSetAtom(showFooterAtom);
 
   const customerPaths = useMemo(
     () => ({
       customerPath1: new LineCurve3(
         new Vector3(0, 0, -18),
-        new Vector3(0, 0, -4)
+        new Vector3(0, 0, -5)
       ),
       customerPath2: new LineCurve3(
-        new Vector3(0, 0, -6),
-        new Vector3(6, 0, -6)
+        new Vector3(0, 0, -5),
+        new Vector3(6.25, 0, -5)
       ),
       customerPath3: new CatmullRomCurve3([
-        new Vector3(6, 0, -6),
+        new Vector3(6.25, 0, -5),
         new Vector3(5, 0, -12),
         new Vector3(3, 0, -12),
         new Vector3(0, 0, -18),
@@ -76,13 +81,13 @@ const GameController = ({
         new Vector3(0, 0, 0),
         new Vector3(0, 0.5, 4.2),
         new Vector3(0.8, 1.2, 6.2),
-        new Vector3(1.6, 0.9, 8.2),
+        new Vector3(1.8, 0.77, 8.8),
       ]),
       pizzaToBox: new CatmullRomCurve3([
         new Vector3(1.6, 0.9, 8.2),
         new Vector3(1.1, 1.2, 6.2),
-        new Vector3(0.6, 0.5, 4.2),
-        new Vector3(5.5, 0, 0),
+        new Vector3(0.6, 0.6, 4.2),
+        new Vector3(6.25, -0.1, -0.7),
       ]),
     }),
     []
@@ -98,11 +103,33 @@ const GameController = ({
     return null;
   }, [currentGamePhase]);
 
+  const currentCustomerRotation = useMemo(() => {
+    if (currentGamePhase.subphase === "customerRotate")
+      return [0, -Math.PI, 0] as [
+        x: number,
+        y: number,
+        z: number,
+        order?: EulerOrder | undefined
+      ];
+    return null;
+  }, [currentGamePhase]);
+
   const currentPizzaPath = useMemo(() => {
     if (currentGamePhase.subphase === "pizzaToOven")
       return pizzaPaths.pizzaToOven;
     else if (currentGamePhase.subphase === "pizzaToBox")
       return pizzaPaths.pizzaToBox;
+    return null;
+  }, [currentGamePhase]);
+
+  const currentPizzaBoxRotation = useMemo(() => {
+    if (currentGamePhase.subphase === "pizzaRotate")
+      return [0, Math.PI, 0] as [
+        x: number,
+        y: number,
+        z: number,
+        order?: EulerOrder | undefined
+      ];
     return null;
   }, [currentGamePhase]);
 
@@ -166,8 +193,26 @@ const GameController = ({
   };
 
   useEffect(() => {
-    const onAnimFinish = (e: any) => {
-      console.log("anim finished:", e.action.getClip().name);
+    if (gameSceneVisible) {
+      audioManager
+        .loadAudio("../../assets/sounds/ShakeAndBake.mp3", "bgMusic")
+        .then(() => {
+          audioManager.playSection("bgMuisc", 0, 116);
+        });
+      setShowFooter(false);
+    } else {
+      setShowFooter(true);
+    }
+  }, [gameSceneVisible]);
+
+  useEffect(() => {
+    const onAnimFinish = (e: {
+      action: AnimationAction;
+      direction: number;
+    }) => {
+      if (e.action.getClip().name === "LidClose" && pizzaMakerRef.current) {
+        pizzaMakerRef.current.setFrustumCulled(true);
+      }
       updateGamePhase("advancePhase");
     };
 
@@ -201,75 +246,78 @@ const GameController = ({
   }, []);
 
   useEffect(() => {
-    if (currentGamePhase.subphase === "generateCustomer") {
-      resetCharacter();
-      pizzaMakerRef.current?.group.current?.position.set(0, 0.01, 0);
-      clearToppings();
-      updateGamePhase("advancePhase");
-    } else if (currentGamePhase.subphase === "takeOrderDialogue") {
-      setTimeout(() => {
-        //TODO: Remove later
+    if (gameSceneVisible) {
+      if (currentGamePhase.subphase === "generateCustomer") {
+        resetCharacter();
+        pizzaMakerRef.current?.group.current?.position.set(0, 0.01, 0);
+        clearToppings();
         updateGamePhase("advancePhase");
-      }, 2000);
-    } else if (currentGamePhase.nextButtonText === "Bake" && world) {
-      [...world.bodies].forEach((val) =>
-        val.shapes[0].type !== SHAPE_TYPES.PLANE ? world.removeBody(val) : null
-      );
-    } else if (currentGamePhase.subphase === "ovenClose") {
-      const action = ovenRef.current?.actions["Close"];
-      ovenRef.current?.mixer.stopAllAction();
-      if (action) {
-        action.clampWhenFinished = true;
-        action.reset().setLoop(LoopOnce, 1).play();
-      }
-    } else if (currentGamePhase.subphase === "waiting") {
-      setTimeout(() => {
-        updateGamePhase("advancePhase");
-      }, 3000);
-    } else if (currentGamePhase.subphase === "ovenOpen") {
-      const action = ovenRef.current?.actions["Open"];
-      if (action) {
-        action.clampWhenFinished = true;
-        action
-          .crossFadeFrom(ovenRef.current?.actions["Close"]!, 0.5, false)
-          .setLoop(LoopOnce, 1)
-          .play();
-      }
-    } else if (currentGamePhase.subphase === "pizzaToBox") {
-      customerRef.current?.group.current?.rotation.set(0, Math.PI / 2, 0);
-    } else if (currentGamePhase.subphase === "packaging") {
-      const action = pizzaBoxRef.current?.actions["LidClose"];
-      if (action) {
-        action.loop = LoopOnce;
-        action.clampWhenFinished = true;
-        action.reset().play();
-      }
-    } else if (
-      currentGamePhase.nextButtonText &&
-      currentGamePhase.nextButtonText === "Deliver"
-    ) {
-      customerRef.current?.group.current?.rotation.set(0, 0, 0);
-    } else if (currentGamePhase.subphase === "pizzaReveal") {
-      const action = pizzaBoxRef.current?.actions["LidOpen"];
-      if (action) {
+      } else if (currentGamePhase.subphase === "takeOrderDialogue") {
+        // reset box rotation and animation while not looking
+        pizzaBoxRef.current?.group.current?.rotation.set(0, 0, 0);
         pizzaBoxRef.current?.mixer.stopAllAction();
-        action.loop = LoopOnce;
-        action.reset().play();
+        setTimeout(() => {
+          //TODO: Remove later
+          updateGamePhase("advancePhase");
+        }, 2000);
+      } else if (currentGamePhase.nextButtonText === "Bake" && world) {
+        [...world.bodies].forEach((val) =>
+          val.shapes[0].type !== SHAPE_TYPES.PLANE
+            ? world.removeBody(val)
+            : null
+        );
+      } else if (currentGamePhase.subphase === "ovenClose") {
+        const action = ovenRef.current?.actions["Close"];
+        ovenRef.current?.mixer.stopAllAction();
+        if (action) {
+          action.clampWhenFinished = true;
+          action.reset().setLoop(LoopOnce, 1).play();
+        }
+      } else if (currentGamePhase.subphase === "waiting") {
+        setTimeout(() => {
+          updateGamePhase("advancePhase");
+        }, 3000);
+      } else if (currentGamePhase.subphase === "ovenOpen") {
+        const action = ovenRef.current?.actions["Open"];
+        if (action) {
+          action.clampWhenFinished = true;
+          action
+            .crossFadeFrom(ovenRef.current?.actions["Close"]!, 0.5, false)
+            .setLoop(LoopOnce, 1)
+            .play();
+        }
+      } else if (currentGamePhase.subphase === "pizzaToBox") {
+        customerRef.current?.group.current?.rotation.set(0, Math.PI / 2, 0);
+      } else if (currentGamePhase.subphase === "packaging") {
+        const action = pizzaBoxRef.current?.actions["LidClose"];
+        if (action) {
+          action.loop = LoopOnce;
+          action.clampWhenFinished = true;
+          action.reset().play();
+        }
+      } else if (currentGamePhase.subphase === "pizzaReveal") {
+        const action = pizzaBoxRef.current?.actions["Peek"];
+        if (action) {
+          pizzaBoxRef.current?.mixer.stopAllAction();
+          action.loop = LoopOnce;
+          action.clampWhenFinished = true;
+          action.reset().play();
+        }
+      } else if (currentGamePhase.subphase === "getPaid") {
+        // TODO: Implement this part
+        // TODO: Calculate toppings worth with a max value
+        // TODO: Calculate emotional damage and increase decrease value according to that.
+        updateGamePhase("advancePhase");
       }
-    } else if (currentGamePhase.subphase === "getPaid") {
-      // TODO: Implement this part
-      // TODO: Calculate toppings worth with a max value
-      // TODO: Calculate emotional damage and increase decrease value according to that.
-      updateGamePhase("advancePhase");
-    }
 
-    changeAnimation(currentGamePhase);
-  }, [currentGamePhase]);
+      changeAnimation(currentGamePhase);
+    }
+  }, [currentGamePhase, gameSceneVisible]);
 
   useFrame((state, delta) => {
     if (currentCustomerPath && customerRef.current?.group.current) {
       currentCustomerAnimTime.current = Math.min(
-        currentCustomerAnimTime.current + delta * 0.2,
+        currentCustomerAnimTime.current + delta * 0.3,
         1
       );
       const pointOnPath = currentCustomerPath.getPointAt(
@@ -278,14 +326,37 @@ const GameController = ({
       damp3(
         customerRef.current?.group.current?.position as Vector3,
         pointOnPath,
-        0.3,
-        delta
+        0,
+        currentCustomerAnimTime.current
       );
+
       if (currentCustomerAnimTime.current >= 1) {
         currentCustomerAnimTime.current = 0;
+        // Rotate to counter at the end of the walking
+        if (
+          currentGamePhase.phase === "pizzaTakeOut" &&
+          currentGamePhase.subphase === "customerWalk"
+        ) {
+          customerRef.current?.group.current?.rotation.set(0, 0, 0);
+        }
         updateGamePhase("advancePhase");
       }
     }
+
+    if (currentCustomerRotation && customerRef.current?.group.current) {
+      const isMoved = dampE(
+        customerRef.current?.group.current?.rotation,
+        currentCustomerRotation,
+        1,
+        delta,
+        0.2,
+        linear
+      );
+      if (!isMoved) {
+        updateGamePhase("advancePhase");
+      }
+    }
+
     // Update game phase when the customer reaches the target
     if (currentPizzaPath && pizzaMakerRef.current?.group.current) {
       currentPizzaAnimTime.current = Math.min(
@@ -295,14 +366,28 @@ const GameController = ({
       const pointOnPath = currentPizzaPath.getPointAt(
         currentPizzaAnimTime.current
       );
-      damp3(
+      const isMoved = damp3(
         pizzaMakerRef.current?.group.current.position,
         pointOnPath,
-        0.1,
+        0.2,
         delta
       );
-      if (currentPizzaAnimTime.current >= 1) {
+      if (!isMoved) {
         currentPizzaAnimTime.current = 0;
+        updateGamePhase("advancePhase");
+      }
+    }
+
+    if (currentPizzaBoxRotation && pizzaBoxRef.current?.group.current) {
+      const isMoved = dampE(
+        pizzaBoxRef.current?.group.current.rotation,
+        currentPizzaBoxRotation,
+        1,
+        delta,
+        0.1,
+        linear
+      );
+      if (!isMoved) {
         updateGamePhase("advancePhase");
       }
     }
