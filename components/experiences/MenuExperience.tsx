@@ -61,7 +61,12 @@ const MenuExperience = ({
         </directionalLight>
 
         <BuildingsScene scale={2} position={[0, 0, -8]} rotation={[0, 0, 0]} />
-        <Chef scale={2} position={[0.8, 0, 0]} rotation={[0, -0.15, 0]} />
+        <Chef
+          scale={2}
+          position={[0.8, 0, 0]}
+          rotation={[0, -0.15, 0]}
+          visible={visible}
+        />
         <Menu position={[-1, 0.2, 0]}>
           <Text3D
             font={fontPath}

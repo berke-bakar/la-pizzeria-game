@@ -57,8 +57,17 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
   const { actions } = useAnimations(animations, group);
 
   useEffect(() => {
-    actions["Armature|mixamo.com|Layer0"]?.play();
-  }, []);
+    const action = actions["Armature|mixamo.com|Layer0"];
+    if (props.visible) {
+      action?.play();
+    } else {
+      action?.stop();
+    }
+
+    return () => {
+      action?.stop();
+    };
+  }, [props.visible]);
 
   return (
     <group

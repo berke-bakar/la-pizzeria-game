@@ -82,6 +82,7 @@ export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
       dispose={null}
       ref={ref as React.Ref<THREE.Group<THREE.Object3DEventMap>>}
       position={props.position}
+      scale={0.9}
     >
       <instances.Node scale={[0.356, 1, 0.356]} />
     </group>
