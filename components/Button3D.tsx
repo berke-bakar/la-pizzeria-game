@@ -67,8 +67,7 @@ export default function Button3D({
         position={position}
         args={[width, height, depth]}
         radius={0.1}
-        smoothness={3}
-        bevelSegments={4}
+        smoothness={0.8}
         creaseAngle={0.8}
       >
         <a.meshStandardMaterial color={springProps.color} />
@@ -76,9 +75,6 @@ export default function Button3D({
         <Text3D
           font={fontPath}
           scale={textScale}
-          bevelSegments={3}
-          bevelEnabled
-          bevelThickness={0.001}
           position={[-width / 3.5 + 0.1, -0.01, depth / 2 + 0.001]}
         >
           {children}

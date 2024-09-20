@@ -52,10 +52,15 @@ const MenuExperience = ({
 
   return (
     <>
-      <color attach="background" args={["#f4511e"]} />
+      {/* {visible && <color attach="background" args={["#009dff"]} />} */}
+      {visible && <color attach="background" args={["#f4511e"]} />}
       <group visible={visible} {...props}>
-        <directionalLight position={[-5, 5, 5]} intensity={5}>
-          {debug && (
+        <directionalLight
+          position={[-5, 5, 5]}
+          intensity={visible ? 5 : 0}
+          visible={visible}
+        >
+          {debug && visible && (
             <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
           )}
         </directionalLight>
@@ -67,14 +72,12 @@ const MenuExperience = ({
           rotation={[0, -0.15, 0]}
           visible={visible}
         />
-        <Menu position={[-1, 0.2, 0]}>
+        <Menu position={[-1, 0.2, 0]} visible={visible}>
           <Text3D
             font={fontPath}
             scale={0.2}
-            bevelSegments={3}
-            bevelEnabled
-            bevelThickness={0.001}
             position-x={-0.75}
+            visible={visible}
           >
             La Pizzeria
             <meshStandardMaterial color={"#FCDE70"} />
@@ -86,6 +89,7 @@ const MenuExperience = ({
             depth={0.01}
             textScale={0.05}
             onPointerDown={visible ? handleStartClick : undefined}
+            visible={visible}
           >
             Start Game
           </Button3D>
@@ -96,6 +100,7 @@ const MenuExperience = ({
             depth={0.01}
             textScale={0.05}
             onPointerDown={visible ? handleStoreClick : undefined}
+            visible={visible}
           >
             {"       Store"}
           </Button3D>
@@ -106,6 +111,7 @@ const MenuExperience = ({
             depth={0.01}
             textScale={0.05}
             onPointerDown={visible ? handleHowToClick : undefined}
+            visible={visible}
           >
             Learn How
           </Button3D>

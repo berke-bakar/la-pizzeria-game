@@ -43,8 +43,7 @@ const GameExperience = ({
       <directionalLight position={[2, 5, 2]} intensity={3}>
         {debug && <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />}
       </directionalLight>
-      <color attach="background" args={["#f4511e"]} />
-      <color attach="background" args={["black"]} />
+      {visible && <color attach="background" args={["#009dff"]} />}
       {/* <Suspense fallback={<SuspenseProgress />}> */}
       <PhysicsProvider>
         {debug && <PhysicsBodyWireframes />}
