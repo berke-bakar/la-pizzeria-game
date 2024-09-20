@@ -1,12 +1,17 @@
 import { SafeAreaView, StyleSheet } from "react-native";
 import React from "react";
 import CustomText from "./CustomText";
+import { useAtomValue } from "jotai";
+import { showFooterAtom } from "@/constants/constants";
 
 const Footer = () => {
+  const showFooter = useAtomValue(showFooterAtom);
   return (
-    <SafeAreaView style={styles.footer}>
-      <CustomText style={styles.footerText}>Made with 💖 for 🍕</CustomText>
-    </SafeAreaView>
+    showFooter && (
+      <SafeAreaView style={styles.footer}>
+        <CustomText style={styles.footerText}>Made with 💖 for 🍕</CustomText>
+      </SafeAreaView>
+    )
   );
 };
 

@@ -67,11 +67,27 @@ import { OlivesInstances, OlivesModel } from "@/components/models/Olives";
 import { Asset } from "expo-asset";
 import { SvgProps } from "react-native-svg";
 
+export type IngredientType =
+  | "anchovies"
+  | "bacon"
+  | "chicken"
+  | "ham"
+  | "mushroom"
+  | "olives"
+  | "onion"
+  | "peppers"
+  | "pickle"
+  | "pineapple"
+  | "salami"
+  | "sausage"
+  | "shrimp"
+  | "tomato";
+
 /**
  * Ingredients info
  */
 export const INGREDIENTS: Record<
-  string,
+  IngredientType,
   {
     Instances: (props: any) => React.JSX.Element;
     Model: (props: any) => React.JSX.Element;
@@ -227,7 +243,8 @@ export const overlayTextAtom = atom<{
   show: false,
   OverlayItem: null,
 });
-
+/** Atom for controlling footer visibility */
+export const showFooterAtom = atom(true);
 /**
  * Atoms for controlling the camera position and otation
  */
@@ -340,6 +357,10 @@ const GAME_PHASES: Array<GamePhase> = [
   },
   {
     phase: "delivery",
+    subphase: "pizzaRotate",
+  },
+  {
+    phase: "delivery",
     subphase: "pizzaReveal",
   },
   {
@@ -349,6 +370,10 @@ const GAME_PHASES: Array<GamePhase> = [
   {
     phase: "delivery",
     subphase: "getPaid",
+  },
+  {
+    phase: "delivery",
+    subphase: "customerRotate",
   },
   {
     phase: "delivery",
