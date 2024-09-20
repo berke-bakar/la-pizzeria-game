@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  MutableRefObject,
   Ref,
   RefObject,
   useContext,
@@ -7,13 +8,11 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { INGREDIENTS } from "@/constants/constants";
 import { PizzaBaseInstances, PizzaBaseModel } from "./models/PizzaBase";
 import { Group, Object3DEventMap } from "three";
 import { WorldContext } from "@/context/PhysicsProvider";
 import { useToppings } from "@/hooks/useToppings";
 import { BaconInstances, BaconModel } from "./models/Bacon_Slice_Bacon_0";
-import { generateRandomPos } from "@/utils/utils";
 import { ToppingType } from "@/constants/types";
 import {
   AnchoviesInstances,
@@ -43,12 +42,14 @@ import {
 } from "./models/Sausage_Slice_Sausage_0";
 import { ShrimpInstances, ShrimpModel } from "./models/Shrimp_Slice_Shrimp_0";
 import { TomatoInstances, TomatoModel } from "./models/Tomato_Slice_Tomato_0";
-import { useAtomValue } from "jotai";
-import { selectedToppingAtom } from "./models/ToppingsContainer";
+import { ThreeEvent } from "@react-three/fiber/native";
 
 export type PizzaMakerRefProps = {
   group: RefObject<Group<Object3DEventMap> | undefined>;
   setFrustumCulled: React.Dispatch<React.SetStateAction<boolean>>;
+  handlePointerDown: MutableRefObject<
+    ((event: ThreeEvent<PointerEvent>) => void) | undefined
+  >;
 };
 export type PizzaMakerRef = Ref<PizzaMakerRefProps>;
 
@@ -56,23 +57,26 @@ type PizzaMakerProps = Omit<JSX.IntrinsicElements["group"], "ref">;
 
 const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
   function PizzaMaker(props, ref) {
-    const [addTopping, lastAddedTopping, toppings] = useToppings((state) => [
-      state.addTopping,
+    const [lastAddedTopping, toppings] = useToppings((state) => [
       state.lastAddedTopping,
       state.toppings,
     ]);
     const world = useContext(WorldContext);
-    const selectedTopping = useAtomValue(selectedToppingAtom);
     const group = useRef<Group>();
     const [frustumCulled, setFrustumCulled] = useState(false);
+
+    const handlePointerDown = useRef<
+      ((e: ThreeEvent<PointerEvent>) => void) | undefined
+    >(undefined);
 
     useImperativeHandle(
       ref,
       () => ({
         group: group,
         setFrustumCulled: setFrustumCulled,
+        handlePointerDown: handlePointerDown,
       }),
-      [group, setFrustumCulled]
+      [group, setFrustumCulled, handlePointerDown.current]
     );
 
     const renderToppingsModels = (
@@ -110,12 +114,7 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
     return (
       <group ref={group} dispose={null}>
         <PizzaBaseInstances
-          onPointerDown={() => {
-            addTopping(
-              selectedTopping,
-              generateRandomPos(1, 1, [2.5, 2.5, -3.2])
-            );
-          }}
+          onPointerDown={handlePointerDown.current}
           frustumCulled={false}
         >
           {renderToppingsModels(

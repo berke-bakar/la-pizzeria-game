@@ -1,6 +1,6 @@
 import { RefObject, useContext, useEffect, useMemo, useRef } from "react";
 import AudioManager from "./AudioManager";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { gamePhaseControllerAtom, showFooterAtom } from "@/constants/constants";
 import { CustomerRefProps } from "../models/Customer";
 import { GamePhase } from "@/constants/types";
@@ -21,6 +21,8 @@ import { PizzaBoxRefProps } from "../models/PizzaBox";
 import { OvenRefProps } from "../models/Oven";
 import { useToppings } from "@/hooks/useToppings";
 import { SHAPE_TYPES } from "cannon-es";
+import { generateRandomPos } from "@/utils/utils";
+import { selectedToppingAtom } from "../models/ToppingsContainer";
 
 type GameControllerProps = {
   pizzaMakerRef: RefObject<PizzaMakerRefProps>;
@@ -48,7 +50,10 @@ const GameController = ({
 }: GameControllerProps) => {
   const world = useContext(WorldContext);
   const audioManager = useMemo(() => AudioManager.getInstance(), []);
+  const selectedTopping = useAtomValue(selectedToppingAtom);
   const [currentGamePhase, updateGamePhase] = useAtom(gamePhaseControllerAtom);
+  const addTopping = useToppings((state) => state.addTopping);
+
   const currentCustomerAnimTime = useRef(0);
   const currentPizzaAnimTime = useRef(0);
   const currentCustomerAnimation = useRef(customerRef.current?.actions["Idle"]);
@@ -260,7 +265,15 @@ const GameController = ({
           //TODO: Remove later
           updateGamePhase("advancePhase");
         }, 2000);
+      } else if (currentGamePhase.specialButtonText === "Ready") {
+        pizzaMakerRef.current!.handlePointerDown.current = (e) => {
+          addTopping(
+            selectedTopping,
+            generateRandomPos(1, 1, [2.5, 2.5, -3.2])
+          );
+        };
       } else if (currentGamePhase.nextButtonText === "Bake" && world) {
+        pizzaMakerRef.current!.handlePointerDown.current = undefined;
         [...world.bodies].forEach((val) =>
           val.shapes[0].type !== SHAPE_TYPES.PLANE
             ? world.removeBody(val)
