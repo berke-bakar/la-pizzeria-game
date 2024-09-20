@@ -403,3 +403,21 @@ export const gamePhaseControllerAtom = atom(
     }
   }
 );
+
+export const customerOrderAtom = atom<{
+  order: IngredientType[];
+  selectedCharacter:
+    | "casualMan"
+    | "casualWoman"
+    | "punk"
+    | "suitMan"
+    | "suitWoman"
+    | "worker";
+  show: boolean;
+}>({
+  order: ["mushroom", "anchovies"],
+  selectedCharacter: "suitMan",
+  show: false,
+});
+
+export const typingFinishedAtom = atom(false);

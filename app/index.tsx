@@ -14,6 +14,7 @@ import CameraController from "@/components/controllers/CameraController";
 import HUD from "@/components/UI/HUD";
 import Footer from "@/components/Footer";
 import SelectedToppingPresenter from "@/components/controllers/SelectedToppingPresenter";
+import ConversationBox from "@/components/UI/ConversationBox";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,6 +40,17 @@ export default function Index() {
       {Platform.OS === "web" && location.pathname === "#debug" && <Leva />}
       <Canvas
         camera={{ position: [0, 2, 10], fov: 30, rotation: [-0.1, 0, 0] }}
+        onCreated={(state) => {
+          const _gl = state.gl.getContext();
+          const pixelStorei = _gl.pixelStorei.bind(_gl);
+          _gl.pixelStorei = function (...args) {
+            const [parameter] = args;
+            switch (parameter) {
+              case _gl.UNPACK_FLIP_Y_WEBGL:
+                return pixelStorei(...args);
+            }
+          };
+        }}
       >
         <StagePrep debug={debug} />
         <SceneLoader debug={debug} />
@@ -49,6 +61,7 @@ export default function Index() {
       <LoadingText />
       <OverlayTextPresenter />
       <SelectedToppingPresenter />
+      <ConversationBox />
       <HUD />
     </View>
   );

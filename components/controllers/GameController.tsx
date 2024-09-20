@@ -1,7 +1,12 @@
 import { RefObject, useContext, useEffect, useMemo, useRef } from "react";
 import AudioManager from "./AudioManager";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { gamePhaseControllerAtom, showFooterAtom } from "@/constants/constants";
+import {
+  customerOrderAtom,
+  gamePhaseControllerAtom,
+  showFooterAtom,
+  typingFinishedAtom,
+} from "@/constants/constants";
 import { CustomerRefProps } from "../models/Customer";
 import { GamePhase } from "@/constants/types";
 import {
@@ -54,11 +59,16 @@ const GameController = ({
   const [currentGamePhase, updateGamePhase] = useAtom(gamePhaseControllerAtom);
   const addTopping = useToppings((state) => state.addTopping);
 
+  const currentCustomerType = useRef<
+    "casualMan" | "casualWoman" | "punk" | "suitMan" | "suitWoman" | "worker"
+  >("casualMan");
   const currentCustomerAnimTime = useRef(0);
   const currentPizzaAnimTime = useRef(0);
   const currentCustomerAnimation = useRef(customerRef.current?.actions["Idle"]);
   const { clearToppings } = useToppings();
   const setShowFooter = useSetAtom(showFooterAtom);
+  const setCustomerOrder = useSetAtom(customerOrderAtom);
+  const typingFinished = useAtomValue(typingFinishedAtom);
 
   const customerPaths = useMemo(
     () => ({
@@ -138,6 +148,15 @@ const GameController = ({
     return null;
   }, [currentGamePhase]);
 
+  const resetOrder = () => {
+    // const order = generateOrder();
+    setCustomerOrder({
+      order: ["anchovies", "bacon", "mushroom"],
+      selectedCharacter: currentCustomerType.current,
+      show: false,
+    });
+  };
+
   const resetCharacter = () => {
     // Preventing the same character to be generated twice
     customerRef.current?.setSelectedCharacter((selectedCharacter) => {
@@ -151,8 +170,14 @@ const GameController = ({
         customerRef.current.group.current?.position.set(0, 0, -18);
         customerRef.current.group.current.rotation.set(0, 0, 0);
       }
-
-      return availableChars[randomIndex];
+      currentCustomerType.current = availableChars[randomIndex] as
+        | "casualMan"
+        | "casualWoman"
+        | "punk"
+        | "suitMan"
+        | "suitWoman"
+        | "worker";
+      return currentCustomerType.current;
     });
   };
 
@@ -181,7 +206,6 @@ const GameController = ({
     ) {
       currentCustomerAnimTime.current = 0;
       if (phaseIndex.subphase === "reaction") {
-        console.log("loop once");
         currentCustomerAnimation.current.setLoop(LoopOnce, 1);
       } else {
         currentCustomerAnimation.current.setLoop(LoopRepeat, Infinity);
@@ -251,9 +275,22 @@ const GameController = ({
   }, []);
 
   useEffect(() => {
+    if (typingFinished) {
+      const timeoutId = setTimeout(() => {
+        setCustomerOrder((prev) => ({ ...prev, show: false }));
+        updateGamePhase("advancePhase");
+      }, 1500);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [typingFinished]);
+
+  useEffect(() => {
     if (gameSceneVisible) {
       if (currentGamePhase.subphase === "generateCustomer") {
         resetCharacter();
+        resetOrder();
         pizzaMakerRef.current?.group.current?.position.set(0, 0.01, 0);
         clearToppings();
         updateGamePhase("advancePhase");
@@ -261,10 +298,7 @@ const GameController = ({
         // reset box rotation and animation while not looking
         pizzaBoxRef.current?.group.current?.rotation.set(0, 0, 0);
         pizzaBoxRef.current?.mixer.stopAllAction();
-        setTimeout(() => {
-          //TODO: Remove later
-          updateGamePhase("advancePhase");
-        }, 2000);
+        setCustomerOrder((prev) => ({ ...prev, show: true }));
       } else if (currentGamePhase.specialButtonText === "Ready") {
         pizzaMakerRef.current!.handlePointerDown.current = (e) => {
           addTopping(
@@ -328,6 +362,7 @@ const GameController = ({
   }, [currentGamePhase, gameSceneVisible]);
 
   useFrame((state, delta) => {
+    // console.log(state.gl.info);
     if (currentCustomerPath && customerRef.current?.group.current) {
       currentCustomerAnimTime.current = Math.min(
         currentCustomerAnimTime.current + delta * 0.3,
