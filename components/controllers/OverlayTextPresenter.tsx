@@ -1,13 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  PointerEvent,
-  Modal,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, PointerEvent } from "react-native";
 import React, { useCallback } from "react";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { overlayTextAtom } from "@/constants/constants";
 
 type Props = {};

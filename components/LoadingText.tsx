@@ -1,9 +1,7 @@
-import { View, Text, StyleSheet, Animated, Platform } from "react-native";
+import { View, StyleSheet, Animated, Platform } from "react-native";
 import React, { useEffect, useRef } from "react";
-import { useProgress } from "@react-three/drei/native";
-import { createPortal } from "@react-three/fiber";
 import { currentSceneAtom, progressAtom } from "@/constants/constants";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 
 type Props = {};
 

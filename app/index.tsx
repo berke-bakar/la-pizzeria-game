@@ -13,6 +13,7 @@ import { Asset } from "expo-asset";
 import CameraController from "@/components/controllers/CameraController";
 import HUD from "@/components/UI/HUD";
 import Footer from "@/components/Footer";
+import SelectedToppingPresenter from "@/components/controllers/SelectedToppingPresenter";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,6 +48,7 @@ export default function Index() {
       <Footer />
       <LoadingText />
       <OverlayTextPresenter />
+      <SelectedToppingPresenter />
       <HUD />
     </View>
   );
