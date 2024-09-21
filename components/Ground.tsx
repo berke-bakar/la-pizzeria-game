@@ -33,11 +33,7 @@ const Ground = (props: JSX.IntrinsicElements["mesh"]) => {
       rotation={[-Math.PI / 2, 0, 0]}
     >
       <planeGeometry args={[10, 10, 8, 8]} />
-      <meshStandardMaterial
-        attach="material"
-        transparent={true}
-        opacity={0.1}
-      />
+      <meshStandardMaterial attach="material" transparent={true} opacity={0} />
     </mesh>
   );
 };
