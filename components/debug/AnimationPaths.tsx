@@ -14,12 +14,12 @@ const AnimationPath = ({ debug }: { debug: boolean }) => {
       ),
       customerPath2: new LineCurve3(
         new Vector3(0, 4, -6),
-        new Vector3(6, 4, -6)
+        new Vector3(7.75, 4, -6)
       ),
       customerPath3: new CatmullRomCurve3([
-        new Vector3(6, 4, -6),
-        new Vector3(5, 4, -12),
-        new Vector3(3, 4, -12),
+        new Vector3(7.75, 4, -6),
+        new Vector3(5, 4, -10),
+        new Vector3(3, 4, -14),
         new Vector3(0, 4, -18),
       ]),
       pizzaToOvenPath: new CatmullRomCurve3([

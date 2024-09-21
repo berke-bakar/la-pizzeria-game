@@ -1,11 +1,6 @@
 import { Platform } from "react-native";
-import React, { useEffect } from "react";
-import {
-  ContactShadows,
-  Grid,
-  Helper,
-  StatsGl,
-} from "@react-three/drei/native";
+import React from "react";
+import { ContactShadows, Grid, StatsGl } from "@react-three/drei/native";
 
 type Props = {
   debug: boolean;

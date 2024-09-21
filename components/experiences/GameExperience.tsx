@@ -46,7 +46,8 @@ const GameExperience = ({
       {visible && <color attach="background" args={["#009dff"]} />}
       {/* <Suspense fallback={<SuspenseProgress />}> */}
       <PhysicsProvider>
-        {debug && <PhysicsBodyWireframes />}
+        {/* {debug && <PhysicsBodyWireframes />} */}
+        {<PhysicsBodyWireframes />}
         <Restraunt />
         <ToppingsContainer />
         <Ground position={[0, 2.55, 0]} />

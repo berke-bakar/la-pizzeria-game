@@ -52,7 +52,10 @@ export function PizzaBaseModel(props: JSX.IntrinsicElements["group"]) {
   const ref = useCannon(
     { mass: 1 },
     (body, setBodyAvailable) => {
-      body.addShape(new CANNON.Box(new CANNON.Vec3(1, 0.15, 1)));
+      body.addShape(
+        new CANNON.Cylinder(0.855, 0.855, 0.117, 16)
+        // new CANNON.Box(new CANNON.Vec3(0.855, 0.07, 0.855))
+      );
       body.type = CANNON.BODY_TYPES.DYNAMIC;
       if (props.position)
         body.position.set(

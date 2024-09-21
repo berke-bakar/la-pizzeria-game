@@ -40,16 +40,12 @@ export const useCannon = (
   }, [bodyAvailable]);
 
   useFrame(() => {
-    if (ref.current && bodyAvailable) {
+    if (ref.current && bodyAvailable && body.type != CANNON.BODY_TYPES.STATIC) {
       // Transport cannon physics into the referenced threejs object
       const { position, quaternion } = body;
       const { x: px, y: py, z: pz } = position;
       const { x: qx, y: qy, z: qz, w: qw } = quaternion;
-      ref.current.position.set(
-        px,
-        body.type == CANNON.BODY_TYPES.STATIC ? py : py + 0.1,
-        pz
-      );
+      ref.current.position.set(px, py, pz);
       ref.current.quaternion.set(qx, qy, qz, qw);
     }
   });

@@ -1,13 +1,9 @@
-import { INGREDIENTS, IngredientType } from "@/constants/constants";
 import { create } from "zustand";
 import * as THREE from "three";
 import { hashStringToNumber } from "@/utils/utils";
 
 export const useToppings = create<{
-  toppings: Record<
-    string,
-    { id: number | number[]; initialPos: THREE.Vector3 }[]
-  >;
+  toppings: Record<string, { id: number[]; initialPos: THREE.Vector3 }[]>;
   lastAddedTopping: { id: number | number[]; initialPos: THREE.Vector3 } | null;
   total: number;
   addTopping: (
@@ -28,19 +24,17 @@ export const useToppings = create<{
     bodyCount: number = 3
   ) => {
     return set((state) => {
-      let usedId: number | number[] = hashStringToNumber(
-        `${key}-${(state.toppings[key] || []).length}`
-      );
+      let usedId: number[] = [
+        hashStringToNumber(`${key}-${(state.toppings[key] || []).length}`),
+      ];
       if (bodyCount > 1) {
-        let results = [usedId];
         for (let i = 0; i < bodyCount - 1; i++) {
-          results.push(
+          usedId.push(
             hashStringToNumber(
               `${key}-${(state.toppings[key] || []).length}-${i}`
             )
           );
         }
-        usedId = results;
       }
 
       let currentToppings = { ...state.toppings };

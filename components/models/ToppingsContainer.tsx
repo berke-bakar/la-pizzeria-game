@@ -47,7 +47,7 @@ type GLTFResult = GLTF & {
   };
 };
 
-export const selectedToppingAtom = atom<IngredientType>("anchovies");
+export const selectedToppingAtom = atom<IngredientType>("bacon");
 
 export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF(

@@ -20,4 +20,4 @@ export type GamePhase = {
   nextButtonText?: string;
 };
 
-export type ToppingType = { id: number | number[]; initialPos: Vector3 };
+export type ToppingType = { id: number[]; initialPos: Vector3 };

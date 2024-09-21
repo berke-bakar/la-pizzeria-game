@@ -1,48 +1,3 @@
-import {
-  AnchoviesInstances,
-  AnchoviesModel,
-} from "@/components/models/Anchovies_Slice_Fish_0";
-import {
-  BaconInstances,
-  BaconModel,
-} from "@/components/models/Bacon_Slice_Bacon_0";
-import {
-  ChickenInstances,
-  ChickenModel,
-} from "@/components/models/Chicken_Slice_Chicken_0";
-import { HamInstances, HamModel } from "@/components/models/Ham_Slice_Ham_0";
-import {
-  MushroomInstances,
-  MushroomModel,
-} from "@/components/models/Mushroom_Slice_Mushroom_0";
-import {
-  OnionInstances,
-  OnionModel,
-} from "@/components/models/Onion_Slice_Onion_0";
-import {
-  PickleInstances,
-  PickleModel,
-} from "@/components/models/Pickle_Slice_Pickles_0";
-import {
-  PineappleInstances,
-  PineappleModel,
-} from "@/components/models/Pineapple_Slice_Pineapple_0";
-import {
-  SalamiInstances,
-  SalamiModel,
-} from "@/components/models/Salami_Slice_Salami_0";
-import {
-  SausageInstances,
-  SausageModel,
-} from "@/components/models/Sausage_Slice_Sausage_0";
-import {
-  ShrimpInstances,
-  ShrimpModel,
-} from "@/components/models/Shrimp_Slice_Shrimp_0";
-import {
-  TomatoInstances,
-  TomatoModel,
-} from "@/components/models/Tomato_Slice_Tomato_0";
 import AnchoviesIcon from "../assets/images/toppings/anchovies.svg";
 import BaconIcon from "../assets/images/toppings/bacon.svg";
 import ChickenIcon from "../assets/images/toppings/chicken.svg";
@@ -62,9 +17,6 @@ import { atom } from "jotai";
 import { atomWithReset, RESET } from "jotai/utils";
 import { GamePhase, State } from "./types";
 import { MathUtils } from "three";
-import { PeppersInstances, PeppersModel } from "@/components/models/Peppers";
-import { OlivesInstances, OlivesModel } from "@/components/models/Olives";
-import { Asset } from "expo-asset";
 import { SvgProps } from "react-native-svg";
 
 export type IngredientType =
@@ -89,107 +41,77 @@ export type IngredientType =
 export const INGREDIENTS: Record<
   IngredientType,
   {
-    Instances: (props: any) => React.JSX.Element;
-    Model: (props: any) => React.JSX.Element;
     icon: React.FC<SvgProps>;
     price: number;
     unitPrice: number;
   }
 > = {
   anchovies: {
-    Instances: AnchoviesInstances,
-    Model: AnchoviesModel,
     icon: AnchoviesIcon,
     price: 120,
     unitPrice: 2,
   },
   bacon: {
-    Instances: BaconInstances,
-    Model: BaconModel,
     icon: BaconIcon,
     price: 100,
     unitPrice: 1.5,
   },
   chicken: {
-    Instances: ChickenInstances,
-    Model: ChickenModel,
     icon: ChickenIcon,
     price: 110,
     unitPrice: 1.2,
   },
   ham: {
-    Instances: HamInstances,
-    Model: HamModel,
     icon: HamIcon,
     price: 120,
     unitPrice: 1.4,
   },
   mushroom: {
-    Instances: MushroomInstances,
-    Model: MushroomModel,
     icon: MushroomIcon,
     price: 150,
     unitPrice: 1.5,
   },
   olives: {
-    Instances: OlivesInstances,
-    Model: OlivesModel,
     icon: OlivesIcon,
     price: 140,
     unitPrice: 1.4,
   },
   onion: {
-    Instances: OnionInstances,
-    Model: OnionModel,
     icon: OnionIcon,
     price: 110,
     unitPrice: 1.4,
   },
   peppers: {
-    Instances: PeppersInstances,
-    Model: PeppersModel,
     icon: PeppersIcon,
     price: 160,
     unitPrice: 2.4,
   },
   pickle: {
-    Instances: PickleInstances,
-    Model: PickleModel,
     icon: PickleIcon,
     price: 180,
     unitPrice: 1,
   },
   pineapple: {
-    Instances: PineappleInstances,
-    Model: PineappleModel,
     icon: PineappleIcon,
     price: 150,
     unitPrice: 2,
   },
   salami: {
-    Instances: SalamiInstances,
-    Model: SalamiModel,
     icon: SalamiIcon,
     price: 120,
     unitPrice: 1.3,
   },
   sausage: {
-    Instances: SausageInstances,
-    Model: SausageModel,
     icon: SausageIcon,
     price: 150,
     unitPrice: 1.3,
   },
   shrimp: {
-    Instances: ShrimpInstances,
-    Model: ShrimpModel,
     icon: ShrimpIcon,
     price: 180,
     unitPrice: 2.3,
   },
   tomato: {
-    Instances: TomatoInstances,
-    Model: TomatoModel,
     icon: TomatoIcon,
     price: 160,
     unitPrice: 1.2,
@@ -343,7 +265,6 @@ const GAME_PHASES: Array<GamePhase> = [
   {
     phase: "baking",
     subphase: "waiting",
-    // TODO: Play audio
   },
   {
     phase: "baking",
@@ -357,7 +278,6 @@ const GAME_PHASES: Array<GamePhase> = [
   {
     phase: "pizzaTakeOut",
     subphase: "pizzaToBox",
-    // TODO: Animation controller needed
   },
   {
     phase: "pizzaTakeOut",
@@ -410,7 +330,6 @@ const GAME_PHASES: Array<GamePhase> = [
 export const gamePhaseControllerAtom = atom(
   (get) => {
     const currentPhaseIndex = get(currentPhaseIndexAtom);
-    console.log("Current phase", GAME_PHASES[currentPhaseIndex]);
     return GAME_PHASES[currentPhaseIndex % GAME_PHASES.length];
   },
   (get, set, action: "advancePhase" | "retreatPhase" | "reset") => {
@@ -442,3 +361,4 @@ export const customerOrderAtom = atom<{
 });
 
 export const typingFinishedAtom = atom(false);
+export const todaysCustomerRatings = atomWithReset<number[]>([]);
