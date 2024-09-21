@@ -8,6 +8,7 @@ import {
   IngredientType,
   overlayTextAtom,
   showFooterAtom,
+  todaysCustomerRatings,
   typingFinishedAtom,
 } from "@/constants/constants";
 import { CustomerRefProps } from "../models/Customer";
@@ -29,7 +30,6 @@ import { PizzaBoxRefProps } from "../models/PizzaBox";
 import { OvenRefProps } from "../models/Oven";
 import { useToppings } from "@/hooks/useToppings";
 import { SHAPE_TYPES } from "cannon-es";
-import { selectedToppingAtom } from "../models/ToppingsContainer";
 import EndOfDay from "../UI/EndOfDay";
 import useGameStore from "@/hooks/useGameStore";
 
@@ -62,15 +62,13 @@ const GameController = ({
   const world = useContext(WorldContext);
   const audioManager = useMemo(() => AudioManager.getInstance(), []);
   const [currentGamePhase, updateGamePhase] = useAtom(gamePhaseControllerAtom);
-  const [toppings, addTopping, clearToppings, addToTotal] = useToppings(
-    (state) => [
-      state.toppings,
-      state.addTopping,
-      state.clearToppings,
-      state.addToTotal,
-    ]
-  );
+  const [toppings, clearToppings, addToTotal] = useToppings((state) => [
+    state.toppings,
+    state.clearToppings,
+    state.addToTotal,
+  ]);
   const boughtToppings = useGameStore((state) => state.boughtToppings);
+  const updateTodaysRatings = useSetAtom(todaysCustomerRatings);
 
   const currentCustomerType = useRef<
     "casualMan" | "casualWoman" | "punk" | "suitMan" | "suitWoman" | "worker"
@@ -99,8 +97,8 @@ const GameController = ({
       ),
       customerPath3: new CatmullRomCurve3([
         new Vector3(6.25, 0, -5),
-        new Vector3(5, 0, -12),
-        new Vector3(3, 0, -12),
+        new Vector3(3.5, 0, -9),
+        new Vector3(1.5, 0, -13),
         new Vector3(0, 0, -18),
       ]),
     }),
@@ -113,13 +111,13 @@ const GameController = ({
         new Vector3(0, 0, 0),
         new Vector3(0, 0.5, 4.2),
         new Vector3(0.8, 1.2, 6.2),
-        new Vector3(1.8, 0.77, 8.8),
+        new Vector3(1.6, 0.9, 8.2),
       ]),
       pizzaToBox: new CatmullRomCurve3([
         new Vector3(1.6, 0.9, 8.2),
         new Vector3(1.1, 1.2, 6.2),
-        new Vector3(0.6, 0.6, 4.2),
-        new Vector3(6.25, -0.1, -0.7),
+        new Vector3(0.6, 0.5, 4.2),
+        new Vector3(5.5, 0.0585, 0),
       ]),
     }),
     []
@@ -239,13 +237,12 @@ const GameController = ({
           requestedToppingCount++;
         }
       });
-      const pizzaRating = Math.floor(
-        Math.ceil(
-          (requestedToppingCount / customerOrderInfo.order.length) * 100
-        ) / 25
+      const pizzaRating = Math.ceil(
+        (requestedToppingCount / customerOrderInfo.order.length) * 100
       );
-      currentCustomerRating.current = pizzaRating;
-      switch (pizzaRating) {
+      updateTodaysRatings((prev) => [...prev, pizzaRating]);
+      currentCustomerRating.current = Math.floor(pizzaRating / 25);
+      switch (currentCustomerRating.current) {
         case 0: // Terrified
           currentCustomerAnimation.current =
             customerRef.current?.actions["Terrified"];
@@ -367,6 +364,7 @@ const GameController = ({
         resetOrder();
         pizzaMakerRef.current?.group.current?.position.set(0, 0.01, 0);
         clearToppings();
+        pizzaMakerRef.current?.setFrustumCulled(false);
         updateGamePhase("advancePhase");
       } else if (currentGamePhase.subphase === "takeOrderDialogue") {
         // reset box rotation and animation while not looking
@@ -451,7 +449,6 @@ const GameController = ({
           sum * customerTipMultiplier,
           MIN_EARNING_PER_CUSTOMER
         );
-        // console.log("Earned:", totalEarned, "rating:", pizzaRating);
         addToTotal(totalEarned);
         updateGamePhase("advancePhase");
       } else if (currentGamePhase.phase === "endGame") {
@@ -481,16 +478,16 @@ const GameController = ({
       const pointOnPath = currentCustomerPath.getPointAt(
         currentCustomerAnimTime.current
       );
-      damp3(
-        customerRef.current?.group.current?.position as Vector3,
+
+      const isMoved = damp3(
+        customerRef.current?.group.current.position as Vector3,
         pointOnPath,
-        0,
-        currentCustomerAnimTime.current
+        0.1,
+        delta
       );
 
-      if (currentCustomerAnimTime.current >= 1) {
+      if (!isMoved && currentCustomerAnimTime.current == 1) {
         currentCustomerAnimTime.current = 0;
-        // Rotate to counter at the end of the walking
         if (
           currentGamePhase.phase === "pizzaTakeOut" &&
           currentGamePhase.subphase === "customerWalk"
@@ -515,7 +512,6 @@ const GameController = ({
       }
     }
 
-    // Update game phase when the customer reaches the target
     if (currentPizzaPath && pizzaMakerRef.current?.group.current) {
       currentPizzaAnimTime.current = Math.min(
         currentPizzaAnimTime.current + delta,

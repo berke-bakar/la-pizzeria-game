@@ -10,15 +10,16 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomText from "../CustomText";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import {
   cameraStateIndexAtom,
   currentSceneAtom,
   gamePhaseControllerAtom,
   overlayTextAtom,
+  todaysCustomerRatings,
 } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
-import { useResetAtom } from "jotai/utils";
+import { RESET, useResetAtom } from "jotai/utils";
 import useGameStore from "@/hooks/useGameStore";
 import { useToppings } from "@/hooks/useToppings";
 type Props = {};
@@ -30,6 +31,7 @@ const EndOfDay = (props: Props) => {
     state.incrementDay,
     state.addMoney,
   ]);
+  const [todaysRatings, setTodaysRatings] = useAtom(todaysCustomerRatings);
   const [total, clearTotal] = useToppings((state) => [
     state.total,
     state.clearTotal,
@@ -41,6 +43,11 @@ const EndOfDay = (props: Props) => {
   const setCurrentSceneInfo = useSetAtom(currentSceneAtom);
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
   const updateGamePhase = useSetAtom(gamePhaseControllerAtom);
+
+  const avgRatings =
+    todaysRatings.reduce((acc, curr) => acc + curr, 0) /
+    todaysRatings.length /
+    25;
 
   useEffect(() => {
     Animated.timing(animRef, {
@@ -69,7 +76,12 @@ const EndOfDay = (props: Props) => {
         <CustomText style={styles.info}>
           The day ended. Let's close the pizzeria
         </CustomText>
-        <CustomText style={styles.info}>You earned ${total} today!</CustomText>
+        <CustomText style={styles.info}>
+          You earned ${total.toFixed(2)} today!
+        </CustomText>
+        <CustomText style={styles.info}>
+          Today's Rating: {avgRatings.toFixed(2)}/5
+        </CustomText>
       </View>
       <AnimatedButton
         onPointerDown={() => {
@@ -83,6 +95,7 @@ const EndOfDay = (props: Props) => {
           addMoney(total);
           clearTotal();
           incrementDay();
+          setTodaysRatings(RESET);
         }}
       >
         Home
