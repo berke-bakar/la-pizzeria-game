@@ -52,8 +52,6 @@ const MenuExperience = ({
 
   return (
     <>
-      {/* {visible && <color attach="background" args={["#009dff"]} />} */}
-      {visible && <color attach="background" args={["#f4511e"]} />}
       <group visible={visible} {...props}>
         <directionalLight
           position={[-5, 5, 5]}
