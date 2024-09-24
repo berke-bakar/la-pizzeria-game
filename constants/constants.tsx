@@ -223,6 +223,10 @@ const GAME_PHASES: Array<GamePhase> = [
   },
   {
     phase: "start",
+    subphase: "doorOpens",
+  },
+  {
+    phase: "start",
     subphase: "customerWalk",
   },
   {

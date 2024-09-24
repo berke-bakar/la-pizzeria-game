@@ -32,12 +32,14 @@ import { useToppings } from "@/hooks/useToppings";
 import { SHAPE_TYPES } from "cannon-es";
 import EndOfDay from "../UI/EndOfDay";
 import useGameStore from "@/hooks/useGameStore";
+import { DoorRefProps } from "../models/Door";
 
 type GameControllerProps = {
   pizzaMakerRef: RefObject<PizzaMakerRefProps>;
   customerRef: RefObject<CustomerRefProps>;
   ovenRef: RefObject<OvenRefProps>;
   pizzaBoxRef: RefObject<PizzaBoxRefProps>;
+  doorRef: RefObject<DoorRefProps>;
   gameSceneVisible: boolean;
 };
 
@@ -57,6 +59,7 @@ const GameController = ({
   customerRef,
   ovenRef,
   pizzaBoxRef,
+  doorRef,
   gameSceneVisible,
 }: GameControllerProps) => {
   const world = useContext(WorldContext);
@@ -84,6 +87,8 @@ const GameController = ({
   const todaysCustomerCount = useRef(0);
   const currentCustomerIndex = useRef(0);
   const currentCustomerRating = useRef(0);
+
+  const isDoorOpened = useRef(false);
 
   const customerPaths = useMemo(
     () => ({
@@ -164,7 +169,8 @@ const GameController = ({
   }, [currentGamePhase]);
 
   const generateOrder = () => {
-    const toppingCount = Math.floor(Math.random() * 5);
+    const toppingCount =
+      Math.floor(Math.random() * Math.min(boughtToppings.length, 5)) + 1;
     const order = [...boughtToppings]
       .sort(() => Math.random() - 0.5)
       .slice(0, toppingCount);
@@ -269,7 +275,6 @@ const GameController = ({
             customerRef.current?.actions["Idle"];
           break;
       }
-      // currentCustomerAnimation.current?.setDuration(2);
       currentCustomerAnimation.current!.clampWhenFinished = true;
     }
     // Change animation, only when needed
@@ -310,15 +315,25 @@ const GameController = ({
       action: AnimationAction;
       direction: number;
     }) => {
-      if (e.action.getClip().name === "LidClose" && pizzaMakerRef.current) {
+      const clipName = e.action.getClip().name;
+      if (clipName === "LidClose" && pizzaMakerRef.current) {
         pizzaMakerRef.current.setFrustumCulled(true);
+      }
+      if (clipName === "DoorOpen" && doorRef.current) {
+        isDoorOpened.current = true;
       }
       updateGamePhase("advancePhase");
     };
 
     const onCustomerAnimFinish = (e: any) => {
       const clipName = e.action.getClip().name;
-      if (clipName === "Surprised") {
+
+      if (
+        clipName === "Surprised" ||
+        clipName === "Terrified" ||
+        clipName === "Angry" ||
+        clipName === "Unhappy"
+      ) {
         updateGamePhase("advancePhase");
       }
     };
@@ -332,6 +347,8 @@ const GameController = ({
       pizzaBoxRef.current.mixer.addEventListener("finished", onAnimFinish);
     if (ovenRef.current)
       ovenRef.current.mixer.addEventListener("finished", onAnimFinish);
+    if (doorRef.current)
+      doorRef.current?.mixer.addEventListener("finished", onAnimFinish);
     return () => {
       if (customerRef.current)
         customerRef.current.mixer.removeEventListener(
@@ -342,6 +359,8 @@ const GameController = ({
         pizzaBoxRef.current.mixer.removeEventListener("finished", onAnimFinish);
       if (ovenRef.current)
         ovenRef.current.mixer.removeEventListener("finished", onAnimFinish);
+      if (doorRef.current)
+        doorRef.current?.mixer.removeEventListener("finished", onAnimFinish);
     };
   }, []);
 
@@ -366,6 +385,14 @@ const GameController = ({
         clearToppings();
         pizzaMakerRef.current?.setFrustumCulled(false);
         updateGamePhase("advancePhase");
+      } else if (currentGamePhase.subphase === "doorOpens") {
+        const action = doorRef.current?.actions["DoorOpen"];
+        if (action && !isDoorOpened.current) {
+          action.clampWhenFinished = true;
+          action.reset().setLoop(LoopOnce, 1).play();
+        } else {
+          updateGamePhase("advancePhase");
+        }
       } else if (currentGamePhase.subphase === "takeOrderDialogue") {
         // reset box rotation and animation while not looking
         pizzaBoxRef.current?.group.current?.rotation.set(0, 0, 0);
@@ -454,6 +481,7 @@ const GameController = ({
       } else if (currentGamePhase.phase === "endGame") {
         // Check if it is end of day, otherwise serve new customer
         if (todaysCustomerCount.current === currentCustomerIndex.current) {
+          isDoorOpened.current = false;
           setOverlayText({
             OverlayItem: EndOfDay,
             show: true,

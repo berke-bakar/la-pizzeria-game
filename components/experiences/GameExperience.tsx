@@ -14,6 +14,7 @@ import PizzaMaker, { PizzaMakerRef, PizzaMakerRefProps } from "../PizzaMaker";
 import { PizzaBox, PizzaBoxRefProps } from "../models/PizzaBox";
 import GameController from "../controllers/GameController";
 import { ToppingsContainer } from "../models/ToppingsContainer";
+import { DoorModel, DoorRefProps } from "../models/Door";
 
 const GameExperience = ({
   debug = false,
@@ -25,6 +26,7 @@ const GameExperience = ({
   const ovenRef = useRef<OvenRefProps>(null);
   const pizzaBoxRef = useRef<PizzaBoxRefProps>(null);
   const customerRef = useRef<CustomerRefProps>(null);
+  const doorRef = useRef<DoorRefProps>(null);
 
   useEffect(() => {
     if (visible) {
@@ -48,6 +50,7 @@ const GameExperience = ({
       <PhysicsProvider>
         {debug && <PhysicsBodyWireframes />}
         <Restraunt />
+        <DoorModel ref={doorRef} />
         <ToppingsContainer />
         <Ground position={[0, 2.55, 0]} />
         <PizzaMaker ref={pizzaMakerRef} />
@@ -59,6 +62,7 @@ const GameExperience = ({
           ovenRef={ovenRef}
           pizzaMakerRef={pizzaMakerRef}
           pizzaBoxRef={pizzaBoxRef}
+          doorRef={doorRef}
           gameSceneVisible={visible}
         />
       </PhysicsProvider>
