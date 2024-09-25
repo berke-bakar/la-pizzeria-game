@@ -54,25 +54,27 @@ export const Oven = forwardRef<OvenRefProps, OvenProps>(function Oven(
       <group name="Scene">
         <group
           name="ovenLid"
-          position={[5.1258, 3.4656, 3.9486]}
-          rotation={[0, -2.12665, -Math.PI / 2]}
-          scale={[3.9242, 3.2349, 2.2318]}
+          position={[5.126, 3.466, 3.949]}
+          rotation={[-Math.PI, -1.015, Math.PI / 2]}
+          scale={[3.924, 3.235, 2.232]}
         >
-          <mesh
-            name="Node-Mesh001"
-            geometry={nodes["Node-Mesh001"].geometry}
-            material={materials["mat15.001"]}
-          />
-          <mesh
-            name="Node-Mesh001_1"
-            geometry={nodes["Node-Mesh001_1"].geometry}
-            material={materials["mat24.001"]}
-          />
+          <group position={[0.237, -0.32, -0.05]} scale={0.45}>
+            <mesh
+              name="Node-Mesh001"
+              geometry={nodes["Node-Mesh001"].geometry}
+              material={materials["mat15.001"]}
+            />
+            <mesh
+              name="Node-Mesh001_1"
+              geometry={nodes["Node-Mesh001_1"].geometry}
+              material={materials["mat24.001"]}
+            />
+          </group>
         </group>
         <group
           name="oven"
-          position={[4.1363, 3.1063, 5.0906]}
-          scale={[3.2622, 3.2349, 3.2193]}
+          position={[4.083, 2.498, 5.045]}
+          scale={[2.493, 2.472, 2.46]}
         >
           <mesh
             name="Node-Mesh003"
