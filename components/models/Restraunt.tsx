@@ -19,7 +19,9 @@ type GLTFResult = GLTF & {
   };
 };
 
-export function Restraunt(props: JSX.IntrinsicElements["group"]) {
+export function Restraunt(
+  props: JSX.IntrinsicElements["group"] & { debug: boolean }
+) {
   const { nodes, materials } = useGLTF(
     Asset.fromModule(require("../../assets/models/restraunt.glb")).uri
   ) as GLTFResult;
@@ -31,6 +33,15 @@ export function Restraunt(props: JSX.IntrinsicElements["group"]) {
         position={[1.497, -0.025, -7.049]}
         scale={[13, 13, 13.405]}
       />
+      {!props.debug && (
+        <mesh
+          geometry={nodes.ground.geometry}
+          position={[1.497, 7.8, -7.049]}
+          scale={[13, 13, 13.405]}
+        >
+          <meshStandardMaterial attach={"material"} side={THREE.BackSide} />
+        </mesh>
+      )}
       <mesh
         geometry={nodes.sideWalls.geometry}
         material={materials.PaletteMaterial002}

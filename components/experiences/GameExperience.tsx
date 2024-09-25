@@ -49,7 +49,7 @@ const GameExperience = ({
       {/* <Suspense fallback={<SuspenseProgress />}> */}
       <PhysicsProvider>
         {debug && <PhysicsBodyWireframes />}
-        <Restraunt />
+        <Restraunt debug={debug} />
         <DoorModel ref={doorRef} />
         <ToppingsContainer />
         <Ground position={[0, 2.55, 0]} />
