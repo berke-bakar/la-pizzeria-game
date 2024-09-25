@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { Outlines, useGLTF } from "@react-three/drei/native";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
@@ -46,6 +46,23 @@ type GLTFResult = GLTF & {
     Tomato: THREE.MeshBasicMaterial;
   };
 };
+
+const TOPPING_MESH_ID: IngredientType[] = [
+  "peppers",
+  "anchovies",
+  "bacon",
+  "chicken",
+  "ham",
+  "mushroom",
+  "olives",
+  "onion",
+  "pickle",
+  "pineapple",
+  "salami",
+  "sausage",
+  "shrimp",
+  "tomato",
+];
 
 export const selectedToppingAtom = atom<IngredientType>("bacon");
 
@@ -139,6 +156,9 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
     [boughtToppings]
   );
 
+  const THROTTLE_TIME = 200;
+  const lastSelectedTime = useRef(0);
+
   const handleToppingChange = useCallback(
     (topping: IngredientType) => {
       return (event: ThreeEvent<PointerEvent>) => {
@@ -147,6 +167,18 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
     },
     [setSelectedTopping]
   );
+
+  const handleToppingContainerSelection = (event: ThreeEvent<PointerEvent>) => {
+    const currentTime = Date.now();
+
+    if (currentTime - lastSelectedTime.current < THROTTLE_TIME) return;
+    lastSelectedTime.current = currentTime;
+    if (event.instanceId !== undefined) {
+      const toppingFromId = TOPPING_MESH_ID[event.instanceId];
+      if (boughtToppings.includes(toppingFromId))
+        setSelectedTopping(toppingFromId);
+    }
+  };
 
   return (
     <group {...props} dispose={null}>
@@ -213,6 +245,7 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
             args={[nodes.Cube013.geometry, materials.Material, 14]}
             name="Cube013"
             instanceMatrix={nodes.Cube013.instanceMatrix}
+            onPointerDown={handleToppingContainerSelection}
           />
         </group>
       </group>
