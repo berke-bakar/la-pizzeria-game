@@ -120,13 +120,14 @@ const GameController = ({
       pizzaToOven: new CatmullRomCurve3([
         new Vector3(0, 0, 0),
         new Vector3(0, 0.5, 4.2),
-        new Vector3(0.8, 1.2, 6.2),
-        new Vector3(1.6, 0.9, 8.2),
+        new Vector3(0.8, 1.3, 6.2),
+        new Vector3(1.6, 0.925, 8.3),
       ]),
       pizzaToBox: new CatmullRomCurve3([
-        new Vector3(1.6, 0.9, 8.2),
+        new Vector3(1.6, 0.925, 8.3),
         new Vector3(1.1, 1.2, 6.2),
         new Vector3(0.6, 0.5, 4.2),
+        new Vector3(5.5, 1.0585, 0),
         new Vector3(5.5, 0.0585, 0),
       ]),
     }),
