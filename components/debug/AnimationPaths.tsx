@@ -4,14 +4,14 @@ import { useMemo } from "react";
 
 const AnimationPath = ({ debug }: { debug: boolean }) => {
   if (!debug) return null;
-  // Define a straight line path from door to cashier
 
   const paths = useMemo(
     () => ({
-      customerPath1: new LineCurve3(
-        new Vector3(0, 4, -18),
-        new Vector3(0, 4, -6)
-      ),
+      customerPath1: new CatmullRomCurve3([
+        new Vector3(-3, 4, -20),
+        new Vector3(0.25, 4, -20),
+        new Vector3(0, 4, -6),
+      ]),
       customerPath2: new LineCurve3(
         new Vector3(0, 4, -6),
         new Vector3(7.75, 4, -6)
@@ -20,7 +20,8 @@ const AnimationPath = ({ debug }: { debug: boolean }) => {
         new Vector3(7.75, 4, -6),
         new Vector3(5, 4, -10),
         new Vector3(3, 4, -14),
-        new Vector3(0, 4, -18),
+        new Vector3(0.25, 4, -20),
+        new Vector3(-3, 4, -20),
       ]),
       pizzaToOvenPath: new CatmullRomCurve3([
         new Vector3(2.5, 2.5, -3.2),

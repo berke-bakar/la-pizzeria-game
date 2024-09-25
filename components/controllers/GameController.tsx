@@ -20,6 +20,7 @@ import {
   LineCurve3,
   LoopOnce,
   LoopRepeat,
+  Quaternion,
   Vector3,
 } from "three";
 import { useFrame } from "@react-three/fiber/native";
@@ -89,13 +90,16 @@ const GameController = ({
   const currentCustomerRating = useRef(0);
 
   const isDoorOpened = useRef(false);
+  const walkRotationQuaternion = useRef(new Quaternion());
 
+  const forwardDir = useMemo(() => new Vector3(0, 0, 1), []);
   const customerPaths = useMemo(
     () => ({
-      customerPath1: new LineCurve3(
-        new Vector3(0, 0, -18),
-        new Vector3(0, 0, -5)
-      ),
+      customerPath1: new CatmullRomCurve3([
+        new Vector3(-3, 0, -18),
+        new Vector3(0.25, 0, -18),
+        new Vector3(0, 0, -5),
+      ]),
       customerPath2: new LineCurve3(
         new Vector3(0, 0, -5),
         new Vector3(6.25, 0, -5)
@@ -104,7 +108,8 @@ const GameController = ({
         new Vector3(6.25, 0, -5),
         new Vector3(3.5, 0, -9),
         new Vector3(1.5, 0, -13),
-        new Vector3(0, 0, -18),
+        new Vector3(0.25, 0, -18),
+        new Vector3(-3, 0, -18),
       ]),
     }),
     []
@@ -198,7 +203,7 @@ const GameController = ({
       const randomIndex = Math.floor(Math.random() * availableChars.length);
       if (customerRef.current && customerRef.current.group.current) {
         customerRef.current.group.current.visible = false;
-        customerRef.current.group.current?.position.set(0, 0, -18);
+        customerRef.current.group.current?.position.set(-3, 0, -18);
         customerRef.current.group.current.rotation.set(0, 0, 0);
       }
       currentCustomerType.current = availableChars[randomIndex] as
@@ -507,12 +512,23 @@ const GameController = ({
         currentCustomerAnimTime.current
       );
 
+      const tangent = currentCustomerPath
+        .getTangentAt(currentCustomerAnimTime.current)
+        .normalize();
+
       const isMoved = damp3(
         customerRef.current?.group.current.position as Vector3,
         pointOnPath,
         0.1,
         delta
       );
+
+      if (tangent) {
+        walkRotationQuaternion.current.setFromUnitVectors(forwardDir, tangent);
+        customerRef.current?.group.current.setRotationFromQuaternion(
+          walkRotationQuaternion.current
+        );
+      }
 
       if (!isMoved && currentCustomerAnimTime.current == 1) {
         currentCustomerAnimTime.current = 0;
