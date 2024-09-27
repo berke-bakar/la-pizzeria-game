@@ -38,7 +38,7 @@ const SpecialButton = (props: Props) => {
   }, [currentGamePhase, updateGamePhase, clearToppings]);
 
   return text ? (
-    <AnimatedButton onPointerDown={handleClick}>{text!}</AnimatedButton>
+    <AnimatedButton onPress={handleClick}>{text!}</AnimatedButton>
   ) : null;
 };
 

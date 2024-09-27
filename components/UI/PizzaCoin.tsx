@@ -6,8 +6,8 @@ const PizzaCoin = (props: SvgProps) => (
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
     id="svg28"
-    width={24}
-    height={24}
+    width={props.width || 24}
+    height={props.height || 24}
     viewBox="0 0 506 506"
     {...props}
   >

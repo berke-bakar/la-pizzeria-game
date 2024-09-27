@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet } from "react-native";
+import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
 import React from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { currentSceneAtom, overlayTextAtom } from "@/constants/constants";
@@ -9,6 +9,7 @@ import useGameStore from "@/hooks/useGameStore";
 import BackToHome from "./BackToHome";
 import SpecialButton from "./SpecialButton";
 import NextButton from "./NextButton";
+import { horizontalScale, moderateScale, verticalScale } from "../Scaling";
 
 type Props = {};
 
@@ -26,7 +27,7 @@ const HUD = (props: Props) => {
     <>
       <SafeAreaView style={styles.upper}>
         <AnimatedButton
-          onPointerDown={() => {
+          onPress={() => {
             setOverLayText({
               OverlayItem: BackToHome,
               show: true,
@@ -38,18 +39,12 @@ const HUD = (props: Props) => {
         </AnimatedButton>
         <CustomText style={styles.hudText}>DAY #{dayCount}</CustomText>
         <SafeAreaView style={styles.pizzaCoinContainer}>
-          <PizzaCoin height={"100%"} width={100} />
+          <PizzaCoin height={horizontalScale(35)} width={horizontalScale(20)} />
           <CustomText style={styles.hudText}>${wallet.toFixed(1)}</CustomText>
         </SafeAreaView>
       </SafeAreaView>
       <SafeAreaView style={styles.lower}>
-        <AnimatedButton
-          onPointerDown={() => {
-            // advanceCamera("retreat");
-          }}
-        >
-          Prev
-        </AnimatedButton>
+        <AnimatedButton disabled>Prev</AnimatedButton>
         <SpecialButton />
         <NextButton />
       </SafeAreaView>
@@ -66,12 +61,10 @@ const styles = StyleSheet.create({
     top: 0,
     width: "90%",
     height: "10%",
-    right: 0,
-    left: 0,
     flexDirection: "row",
-    marginHorizontal: "auto",
     justifyContent: "space-between",
     alignItems: "center",
+    alignSelf: "center",
   },
 
   lower: {
@@ -80,23 +73,23 @@ const styles = StyleSheet.create({
     bottom: 30,
     width: "90%",
     height: "10%",
-    right: 0,
-    left: 0,
     flexDirection: "row",
-    marginHorizontal: "auto",
     justifyContent: "space-between",
     alignItems: "center",
+    alignSelf: "center",
   },
 
   pizzaCoinContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    textAlign: "center",
     gap: 15,
+    padding: 0,
   },
 
   hudText: {
-    fontSize: 50,
+    fontSize: moderateScale(18),
     color: "white",
     userSelect: "none",
   },

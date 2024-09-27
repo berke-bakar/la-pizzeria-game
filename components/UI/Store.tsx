@@ -1,8 +1,12 @@
 import { Animated, Easing, StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
-import { INGREDIENTS, overlayTextAtom } from "@/constants/constants";
+import {
+  INGREDIENTS,
+  IngredientType,
+  overlayTextAtom,
+} from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
 import PizzaCoin from "./PizzaCoin";
 import useGameStore from "@/hooks/useGameStore";
@@ -59,7 +63,7 @@ const Store = (props: Props) => {
         }}
       >
         {Object.keys(INGREDIENTS).map((val) => {
-          const Icon = INGREDIENTS[val].icon;
+          const Icon = INGREDIENTS[val as IngredientType].icon;
           const alreadyBought =
             boughtToppings.find((boughtTopping) => boughtTopping === val) !==
             undefined;
@@ -68,7 +72,7 @@ const Store = (props: Props) => {
               key={val}
               disabled={alreadyBought}
               icon={Icon}
-              price={INGREDIENTS[val].price}
+              price={INGREDIENTS[val as IngredientType].price}
               title={val}
             />
           );
@@ -80,7 +84,7 @@ const Store = (props: Props) => {
         }}
       >
         <AnimatedButton
-          onPointerDown={() => {
+          onPress={() => {
             setOverlayText((prev) => ({ ...prev, show: false }));
           }}
         >

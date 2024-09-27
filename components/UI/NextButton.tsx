@@ -26,10 +26,7 @@ const NextButton = (props: Props) => {
   }, [updateGamePhase, advanceCamera, currentGamePhase]);
 
   return (
-    <AnimatedButton
-      disabled={!text}
-      onPointerDown={!!text ? handleClick : undefined}
-    >
+    <AnimatedButton disabled={!text} onPress={!!text ? handleClick : undefined}>
       {text ? text : "Next"}
     </AnimatedButton>
   );

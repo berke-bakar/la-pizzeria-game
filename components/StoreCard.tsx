@@ -1,9 +1,10 @@
-import { PointerEvent, StyleSheet, Text, View } from "react-native";
+import { GestureResponderEvent, StyleSheet, View } from "react-native";
 import React, { useCallback } from "react";
 import CustomText from "./CustomText";
 import { SvgProps } from "react-native-svg";
 import AnimatedButton from "./UI/AnimatedButton";
 import useGameStore from "@/hooks/useGameStore";
+import { IngredientType } from "@/constants/constants";
 
 type Props = {
   icon: React.FC<SvgProps>;
@@ -17,8 +18,8 @@ const StoreCard = ({ icon: Icon, disabled = false, price, title }: Props) => {
 
   const handleBuyClick = useCallback(
     (topping: string, toppingPrice: number) => {
-      return (event: PointerEvent) => {
-        buyTopping(topping, toppingPrice);
+      return (event: GestureResponderEvent) => {
+        buyTopping(topping as IngredientType, toppingPrice);
       };
     },
     [buyTopping]
@@ -39,7 +40,7 @@ const StoreCard = ({ icon: Icon, disabled = false, price, title }: Props) => {
       />
       <CustomText style={styles.cardText}>${price}</CustomText>
       <AnimatedButton
-        onPointerDown={!disabled ? handleBuyClick(title, price) : undefined}
+        onPress={!disabled ? handleBuyClick(title, price) : undefined}
         disabled={disabled}
       >
         {!disabled ? "BUY" : "BOUGHT"}

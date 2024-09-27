@@ -1,5 +1,5 @@
 import { Animated, Easing, StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
 import {
@@ -43,9 +43,9 @@ const BackToHome = (props: Props) => {
         You will lose today's earnings, but day count won't increase.
       </CustomText>
       <View style={styles.buttonContainer}>
-        <AnimatedButton onPointerDown={closeOverlay}>Cancel</AnimatedButton>
+        <AnimatedButton onPress={closeOverlay}>Cancel</AnimatedButton>
         <AnimatedButton
-          onPointerDown={() => {
+          onPress={() => {
             setCurrentSceneInfo({
               currentScene: "menu",
               transitionNeeded: false,

@@ -1,11 +1,16 @@
 import { useRef } from "react";
 import {
   Animated,
+  GestureResponderEvent,
   PointerEvent,
+  Pressable,
   PressableProps,
   StyleSheet,
 } from "react-native";
 import CustomText from "../CustomText";
+import { moderateScale } from "../Scaling";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type AnimatedButtonProps = React.JSX.IntrinsicAttributes &
   React.JSX.IntrinsicClassAttributes<PressableProps> &
@@ -17,7 +22,7 @@ const AnimatedButton = ({
 }: AnimatedButtonProps) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  const handleClick = (event: PointerEvent) => {
+  const handlePress = (event: GestureResponderEvent) => {
     const anim = Animated.timing(scaleAnim, {
       toValue: 1.3,
       useNativeDriver: true,
@@ -25,25 +30,31 @@ const AnimatedButton = ({
       duration: 240,
     });
     anim.start((result) => {
-      if (result.finished && props.onPointerDown) {
-        props.onPointerDown(event);
+      if (result.finished && props.onPress) {
+        props.onPress(event);
       }
     });
   };
 
   return (
-    <Animated.View
+    <AnimatedPressable
       style={[
         styles.button,
         { transform: [{ scale: scaleAnim }] },
         disabled ? styles.buttonDisabled : styles.buttonActive,
       ]}
-      onPointerDown={handleClick}
+      onPress={handlePress}
     >
-      <CustomText style={{ color: "white", userSelect: "none" }}>
+      <CustomText
+        style={{
+          color: "white",
+          userSelect: "none",
+          includeFontPadding: false,
+        }}
+      >
         {props.children}
       </CustomText>
-    </Animated.View>
+    </AnimatedPressable>
   );
 };
 
@@ -52,10 +63,10 @@ export default AnimatedButton;
 const styles = StyleSheet.create({
   button: {
     borderStyle: "dashed",
-    paddingHorizontal: 50,
-    paddingVertical: 20,
-    borderWidth: 8,
-    borderRadius: 10,
+    paddingHorizontal: moderateScale(20),
+    paddingVertical: moderateScale(10),
+    borderWidth: moderateScale(3),
+    borderRadius: moderateScale(8),
     userSelect: "none",
   },
 

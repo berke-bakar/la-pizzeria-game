@@ -64,7 +64,7 @@ const HowToPlay = (props: Props) => {
         </CustomText>
       </View>
       <AnimatedButton
-        onPointerDown={() => {
+        onPress={() => {
           setOverlayText((prev) => ({ ...prev, show: false }));
         }}
       >

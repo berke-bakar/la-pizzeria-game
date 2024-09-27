@@ -1,14 +1,5 @@
-import {
-  Animated,
-  Easing,
-  PointerEvent,
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Animated, Easing, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useRef } from "react";
 import CustomText from "../CustomText";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -84,7 +75,7 @@ const EndOfDay = (props: Props) => {
         </CustomText>
       </View>
       <AnimatedButton
-        onPointerDown={() => {
+        onPress={() => {
           closeOverlay();
           setCurrentSceneInfo({
             currentScene: "menu",
@@ -127,6 +118,5 @@ const styles = StyleSheet.create({
   info: {
     color: "#820300",
     maxWidth: "65%",
-    // fontSize: 16,
   },
 });

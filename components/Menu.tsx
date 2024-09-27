@@ -1,5 +1,5 @@
 import React from "react";
-import { Billboard, Float } from "@react-three/drei/native";
+import { Float } from "@react-three/drei/native";
 
 const Menu = (props: JSX.IntrinsicElements["group"]) => {
   const MENU_ITEM_SPACING = 0.2;
