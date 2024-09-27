@@ -33,17 +33,19 @@ const CameraController = ({ debug }: CameraControllerProps) => {
 
   useFrame((state, delta) => {
     // check if distance is reached approximately
-    const positionReached =
-      calcVector.subVectors(statePosVector, state.camera.position).length() <
-      0.05;
-    // Rough angle calculation to check if we reached the desired rotation
-    const rotationReached =
-      1 - Math.pow(stateRotQuat.dot(state.camera.quaternion), 2) < 0.05;
+    // const positionReached =
+    //   calcVector.subVectors(statePosVector, state.camera.position).length() <
+    //   0.05;
+    // // Rough angle calculation to check if we reached the desired rotation
+    // const rotationReached =
+    //   1 - Math.pow(stateRotQuat.dot(state.camera.quaternion), 2) < 0.05;
 
-    if (!positionReached || !rotationReached) {
-      damp3(state.camera.position, cameraState.position, 0.3, delta);
-      dampQ(state.camera.quaternion, stateRotQuat, 0.3, delta);
-    }
+    // if (!positionReached || !rotationReached) {
+    //   damp3(state.camera.position, cameraState.position, 0.3, delta);
+    //   dampQ(state.camera.quaternion, stateRotQuat, 0.3, delta);
+    // }
+    damp3(state.camera.position, cameraState.position, 0.3, delta);
+    dampQ(state.camera.quaternion, stateRotQuat, 0.3, delta);
   });
 
   return null;

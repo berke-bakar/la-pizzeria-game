@@ -1,6 +1,7 @@
 import { IngredientType } from "@/constants/constants";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface GameState {
   wallet: number;
@@ -40,6 +41,7 @@ const useGameStore = create<GameState>()(
     }),
     {
       name: "la-pizzeria-game-store",
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 );

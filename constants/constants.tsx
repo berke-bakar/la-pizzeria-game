@@ -158,7 +158,7 @@ export const CAMERA_STATES: Record<string, Array<State>> = {
     {
       position: [8, 4, 0],
       rotation: {
-        x: MathUtils.DEG2RAD * 22.5,
+        x: 0,
         y: 0,
         z: 0,
       },

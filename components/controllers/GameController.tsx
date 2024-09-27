@@ -307,8 +307,8 @@ const GameController = ({
 
   useEffect(() => {
     if (gameSceneVisible) {
-      todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
-      // todaysCustomerCount.current = 1;
+      // todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
+      todaysCustomerCount.current = 1;
       currentCustomerIndex.current = 0;
       setShowFooter(false);
     } else {

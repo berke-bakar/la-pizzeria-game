@@ -39,7 +39,12 @@ export default function Index() {
     <View style={{ ...styles.container }}>
       {Platform.OS === "web" && location.pathname === "#debug" && <Leva />}
       <Canvas
-        camera={{ position: [0, 2, 10], fov: 30, rotation: [-0.1, 0, 0] }}
+        camera={{
+          position: [0, 2, 10],
+          fov: 30,
+          rotation: [-0.1, 0, 0],
+          far: 30,
+        }}
         onCreated={(state) => {
           const _gl = state.gl.getContext();
           const pixelStorei = _gl.pixelStorei.bind(_gl);
@@ -56,7 +61,7 @@ export default function Index() {
         <SceneLoader debug={debug} />
         <CameraController debug={debug} />
       </Canvas>
-      <StatusBar style="auto" />
+      <StatusBar style="auto" hidden />
       <Footer />
       <LoadingText />
       <OverlayTextPresenter />

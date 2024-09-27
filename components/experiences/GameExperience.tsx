@@ -28,11 +28,11 @@ const GameExperience = ({
   const customerRef = useRef<CustomerRefProps>(null);
   const doorRef = useRef<DoorRefProps>(null);
 
+  console.log(camera);
+
   useEffect(() => {
     if (visible) {
       (camera as PerspectiveCamera).fov = 50;
-      camera.near = 0.01;
-      camera.far = 1000;
       if (debug) camera.position.set(0, 0, -30);
       camera.updateProjectionMatrix();
     }

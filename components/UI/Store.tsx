@@ -1,4 +1,12 @@
-import { Animated, Easing, StyleSheet, View } from "react-native";
+import {
+  Animated,
+  Easing,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useEffect, useRef } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
@@ -11,6 +19,7 @@ import AnimatedButton from "./AnimatedButton";
 import PizzaCoin from "./PizzaCoin";
 import useGameStore from "@/hooks/useGameStore";
 import StoreCard from "../StoreCard";
+import { horizontalScale, moderateScale } from "../Scaling";
 type Props = {};
 
 const Store = (props: Props) => {
@@ -34,32 +43,26 @@ const Store = (props: Props) => {
         e.stopPropagation();
       }}
     >
-      <View
+      <CustomText style={styles.header}>Store</CustomText>
+      <SafeAreaView style={styles.pizzaCoinContainer}>
+        <PizzaCoin height={moderateScale(35)} width={moderateScale(30)} />
+        <CustomText style={styles.currencyText}>
+          ${wallet.toFixed(1)}
+        </CustomText>
+      </SafeAreaView>
+      <CustomText style={styles.info}>
+        Surprise your customers with new delicious toppings...
+      </CustomText>
+      <ScrollView
         style={{
-          // flex: 1,
-          justifyContent: "flex-start",
-          alignItems: "center",
           width: "100%",
         }}
-      >
-        <CustomText style={styles.header}>Store</CustomText>
-        <View style={styles.pizzaCoinContainer}>
-          <PizzaCoin height={"100%"} width={100} />
-          <CustomText style={styles.currencyText}>${wallet}</CustomText>
-        </View>
-        <CustomText style={styles.info}>
-          Surprise your customers with new delicious toppings...
-        </CustomText>
-      </View>
-      <View
-        style={{
-          flex: 1,
-          // justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
+        contentContainerStyle={{
           flexDirection: "row",
           flexWrap: "wrap",
-          gap: 15,
+          justifyContent: "center",
+          alignItems: "center",
+          gap: Platform.select({ web: 15, native: 10 }),
         }}
       >
         {Object.keys(INGREDIENTS).map((val) => {
@@ -77,7 +80,7 @@ const Store = (props: Props) => {
             />
           );
         })}
-      </View>
+      </ScrollView>
       <View
         style={{
           alignSelf: "flex-end",
@@ -114,28 +117,35 @@ const styles = StyleSheet.create({
 
   header: {
     color: "#B80000",
-    fontSize: 50,
-    flex: 1,
+    fontSize: moderateScale(18),
     textAlign: "center",
+    includeFontPadding: false,
   },
 
   info: {
     color: "#820300",
     maxWidth: "65%",
-    // fontSize: 16,
+    fontSize: Platform.select({
+      web: 16,
+      native: 12,
+    }),
+    includeFontPadding: false,
+    alignSelf: "center",
   },
+
   pizzaCoinContainer: {
     position: "absolute",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    gap: 15,
-    right: 0,
+    gap: 10,
+    right: 15,
     top: 0,
   },
 
   currencyText: {
-    fontSize: 50,
+    fontSize: moderateScale(18),
     color: "white",
+    userSelect: "none",
   },
 });

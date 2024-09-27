@@ -1,4 +1,4 @@
-import { Animated, Easing, StyleSheet, View } from "react-native";
+import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
 import React, { useCallback, useEffect, useRef } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
@@ -10,6 +10,7 @@ import {
 } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
 import { useResetAtom } from "jotai/utils";
+import { moderateScale } from "../Scaling";
 type Props = {};
 
 const BackToHome = (props: Props) => {
@@ -69,36 +70,40 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
     alignItems: "center",
-    maxHeight: "30%",
-    width: "30%",
+    maxHeight: "45%",
+    // width: "30%",
+    width: Platform.select({
+      web: "30%",
+      native: "45%",
+    }),
     borderRadius: 8,
     backgroundColor: "#FF9800",
     userSelect: "none",
-    // gap: 15,
   },
 
   title: {
     color: "#B80000",
-    fontSize: 30,
-    maxWidth: "50%",
     textAlign: "center",
+    fontSize: moderateScale(18),
+    includeFontPadding: false,
   },
 
   subtitle: {
     color: "#1a1a1a",
-    fontSize: 15,
-    maxWidth: "50%",
+    fontSize: Platform.select({
+      web: 16,
+      native: 12,
+    }),
     textAlign: "center",
+    includeFontPadding: false,
   },
 
   buttonContainer: {
     flexDirection: "row",
-    gap: 25,
-  },
-
-  info: {
-    color: "#820300",
-    maxWidth: "65%",
-    // fontSize: 16,
+    // gap: 25,
+    gap: Platform.select({
+      web: 25,
+      native: 10,
+    }),
   },
 });

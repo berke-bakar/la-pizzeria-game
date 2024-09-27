@@ -1,16 +1,17 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Image, View, StyleSheet } from "react-native";
+import { Image, View, StyleSheet, Platform } from "react-native";
 import { useAtomValue, useSetAtom } from "jotai";
 import { customerOrderAtom, typingFinishedAtom } from "@/constants/constants";
 import CustomText from "../CustomText";
+import { Asset } from "expo-asset";
 
 const characterImages = {
-  suitMan: "../../assets/images/characters/suitMan.png",
-  suitWoman: "../../assets/images/characters/suitWoman.png",
-  casualMan: "../../assets/images/characters/casualMan.png",
-  casualWoman: "../../assets/images/characters/casualWoman.png",
-  punk: "../../assets/images/characters/punk.png",
-  worker: "../../assets/images/characters/worker.png",
+  suitMan: require("../../assets/images/characters/suitMan.png"),
+  suitWoman: require("../../assets/images/characters/suitWoman.png"),
+  casualMan: require("../../assets/images/characters/casualMan.png"),
+  casualWoman: require("../../assets/images/characters/casualWoman.png"),
+  punk: require("../../assets/images/characters/punk.png"),
+  worker: require("../../assets/images/characters/worker.png"),
 };
 
 const ConversationBox: React.FC = () => {
@@ -71,7 +72,10 @@ const ConversationBox: React.FC = () => {
   return (
     customerOrder.show && (
       <View style={styles.container}>
-        <Image source={{ uri: selectedImage }} style={styles.image} />
+        <Image
+          source={{ uri: Asset.fromModule(selectedImage).uri }}
+          style={styles.image}
+        />
         <View style={styles.textBox}>
           <CustomText style={styles.text}>
             {displayedText}
@@ -85,25 +89,22 @@ const ConversationBox: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
+    position: "absolute",
+    zIndex: 8000,
+    width: "60%",
     flexDirection: "row",
     padding: 10,
     backgroundColor: "#ffffffb5",
     borderRadius: 8,
     alignItems: "center",
+    alignSelf: "center",
     elevation: 5,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    width: "70%",
-    position: "absolute",
-    right: 0,
-    left: 0,
     height: "20%",
-    zIndex: 8000,
     bottom: 30,
-    marginHorizontal: "auto",
-    gap: 45,
+    gap: Platform.select({
+      web: 45,
+      native: 20,
+    }),
   },
   image: {
     height: "80%",
@@ -118,7 +119,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    fontSize: 20,
+    fontSize: Platform.select({
+      web: 20,
+      native: 12,
+    }),
     color: "#333",
   },
 });

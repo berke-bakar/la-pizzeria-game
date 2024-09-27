@@ -1,10 +1,16 @@
-import { GestureResponderEvent, StyleSheet, View } from "react-native";
+import {
+  GestureResponderEvent,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useCallback } from "react";
 import CustomText from "./CustomText";
 import { SvgProps } from "react-native-svg";
 import AnimatedButton from "./UI/AnimatedButton";
 import useGameStore from "@/hooks/useGameStore";
 import { IngredientType } from "@/constants/constants";
+import { moderateScale } from "./Scaling";
 
 type Props = {
   icon: React.FC<SvgProps>;
@@ -25,6 +31,11 @@ const StoreCard = ({ icon: Icon, disabled = false, price, title }: Props) => {
     [buyTopping]
   );
 
+  const iconSize = Platform.select({
+    web: 100,
+    native: 50,
+  });
+
   return (
     <View
       style={[
@@ -34,8 +45,8 @@ const StoreCard = ({ icon: Icon, disabled = false, price, title }: Props) => {
     >
       <CustomText style={styles.cardText}>{title.toUpperCase()}</CustomText>
       <Icon
-        height={100}
-        width={100}
+        height={iconSize}
+        width={iconSize}
         style={{ maxHeight: 100, maxWidth: 100 }}
       />
       <CustomText style={styles.cardText}>${price}</CustomText>
@@ -57,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    width: "12%",
+    // width: "12%",
   },
 
   cardContainerActive: {
@@ -70,6 +81,11 @@ const styles = StyleSheet.create({
 
   cardText: {
     color: "white",
-    fontSize: 20,
+    // fontSize: 20,
+    // fontSize: moderateScale(20),
+    fontSize: Platform.select({
+      web: 16,
+      native: 12,
+    }),
   },
 });

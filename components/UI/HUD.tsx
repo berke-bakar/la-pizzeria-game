@@ -1,4 +1,4 @@
-import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
+import { Platform, SafeAreaView, StyleSheet } from "react-native";
 import React from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { currentSceneAtom, overlayTextAtom } from "@/constants/constants";
@@ -9,11 +9,9 @@ import useGameStore from "@/hooks/useGameStore";
 import BackToHome from "./BackToHome";
 import SpecialButton from "./SpecialButton";
 import NextButton from "./NextButton";
-import { horizontalScale, moderateScale, verticalScale } from "../Scaling";
+import { horizontalScale, moderateScale } from "../Scaling";
 
-type Props = {};
-
-const HUD = (props: Props) => {
+const HUD = () => {
   const currentSceneInfo = useAtomValue(currentSceneAtom);
 
   const { wallet, dayCount } = useGameStore();
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
   upper: {
     position: "absolute",
     zIndex: 8000,
-    top: 0,
+    top: Platform.select({ web: 0, native: 10 }),
     width: "90%",
     height: "10%",
     flexDirection: "row",

@@ -13,6 +13,7 @@ import AnimatedButton from "./AnimatedButton";
 import { RESET, useResetAtom } from "jotai/utils";
 import useGameStore from "@/hooks/useGameStore";
 import { useToppings } from "@/hooks/useToppings";
+import { moderateScale } from "../Scaling";
 type Props = {};
 
 const EndOfDay = (props: Props) => {
@@ -112,7 +113,10 @@ const styles = StyleSheet.create({
 
   header: {
     color: "#B80000",
-    fontSize: 50,
+    // fontSize: 50,
+    fontSize: moderateScale(18),
+    textAlign: "center",
+    includeFontPadding: false,
   },
 
   info: {
