@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.berkebakar.lapizzeriagame"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +39,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3d01a12a-5937-47ac-b59e-123fb50f1284"
+      }
     }
   }
 }
