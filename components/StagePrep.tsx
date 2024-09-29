@@ -9,11 +9,15 @@ type Props = {
 const StagePrep = ({ debug = false }: Props) => {
   return (
     <>
-      <Grid visible={debug} infiniteGrid />
       {Platform.OS === "web" && debug && <StatsGl />}
       <ambientLight intensity={1} />
-      <axesHelper visible={debug} />
-      <ContactShadows />
+      {debug && (
+        <>
+          <Grid infiniteGrid />
+          <axesHelper />
+        </>
+      )}
+      {Platform.OS === "web" && <ContactShadows />}
     </>
   );
 };
