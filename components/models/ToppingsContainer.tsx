@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useGLTF } from "@react-three/drei/native";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
@@ -41,12 +41,22 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
   ) as GLTFResult;
   const { boughtToppings } = useGameStore();
   const shaderRef = useRef<any>(null);
-  const uniforms = useRef({
-    textureAtlas: {
-      value: materials.toppingsAtlas.map,
-    },
-    visibleToppings: new THREE.Uniform(Array<boolean>(14).fill(!!0)),
-  });
+  const uniforms = useMemo(
+    () => ({
+      textureAtlas: {
+        value: materials.toppingsAtlas.map,
+      },
+      visibleToppings: new THREE.Uniform(Array<number>(14).fill(0)),
+      lightDirection: new THREE.Uniform(
+        new THREE.Vector3(0, 0, 0).sub(new THREE.Vector3(2, 5, 2))
+      ),
+      dirLightColor: new THREE.Uniform(new THREE.Color("white")),
+      dirLightIntensity: new THREE.Uniform(3),
+      ambientLightColor: new THREE.Uniform(new THREE.Color("white")),
+      ambientLightIntensity: new THREE.Uniform(1),
+    }),
+    []
+  );
 
   useEffect(() => {
     if (shaderRef.current) {
@@ -55,7 +65,6 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
         const index = toppingsIndexMap[toppingName];
         if (index !== undefined) visibleToppings[index] = 1;
       });
-      console.log(visibleToppings);
 
       shaderRef.current.uniforms.visibleToppings.value = visibleToppings;
       shaderRef.current.uniforms.visibleToppings.needsUpdate = true;
@@ -77,7 +86,7 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
       >
         <shaderMaterial
           ref={shaderRef}
-          uniforms={uniforms.current}
+          uniforms={uniforms}
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
           transparent={true}
