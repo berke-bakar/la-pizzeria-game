@@ -50,14 +50,12 @@ const MenuExperience = ({
     }
   }, [visible]);
 
+  if (!visible) return null;
+
   return (
     <>
       <group visible={visible} {...props}>
-        <directionalLight
-          position={[-5, 5, 5]}
-          intensity={visible ? 5 : 0}
-          visible={visible}
-        >
+        <directionalLight position={[-5, 5, 5]} intensity={visible ? 5 : 0}>
           {debug && visible && (
             <Helper type={DirectionalLightHelper} args={[1, 0xff0000]} />
           )}
@@ -65,7 +63,6 @@ const MenuExperience = ({
 
         <BuildingsScene scale={2} position={[0, 0, -8]} rotation={[0, 0, 0]} />
         <Chef
-          scale={2}
           position={[0.8, 0, 0]}
           rotation={[0, -0.15, 0]}
           visible={visible}

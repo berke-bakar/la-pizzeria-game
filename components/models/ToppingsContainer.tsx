@@ -6,6 +6,7 @@ import { Asset } from "expo-asset";
 import useGameStore from "@/hooks/useGameStore";
 import { INGREDIENTS, IngredientType } from "@/constants/constants";
 import { atom, useAtom } from "jotai";
+import { selectedToppingAtom } from "../../constants/constants";
 import { ThreeEvent } from "@react-three/fiber/native";
 
 type GLTFResult = GLTF & {
@@ -63,8 +64,6 @@ const TOPPING_MESH_ID: IngredientType[] = [
   "shrimp",
   "tomato",
 ];
-
-export const selectedToppingAtom = atom<IngredientType>("bacon");
 
 export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF(

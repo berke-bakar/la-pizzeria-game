@@ -307,8 +307,8 @@ const GameController = ({
 
   useEffect(() => {
     if (gameSceneVisible) {
-      // todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
-      todaysCustomerCount.current = 1;
+      todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
+      // todaysCustomerCount.current = 1;
       currentCustomerIndex.current = 0;
       setShowFooter(false);
     } else {
@@ -322,7 +322,7 @@ const GameController = ({
       direction: number;
     }) => {
       const clipName = e.action.getClip().name;
-      if (clipName === "LidClose" && pizzaMakerRef.current) {
+      if (clipName === "LidClose.001" && pizzaMakerRef.current) {
         pizzaMakerRef.current.setFrustumCulled(true);
       }
       if (clipName === "DoorOpen" && doorRef.current) {
@@ -411,7 +411,7 @@ const GameController = ({
             : null
         );
       } else if (currentGamePhase.subphase === "ovenClose") {
-        const action = ovenRef.current?.actions["Close"];
+        const action = ovenRef.current?.actions["OvenClose"];
         ovenRef.current?.mixer.stopAllAction();
         if (action) {
           action.clampWhenFinished = true;
@@ -422,25 +422,25 @@ const GameController = ({
           updateGamePhase("advancePhase");
         }, 3000);
       } else if (currentGamePhase.subphase === "ovenOpen") {
-        const action = ovenRef.current?.actions["Open"];
+        const action = ovenRef.current?.actions["OvenOpen"];
         if (action) {
           action.clampWhenFinished = true;
           action
-            .crossFadeFrom(ovenRef.current?.actions["Close"]!, 0.5, false)
+            .crossFadeFrom(ovenRef.current?.actions["OvenClose"]!, 0.5, false)
             .setLoop(LoopOnce, 1)
             .play();
         }
       } else if (currentGamePhase.subphase === "pizzaToBox") {
         customerRef.current?.group.current?.rotation.set(0, Math.PI / 2, 0);
       } else if (currentGamePhase.subphase === "packaging") {
-        const action = pizzaBoxRef.current?.actions["LidClose"];
+        const action = pizzaBoxRef.current?.actions["LidClose.001"];
         if (action) {
           action.loop = LoopOnce;
           action.clampWhenFinished = true;
           action.reset().play();
         }
       } else if (currentGamePhase.subphase === "pizzaReveal") {
-        const action = pizzaBoxRef.current?.actions["Peek"];
+        const action = pizzaBoxRef.current?.actions["Peek.001"];
         if (action) {
           pizzaBoxRef.current?.mixer.stopAllAction();
           action.loop = LoopOnce;
@@ -594,5 +594,5 @@ const GameController = ({
 
   return null;
 };
-
+GameController.whyDidYouRender = true;
 export default GameController;

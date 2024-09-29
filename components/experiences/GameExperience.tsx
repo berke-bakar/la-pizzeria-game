@@ -28,8 +28,6 @@ const GameExperience = ({
   const customerRef = useRef<CustomerRefProps>(null);
   const doorRef = useRef<DoorRefProps>(null);
 
-  console.log(camera);
-
   useEffect(() => {
     if (visible) {
       (camera as PerspectiveCamera).fov = 50;
@@ -37,6 +35,8 @@ const GameExperience = ({
       camera.updateProjectionMatrix();
     }
   }, [visible]);
+
+  if (!visible) return null;
 
   return (
     <group visible={visible} {...props}>

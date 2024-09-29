@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import React, { forwardRef, Ref, RefObject, useImperativeHandle } from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGLTF, useAnimations } from "@react-three/drei/native";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
 
-type ActionName = "LidClose" | "LidOpen" | "Peek";
+type ActionName = "LidClose.001" | "Peek.001";
 
 interface GLTFAction extends THREE.AnimationClip {
   name: ActionName;
@@ -12,13 +12,12 @@ interface GLTFAction extends THREE.AnimationClip {
 
 type GLTFResult = GLTF & {
   nodes: {
-    lid: THREE.Mesh;
-    pizzaBox: THREE.Mesh;
+    pizzaBoxMesh: THREE.SkinnedMesh;
+    Bone: THREE.Bone;
   };
   materials: {
     _defaultMat: THREE.MeshStandardMaterial;
   };
-  animations: GLTFAction[];
 };
 
 export type PizzaBoxRefProps = {
@@ -34,6 +33,7 @@ export type PizzaBoxProps = Omit<JSX.IntrinsicElements["group"], "ref">;
 export const PizzaBox = forwardRef<PizzaBoxRefProps, PizzaBoxProps>(
   function PizzaBox(props, ref) {
     const group = React.useRef<THREE.Group>();
+    const rotatingGroup = React.useRef<THREE.Group>();
     const { nodes, materials, animations } = useGLTF(
       Asset.fromModule(require("../../assets/models/pizzaBox.glb")).uri
     ) as GLTFResult;
@@ -42,7 +42,7 @@ export const PizzaBox = forwardRef<PizzaBoxRefProps, PizzaBoxProps>(
     useImperativeHandle(
       ref,
       () => ({
-        group: group,
+        group: rotatingGroup,
         actions: actions,
         mixer: mixer,
       }),
@@ -50,19 +50,17 @@ export const PizzaBox = forwardRef<PizzaBoxRefProps, PizzaBoxProps>(
     );
 
     return (
-      <group ref={group} position={[8, 2.608, -3.2]} {...props} dispose={null}>
-        <group name="Scene">
-          <mesh
-            name="lid"
-            geometry={nodes.lid.geometry}
-            material={materials._defaultMat}
-            position={[0, 0.156, -1.1]}
-          />
-          <mesh
-            name="pizzaBox"
-            geometry={nodes.pizzaBox.geometry}
-            material={materials._defaultMat}
-          />
+      <group ref={group} {...props} dispose={null}>
+        <group name="PizzaBoxArmature" position={[8, 2.601, -3.2]}>
+          <group name="Scene" ref={rotatingGroup}>
+            <skinnedMesh
+              name="pizzaBoxMesh"
+              geometry={nodes.pizzaBoxMesh.geometry}
+              material={materials._defaultMat}
+              skeleton={nodes.pizzaBoxMesh.skeleton}
+            />
+            <primitive object={nodes.Bone} />
+          </group>
         </group>
       </group>
     );

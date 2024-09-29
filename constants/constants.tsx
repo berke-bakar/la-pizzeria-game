@@ -171,7 +171,7 @@ export const CAMERA_STATES: Record<string, Array<State>> = {
 export const currentSceneAtom = atom<{
   currentScene: "game" | "menu";
   transitionNeeded: boolean;
-}>({ currentScene: "menu", transitionNeeded: true });
+}>({ currentScene: "menu", transitionNeeded: false }); // TODO: Change here
 export const progressAtom = atom(0);
 export const overlayTextAtom = atom<{
   show: boolean;
@@ -366,3 +366,4 @@ export const customerOrderAtom = atom<{
 
 export const typingFinishedAtom = atom(false);
 export const todaysCustomerRatings = atomWithReset<number[]>([]);
+export const selectedToppingAtom = atom<IngredientType>("bacon");
