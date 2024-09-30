@@ -53,6 +53,7 @@
     "react-native-svg": "15.2.0",
     "react-native-web": "~0.19.10",
     "three": "^0.168.0",
+    "three-custom-shader-material": "^6.0.10",
     "three-stdlib": "^2.32.2",
     "zustand": "^4.5.5"
   },

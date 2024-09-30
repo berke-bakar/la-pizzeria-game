@@ -67,9 +67,7 @@ const Store = (props: Props) => {
       >
         {Object.keys(INGREDIENTS).map((val) => {
           const Icon = INGREDIENTS[val as IngredientType].icon;
-          const alreadyBought =
-            boughtToppings.find((boughtTopping) => boughtTopping === val) !==
-            undefined;
+          const alreadyBought = boughtToppings[val as IngredientType];
           return (
             <StoreCard
               key={val}

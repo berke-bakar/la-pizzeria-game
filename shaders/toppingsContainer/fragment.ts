@@ -1,14 +1,7 @@
 export const fragmentShader = `
-uniform sampler2D textureAtlas;
-uniform bool visibleToppings[14];
-uniform vec3 lightDirection;
-uniform vec3 dirLightColor;
-uniform float dirLightIntensity;
-uniform vec3 ambientLightColor;
-uniform float ambientLightIntensity;
+uniform sampler2D uTextureAtlas;
+uniform bool uVisibleToppings[14];
 varying vec2 vUv;
-varying vec3 vNormal;
-varying vec3 vPosition;
 
 void main() {
   vec2 atlasUV = vUv;
@@ -24,20 +17,12 @@ void main() {
   atlasUV.x = fract(vUv.x * numRows) * tileSize + float(col) * tileSize;
   atlasUV.y = fract(vUv.y * numRows) * tileSize + float(row) * tileSize;
 
-  vec4 color = texture2D(textureAtlas, atlasUV);
+  vec4 color = texture2D(uTextureAtlas, atlasUV);
 
   // Draw only if bought
-  if (toppingIndex < 14 && !visibleToppings[toppingIndex])
+  if (toppingIndex < 14 && !uVisibleToppings[toppingIndex])
     discard;
 
-  vec3 normal = normalize(vNormal);
-  vec3 lightDir = normalize(lightDirection);
-  float diffuseStrength = max(dot(normal, lightDir), 0.0);
-
-  // Ambient + Diffuse lighting
-  color.rgb += ambientLightIntensity * 0.15 * ambientLightColor + dirLightColor * diffuseStrength * dirLightIntensity * 0.15;
-  // color.rgb += dirLightColor * diffuseStrength * dirLightIntensity * 0.1;
-
-  gl_FragColor = color;
+  csm_DiffuseColor = color;
 }
 `;

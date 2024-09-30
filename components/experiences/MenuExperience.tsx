@@ -3,7 +3,7 @@ import Chef from "../models/Chef";
 import Menu from "../Menu";
 import Button3D from "../Button3D";
 import { BuildingsScene } from "../models/BuildingsScene";
-import { ThreeEvent, useThree } from "@react-three/fiber/native";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber/native";
 import { Helper, Text3D } from "@react-three/drei/native";
 import fontPath from "../../assets/fonts/PlaywriteCU_Regular.json";
 import { useSetAtom } from "jotai";

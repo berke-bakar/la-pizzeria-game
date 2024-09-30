@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 interface GameState {
   wallet: number;
   dayCount: number;
-  boughtToppings: IngredientType[];
+  boughtToppings: Record<IngredientType, boolean>;
   addMoney: (amount: number) => void;
   incrementDay: () => void;
   buyTopping: (topping: IngredientType, price: number) => void;
@@ -17,23 +17,30 @@ const useGameStore = create<GameState>()(
     (set, get) => ({
       wallet: 100,
       dayCount: 1,
-      boughtToppings: [
-        "bacon",
-        "mushroom",
-        "olives",
-        "onion",
-        "peppers",
-        "salami",
-        "tomato",
-      ],
+      boughtToppings: {
+        anchovies: false,
+        bacon: true,
+        chicken: false,
+        ham: false,
+        mushroom: true,
+        olives: true,
+        onion: true,
+        peppers: true,
+        pickle: false,
+        pineapple: false,
+        salami: true,
+        sausage: false,
+        shrimp: false,
+        tomato: true,
+      },
       addMoney: (amount) => set((state) => ({ wallet: state.wallet + amount })),
       incrementDay: () => set((state) => ({ dayCount: state.dayCount + 1 })),
       buyTopping: (topping, price) => {
         const boughtToppings = get().boughtToppings;
         const currentWallet = get().wallet;
-        if (!boughtToppings.includes(topping) && currentWallet >= price) {
+        if (!boughtToppings[topping] && currentWallet >= price) {
           set((state) => ({
-            boughtToppings: [...state.boughtToppings, topping],
+            boughtToppings: { ...state.boughtToppings, [topping]: true },
             wallet: state.wallet - price,
           }));
         }

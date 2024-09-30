@@ -1,7 +1,7 @@
 import { StyleSheet, Animated } from "react-native";
 import React, { useEffect, useRef } from "react";
 import { useAtomValue } from "jotai";
-import { selectedToppingAtom } from "../models/ToppingsContainer";
+import { selectedToppingAtom } from "../../constants/constants";
 import CustomText from "../CustomText";
 import { showFooterAtom } from "@/constants/constants";
 

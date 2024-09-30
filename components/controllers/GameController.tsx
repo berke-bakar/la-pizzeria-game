@@ -34,6 +34,7 @@ import { SHAPE_TYPES } from "cannon-es";
 import EndOfDay from "../UI/EndOfDay";
 import useGameStore from "@/hooks/useGameStore";
 import { DoorRefProps } from "../models/Door";
+import { Platform } from "react-native";
 
 type GameControllerProps = {
   pizzaMakerRef: RefObject<PizzaMakerRefProps>;
@@ -175,9 +176,13 @@ const GameController = ({
   }, [currentGamePhase]);
 
   const generateOrder = () => {
+    const boughtItems: IngredientType[] = [];
+    Object.entries(boughtToppings).forEach(([key, val], ind) => {
+      if (val) boughtItems.push(key as IngredientType);
+    });
     const toppingCount =
-      Math.floor(Math.random() * Math.min(boughtToppings.length, 5)) + 1;
-    const order = [...boughtToppings]
+      Math.floor(Math.random() * Math.min(boughtItems.length, 5)) + 1;
+    const order = [...boughtItems]
       .sort(() => Math.random() - 0.5)
       .slice(0, toppingCount);
 
@@ -488,6 +493,7 @@ const GameController = ({
         // Check if it is end of day, otherwise serve new customer
         if (todaysCustomerCount.current === currentCustomerIndex.current) {
           isDoorOpened.current = false;
+          clearToppings();
           setOverlayText({
             OverlayItem: EndOfDay,
             show: true,
@@ -504,6 +510,7 @@ const GameController = ({
 
   useFrame((state, delta) => {
     // console.log(state.gl.info);
+
     if (currentCustomerPath && customerRef.current?.group.current) {
       currentCustomerAnimTime.current = Math.min(
         currentCustomerAnimTime.current + delta * 0.3,
@@ -594,5 +601,5 @@ const GameController = ({
 
   return null;
 };
-GameController.whyDidYouRender = true;
+// GameController.whyDidYouRender = Platform.OS === "web" ? true : undefined;
 export default GameController;
