@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useGraph } from "@react-three/fiber/native";
 import { useGLTF, useAnimations } from "@react-three/drei/native";
 import { GLTF, SkeletonUtils } from "three-stdlib";
@@ -25,25 +25,64 @@ export default function Chef(props: JSX.IntrinsicElements["group"]) {
   const group = React.useRef<THREE.Group<THREE.Object3DEventMap>>();
   const { nodes, materials, animations } = useGLTF(
     Asset.fromModule(require("../../assets/models/Chef_simplified.glb")).uri
+  ) as GLTFResult;
+  const { actions, mixer, clips } = useAnimations(
+    animations as GLTFAction[],
+    group
   );
-  const { actions } = useAnimations(animations as GLTFAction[], group);
+
+  const actionCopy = useMemo(() => {
+    const action = new THREE.AnimationAction(
+      mixer,
+      clips[0].clone(),
+      group.current
+    );
+    action.clampWhenFinished = true;
+    return action;
+  }, [mixer, clips]);
+
+  const handleAnimationEnd = useCallback(
+    (
+      e: {
+        action: THREE.AnimationAction;
+        direction: number;
+      } & THREE.Event<"finished", THREE.AnimationMixer>
+    ) => {
+      const origAction = actions["Angry.001"];
+      if (origAction) {
+        if (e.action === origAction) {
+          actionCopy
+            .reset()
+            .crossFadeFrom(e.action, 1, false)
+            .setLoop(THREE.LoopOnce, 1)
+            .play();
+        } else {
+          origAction
+            .reset()
+            .crossFadeFrom(e.action, 1, false)
+            .setLoop(THREE.LoopOnce, 1)
+            .play();
+        }
+      }
+    },
+    [actions]
+  );
 
   useEffect(() => {
-    const action = actions["Angry.001"];
-    if (action) {
-      action.clampWhenFinished = true;
-      // action.setLoop(THREE.LoopOnce, 1);
-      if (props.visible) {
-        action?.play();
-      } else {
-        action?.stop();
+    if (props.visible) {
+      mixer.addEventListener("finished", handleAnimationEnd);
+      const action = actions["Angry.001"];
+      if (action) {
+        action.clampWhenFinished = true;
+        action.setLoop(THREE.LoopOnce, 1).play();
       }
     }
 
     return () => {
-      if (action) action.stop();
+      if (props.visible) mixer.stopAllAction();
+      mixer.removeEventListener("finished", handleAnimationEnd);
     };
-  }, [props.visible]);
+  }, [props.visible, mixer, actions]);
 
   return (
     <group ref={group} {...props} dispose={null}>
