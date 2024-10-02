@@ -64,8 +64,7 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
     state.lastAddedTopping,
   ]);
 
-  // const SCALE_VECTOR = useMemo(() => new THREE.Vector3(1, 1, 1), []);
-  const SCALE_VECTOR = useMemo(() => new THREE.Vector3(0.01, 0.01, 0.01), []);
+  const SCALE_VECTOR = useMemo(() => new THREE.Vector3(1, 1, 1), []);
   const calcVector = useMemo(() => new THREE.Vector3(), []);
   const calcQuaternion = useMemo(() => new THREE.Quaternion(), []);
   const calcMatrix = useMemo(() => new THREE.Matrix4(), []);
@@ -138,7 +137,12 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
       );
       toppingRef.current!.setMatrixAt(currentIndex, positionMatrix);
 
-      typeArray[currentIndex] = toppingsIndexMap[lastAddedTopping.type];
+      // For pepper we need to give 0.0, 0.1 or 0.2 to indicate which colored pepper
+      // With this we can customize the pepper color while keeping only one pepper vertices
+      typeArray[currentIndex] =
+        lastAddedTopping.type !== "peppers"
+          ? toppingsIndexMap[lastAddedTopping.type]
+          : Math.floor(Math.random() * 3) / 10;
 
       // Create the physics body for the new instance
       const body = new CANNON.Body({
