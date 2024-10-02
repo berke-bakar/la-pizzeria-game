@@ -9,7 +9,7 @@ export function generateRandomPos(
   const distanceToCenter = Math.random() * radius;
   const x = Math.cos(angle) * distanceToCenter;
   const z = Math.sin(angle) * distanceToCenter;
-  const y = yLimit + (Math.random() - 0.5);
+  const y = yLimit + (Math.random() - 0.25);
   return new Vector3(x + offset[0], y + offset[1], z + offset[2]);
 }
 

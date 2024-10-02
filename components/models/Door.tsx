@@ -58,7 +58,7 @@ export const DoorModel = forwardRef<DoorRefProps, DoorProps>(function DoorModel(
             name="door"
             geometry={nodes.door.geometry}
             material={materials["restaurant.002"]}
-            scale={[100, 100, 50]}
+            scale={[126, 121, 50]}
           />
         </group>
       </group>

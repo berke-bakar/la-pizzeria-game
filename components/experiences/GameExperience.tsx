@@ -31,7 +31,10 @@ const GameExperience = ({
   useEffect(() => {
     if (visible) {
       (camera as PerspectiveCamera).fov = 50;
-      if (debug) camera.position.set(0, 0, -30);
+      if (debug) {
+        camera.position.set(0, 0, -30);
+        camera.far = 50;
+      }
       camera.updateProjectionMatrix();
     }
   }, [visible]);

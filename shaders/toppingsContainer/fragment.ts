@@ -1,4 +1,4 @@
-export const fragmentShader = `
+export const fragmentShader = /* glsl */ `
 uniform sampler2D uTextureAtlas;
 uniform bool uVisibleToppings[14];
 varying vec2 vUv;

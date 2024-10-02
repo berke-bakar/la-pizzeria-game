@@ -17,7 +17,7 @@ import { useAtomValue } from "jotai";
 import { gamePhaseControllerAtom, IngredientType } from "@/constants/constants";
 import { selectedToppingAtom } from "../constants/constants";
 import { generateRandomPos } from "@/utils/utils";
-import { Toppings } from "./models/ToppingsNew";
+import { Toppings } from "./models/Toppings";
 
 export type PizzaMakerRefProps = {
   group: RefObject<Group<Object3DEventMap> | undefined>;

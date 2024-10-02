@@ -454,12 +454,8 @@ const GameController = ({
         }
       } else if (currentGamePhase.subphase === "getPaid") {
         let sum = 0;
-        Object.entries(toppings).forEach(([key, val]) => {
-          if (key === "pizzaBase") return;
-          const maxEarningPerTopping =
-            INGREDIENTS[key as IngredientType].unitPrice *
-            Math.min(val.length, MAX_TOPPING_COUNT);
-          sum += maxEarningPerTopping;
+        toppings.forEach((val) => {
+          sum += INGREDIENTS[val.type].unitPrice;
         });
         let customerTipMultiplier = 1;
         switch (currentCustomerRating.current) {
