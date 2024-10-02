@@ -20,13 +20,14 @@ const NextButton = (props: Props) => {
   }, [currentGamePhase]);
 
   const handleClick = useCallback(() => {
-    updateGamePhase("advancePhase");
-    advanceCamera("advance");
-    // if (currentGamePhase.nextButtonText !== "Deliver") advanceCamera("advance");
-  }, [updateGamePhase, advanceCamera, currentGamePhase]);
+    if (!!text) {
+      updateGamePhase("advancePhase");
+      advanceCamera("advance");
+    }
+  }, [updateGamePhase, advanceCamera, text]);
 
   return (
-    <AnimatedButton disabled={!text} onPress={!!text ? handleClick : undefined}>
+    <AnimatedButton disabled={!text} onPress={handleClick}>
       {text ? text : "Next"}
     </AnimatedButton>
   );

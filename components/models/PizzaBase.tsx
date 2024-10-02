@@ -1,12 +1,11 @@
 import * as CANNON from "cannon-es";
 import * as THREE from "three";
-import React, { useEffect, useRef, useState } from "react";
-import { useGLTF, Merged } from "@react-three/drei";
+import React, { useCallback } from "react";
+import { useGLTF, Merged } from "@react-three/drei/native";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
 import { useCannon } from "@/hooks/useCannon";
 import { CollisionEvent } from "@/constants/types";
-import { useFrame } from "@react-three/fiber";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -54,6 +53,17 @@ export function PizzaBaseModel({
 } & JSX.IntrinsicElements["group"]) {
   const instances = React.useContext(context);
 
+  const handleCollide = useCallback(function handleCollision(
+    event: CollisionEvent
+  ) {
+    if (event.body.type === CANNON.BODY_TYPES.STATIC) {
+      event.target.type = CANNON.BODY_TYPES.STATIC;
+      event.target.mass = 0;
+      event.target.removeEventListener("collide", handleCollision);
+    }
+  },
+  []);
+
   const ref = useCannon(
     { mass: 1 },
     (body, setBodyAvailable) => {
@@ -68,13 +78,6 @@ export function PizzaBaseModel({
           initialPosition[1],
           initialPosition[2]
         );
-      const handleCollide = (event: CollisionEvent) => {
-        if (event.body.type === CANNON.BODY_TYPES.STATIC) {
-          event.target.type = CANNON.BODY_TYPES.STATIC;
-          event.target.mass = 0;
-          body.removeEventListener("collide", handleCollide);
-        }
-      };
 
       body.addEventListener("collide", handleCollide);
 

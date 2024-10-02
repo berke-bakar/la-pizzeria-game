@@ -2,8 +2,7 @@ import { currentCameraStateAtom } from "@/constants/constants";
 import { useFrame } from "@react-three/fiber";
 import { useAtomValue } from "jotai";
 import { damp3, dampQ } from "maath/easing";
-import { useEffect, useRef } from "react";
-import { Platform } from "react-native";
+import { useEffect, useMemo } from "react";
 import { Euler, Quaternion, Vector3 } from "three";
 
 type CameraControllerProps = {
@@ -14,16 +13,9 @@ const CameraController = ({ debug }: CameraControllerProps) => {
   if (debug) return null;
 
   const cameraState = useAtomValue(currentCameraStateAtom);
-  const statePosVector = useRef(
-    new Vector3().fromArray(cameraState.position)
-  ).current;
-  const stateRotEuler = useRef(
-    new Euler().setFromVector3(cameraState.rotation as Vector3)
-  ).current;
-  const stateRotQuat = useRef(
-    new Quaternion().setFromEuler(stateRotEuler)
-  ).current;
-  const calcVector = useRef(new Vector3()).current;
+  const statePosVector = useMemo(() => new Vector3(), []);
+  const stateRotEuler = useMemo(() => new Euler(), []);
+  const stateRotQuat = useMemo(() => new Quaternion(), []);
 
   useEffect(() => {
     statePosVector.fromArray(cameraState.position);

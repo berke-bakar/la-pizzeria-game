@@ -124,7 +124,6 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
   const { boughtToppings } = useGameStore();
   const shaderRef = useRef<any>(null);
   const [selectedTopping, setSelectedTopping] = useAtom(selectedToppingAtom);
-  const uv = useRef(new THREE.Vector2());
   const uniforms = useMemo(
     () => ({
       uTextureAtlas: {
@@ -134,7 +133,7 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
     }),
     []
   );
-  const calcVector = useRef(new THREE.Vector3()).current;
+  const calcVector = useMemo(() => new THREE.Vector3(), []);
 
   const findNearestContainer = (point: THREE.Vector3) => {
     let closestTopping = null;
@@ -191,8 +190,7 @@ export function ToppingsContainer(props: JSX.IntrinsicElements["group"]) {
         onPointerDown={(evt: ThreeEvent<PointerEvent>) => {
           if (evt.uv) {
             let selectedTopping = undefined;
-            uv.current.copy(evt.uv);
-            const clickedToppingIndex = detectToppingFromUV(uv.current);
+            const clickedToppingIndex = detectToppingFromUV(evt.uv);
             if (clickedToppingIndex !== null) {
               if (clickedToppingIndex < 14) {
                 const clickedTopping = Object.entries(toppingsIndexMap).find(

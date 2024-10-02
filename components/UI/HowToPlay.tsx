@@ -2,11 +2,12 @@ import {
   Animated,
   Easing,
   Platform,
+  PointerEvent,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
 import { overlayTextAtom } from "@/constants/constants";
@@ -17,7 +18,7 @@ type Props = {};
 const HowToPlay = (props: Props) => {
   const setOverlayText = useSetAtom(overlayTextAtom);
 
-  const animRef = useRef(new Animated.Value(0.5)).current;
+  const animRef = useMemo(() => new Animated.Value(0.5), []);
 
   useEffect(() => {
     Animated.timing(animRef, {
@@ -28,12 +29,18 @@ const HowToPlay = (props: Props) => {
     return () => {};
   }, [animRef]);
 
+  const handlePointerDown = useCallback((e: PointerEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handleCloseButton = useCallback(() => {
+    setOverlayText((prev) => ({ ...prev, show: false }));
+  }, [setOverlayText]);
+
   return (
     <Animated.View
       style={{ ...styles.container, transform: [{ scale: animRef }] }}
-      onPointerDown={(e) => {
-        e.stopPropagation();
-      }}
+      onPointerDown={handlePointerDown}
     >
       <View
         style={{
@@ -69,13 +76,7 @@ const HowToPlay = (props: Props) => {
           </CustomText>
         </ScrollView>
       </View>
-      <AnimatedButton
-        onPress={() => {
-          setOverlayText((prev) => ({ ...prev, show: false }));
-        }}
-      >
-        Close
-      </AnimatedButton>
+      <AnimatedButton onPress={handleCloseButton}>Close</AnimatedButton>
     </Animated.View>
   );
 };

@@ -10,7 +10,6 @@ import { SvgProps } from "react-native-svg";
 import AnimatedButton from "./UI/AnimatedButton";
 import useGameStore from "@/hooks/useGameStore";
 import { IngredientType } from "@/constants/constants";
-import { moderateScale } from "./Scaling";
 
 type Props = {
   icon: React.FC<SvgProps>;
@@ -24,11 +23,13 @@ const StoreCard = ({ icon: Icon, disabled = false, price, title }: Props) => {
 
   const handleBuyClick = useCallback(
     (topping: string, toppingPrice: number) => {
-      return (event: GestureResponderEvent) => {
-        buyTopping(topping as IngredientType, toppingPrice);
-      };
+      return !disabled
+        ? (event: GestureResponderEvent) => {
+            buyTopping(topping as IngredientType, toppingPrice);
+          }
+        : undefined;
     },
-    [buyTopping]
+    [buyTopping, disabled]
   );
 
   const iconSize = Platform.select({
@@ -51,7 +52,7 @@ const StoreCard = ({ icon: Icon, disabled = false, price, title }: Props) => {
       />
       <CustomText style={styles.cardText}>${price}</CustomText>
       <AnimatedButton
-        onPress={!disabled ? handleBuyClick(title, price) : undefined}
+        onPress={handleBuyClick(title, price)}
         disabled={disabled}
       >
         {!disabled ? "BUY" : "BOUGHT"}

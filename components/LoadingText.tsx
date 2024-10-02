@@ -1,6 +1,6 @@
 import { View, StyleSheet, Animated, Platform } from "react-native";
-import React, { useEffect, useRef } from "react";
-import { currentSceneAtom, progressAtom } from "@/constants/constants";
+import React, { useEffect, useMemo } from "react";
+import { progressAtom } from "@/constants/constants";
 import { useAtomValue } from "jotai";
 
 type Props = {};
@@ -8,9 +8,9 @@ type Props = {};
 const LoadingText = (props: Props) => {
   const { progress, active } = useAtomValue(progressAtom);
   // Initial value for opacity: 0
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useMemo(() => new Animated.Value(0), []);
   // Initial value for width: 0
-  const progressAnim = useRef(new Animated.Value(0)).current;
+  const progressAnim = useMemo(() => new Animated.Value(0), []);
 
   useEffect(() => {
     const animation = Animated.sequence([

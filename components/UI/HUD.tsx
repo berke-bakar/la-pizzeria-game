@@ -1,5 +1,5 @@
 import { Platform, SafeAreaView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { currentSceneAtom, overlayTextAtom } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
@@ -17,6 +17,14 @@ const HUD = () => {
   const { wallet, dayCount } = useGameStore();
   const setOverLayText = useSetAtom(overlayTextAtom);
 
+  const handleHomeButton = useCallback(() => {
+    setOverLayText({
+      OverlayItem: BackToHome,
+      show: true,
+      closeable: true,
+    });
+  }, [setOverLayText]);
+
   if (currentSceneInfo.currentScene != "game") {
     return null;
   }
@@ -24,17 +32,7 @@ const HUD = () => {
   return (
     <>
       <SafeAreaView style={styles.upper}>
-        <AnimatedButton
-          onPress={() => {
-            setOverLayText({
-              OverlayItem: BackToHome,
-              show: true,
-              closeable: true,
-            });
-          }}
-        >
-          Home
-        </AnimatedButton>
+        <AnimatedButton onPress={handleHomeButton}>Home</AnimatedButton>
         <CustomText style={styles.hudText}>DAY #{dayCount}</CustomText>
         <SafeAreaView style={styles.pizzaCoinContainer}>
           <PizzaCoin height={horizontalScale(35)} width={horizontalScale(20)} />

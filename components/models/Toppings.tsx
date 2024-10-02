@@ -1,6 +1,12 @@
 import CustomShaderMaterial from "three-custom-shader-material";
 import * as THREE from "three";
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
@@ -12,7 +18,6 @@ import { useFrame } from "@react-three/fiber";
 import { WorldContext } from "@/context/PhysicsProvider";
 import { useToppings } from "@/hooks/useToppings";
 import { CollisionEvent } from "@/constants/types";
-import { Platform } from "react-native";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -81,9 +86,11 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
   );
 
   const shaderRef = useRef<any>(null);
-  const physicsBodies = useRef<
-    Map<number, { body: CANNON.Body; instanceId: number }>
-  >(new Map());
+  const physicsBodies = useMemo(
+    () => new Map<number, { body: CANNON.Body; instanceId: number }>(),
+    []
+  );
+  const toBeDeleted = useMemo<[number, CANNON.Body][]>(() => new Array(), []);
 
   const typeArray = useMemo<Float32Array>(() => {
     const arr = new Float32Array(MAX_TOPPINGS);
@@ -95,7 +102,9 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
     return arr;
   }, []);
 
-  const handleCollide = (event: CollisionEvent) => {
+  const handleCollide = useCallback(function handleCollision(
+    event: CollisionEvent
+  ) {
     if (
       event.body.type === CANNON.BODY_TYPES.STATIC &&
       event.body.shapes[0].type === CANNON.SHAPE_TYPES.CYLINDER
@@ -104,9 +113,10 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
 
       event.target.sleep();
       event.target.type = CANNON.BODY_TYPES.STATIC;
-      event.target.removeEventListener("collide", handleCollide);
+      event.target.removeEventListener("collide", handleCollision);
     }
-  };
+  },
+  []);
 
   useEffect(() => {
     toppingRef.current?.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -114,7 +124,7 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
 
   useEffect(() => {
     if (toppingsList.length === 0 || lastAddedTopping === null) {
-      physicsBodies.current.clear();
+      physicsBodies.clear();
       typeArray.fill(15);
       if (toppingRef.current) toppingRef.current.count = 0;
       return;
@@ -164,20 +174,18 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
         Math.random() * 50
       );
       body.applyTorque(torqueVector);
-      // TODO: Handle multiple bodies
       body.id = lastAddedTopping.id[0];
-      physicsBodies.current.set(lastAddedTopping.id[0], {
+      physicsBodies.set(lastAddedTopping.id[0], {
         body: body,
         instanceId: currentIndex,
       });
       world?.addBody(body);
 
-      // TODO: Handle colliding
       const timeoutId = setTimeout(() => {
         body.sleep();
         body.type = CANNON.BODY_TYPES.STATIC;
         world?.removeBody(body);
-        physicsBodies.current.delete(lastAddedTopping.id[0]);
+        physicsBodies.delete(lastAddedTopping.id[0]);
       }, 5000);
 
       body.addEventListener("collide", handleCollide);
@@ -192,11 +200,10 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
     }
   }, [toppingsList]);
 
-  const toBeDeleted = useRef<[number, CANNON.Body][]>([]);
   useFrame(() => {
     // Synchronize positions and physics updates
     if (toppingRef.current) {
-      physicsBodies.current.forEach(({ instanceId, body }, index) => {
+      physicsBodies.forEach(({ instanceId, body }, index) => {
         if (body.sleepState === CANNON.BODY_SLEEP_STATES.AWAKE) {
           toppingRef.current?.getMatrixAt(instanceId, calcMatrix);
 
@@ -207,15 +214,15 @@ export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
 
           toppingRef.current!.setMatrixAt(instanceId, calcMatrix);
         } else if (body.sleepState === CANNON.BODY_SLEEP_STATES.SLEEPING) {
-          toBeDeleted.current.push([index, body]);
+          toBeDeleted.push([index, body]);
         }
       });
       toppingRef.current.instanceMatrix.needsUpdate = true;
-      toBeDeleted.current.forEach((val) => {
+      toBeDeleted.forEach((val) => {
         world?.removeBody(val[1]);
-        physicsBodies.current.delete(val[0]);
+        physicsBodies.delete(val[0]);
       });
-      toBeDeleted.current.length = 0;
+      toBeDeleted.length = 0;
     }
   });
 

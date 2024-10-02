@@ -1,6 +1,6 @@
 import { Outlines, RoundedBox, Text3D } from "@react-three/drei/native";
 import { ThreeEvent } from "@react-three/fiber/native";
-import React from "react";
+import React, { useCallback } from "react";
 import fontPath from "../assets/fonts/BungeeSpice_Regular.json";
 import { useSpring, a, config } from "@react-spring/three";
 
@@ -39,7 +39,7 @@ export default function Button3D({
     }),
     []
   );
-  function handleClick(e: ThreeEvent<PointerEvent>) {
+  const handleClick = useCallback((e: ThreeEvent<PointerEvent>) => {
     api.start({
       to: {
         scale: 1.25,
@@ -59,7 +59,7 @@ export default function Button3D({
       },
       config: animConfig,
     });
-  }
+  }, []);
 
   return (
     <a.group {...props} scale={springProps.scale} onPointerDown={handleClick}>

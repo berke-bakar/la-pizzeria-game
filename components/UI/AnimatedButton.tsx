@@ -1,8 +1,7 @@
-import { useRef } from "react";
+import { useCallback, useMemo } from "react";
 import {
   Animated,
   GestureResponderEvent,
-  PointerEvent,
   Pressable,
   PressableProps,
   StyleSheet,
@@ -20,21 +19,24 @@ const AnimatedButton = ({
   disabled = false,
   ...props
 }: AnimatedButtonProps) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useMemo(() => new Animated.Value(1), []);
 
-  const handlePress = (event: GestureResponderEvent) => {
-    const anim = Animated.timing(scaleAnim, {
-      toValue: 1.3,
-      useNativeDriver: true,
-      easing: (val) => -4 * val * val + 4 * val,
-      duration: 240,
-    });
-    anim.start((result) => {
-      if (result.finished && props.onPress) {
-        props.onPress(event);
-      }
-    });
-  };
+  const handlePress = useCallback(
+    (event: GestureResponderEvent) => {
+      const anim = Animated.timing(scaleAnim, {
+        toValue: 1.3,
+        useNativeDriver: true,
+        easing: (val) => -4 * val * val + 4 * val,
+        duration: 240,
+      });
+      anim.start((result) => {
+        if (result.finished && props.onPress) {
+          props.onPress(event);
+        }
+      });
+    },
+    [props.onPress, scaleAnim]
+  );
 
   return (
     <AnimatedPressable

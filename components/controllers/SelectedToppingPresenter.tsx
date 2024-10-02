@@ -1,5 +1,5 @@
 import { StyleSheet, Animated } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useAtomValue } from "jotai";
 import { selectedToppingAtom } from "../../constants/constants";
 import CustomText from "../CustomText";
@@ -7,7 +7,7 @@ import { showFooterAtom } from "@/constants/constants";
 
 const SelectedToppingPresenter = () => {
   const selectedTopping = useAtomValue(selectedToppingAtom);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useMemo(() => new Animated.Value(0), []);
   const showFooter = useAtomValue(showFooterAtom);
 
   useEffect(() => {

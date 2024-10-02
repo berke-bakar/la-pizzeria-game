@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo, useRef } from "react";
+import React, { Suspense, useMemo } from "react";
 import { useAtomValue } from "jotai";
 import { currentSceneAtom } from "@/constants/constants";
 import SuspenseProgress from "../SuspenseProgress";

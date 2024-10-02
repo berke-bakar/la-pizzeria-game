@@ -1,5 +1,5 @@
-import { Animated, Easing, StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useRef } from "react";
+import { Animated, Easing, PointerEvent, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useMemo } from "react";
 import CustomText from "../CustomText";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -28,7 +28,7 @@ const EndOfDay = (props: Props) => {
     state.total,
     state.clearTotal,
   ]);
-  const animRef = useRef(new Animated.Value(0.5)).current;
+  const animRef = useMemo(() => new Animated.Value(0.5), []);
   const closeOverlay = useCallback(() => {
     return setOverlayText((prev) => ({ ...prev, show: false }));
   }, [setOverlayText]);
@@ -50,12 +50,36 @@ const EndOfDay = (props: Props) => {
     return () => {};
   }, [animRef]);
 
+  const handlePointerDown = useCallback((e: PointerEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handleHomeButton = useCallback(() => {
+    closeOverlay();
+    setCurrentSceneInfo({
+      currentScene: "menu",
+      transitionNeeded: false,
+    });
+    resetCameraStateIndex();
+    updateGamePhase("reset");
+    addMoney(total);
+    clearTotal();
+    incrementDay();
+    setTodaysRatings(RESET);
+  }, [
+    closeOverlay,
+    setCurrentSceneInfo,
+    resetCameraStateIndex,
+    updateGamePhase,
+    addMoney,
+    incrementDay,
+    setTodaysRatings,
+  ]);
+
   return (
     <Animated.View
       style={{ ...styles.container, transform: [{ scale: animRef }] }}
-      onPointerDown={(e) => {
-        e.stopPropagation();
-      }}
+      onPointerDown={handlePointerDown}
     >
       <View
         style={{
@@ -75,23 +99,7 @@ const EndOfDay = (props: Props) => {
           Today's Rating: {avgRatings.toFixed(2)}/5
         </CustomText>
       </View>
-      <AnimatedButton
-        onPress={() => {
-          closeOverlay();
-          setCurrentSceneInfo({
-            currentScene: "menu",
-            transitionNeeded: false,
-          });
-          resetCameraStateIndex();
-          updateGamePhase("reset");
-          addMoney(total);
-          clearTotal();
-          incrementDay();
-          setTodaysRatings(RESET);
-        }}
-      >
-        Home
-      </AnimatedButton>
+      <AnimatedButton onPress={handleHomeButton}>Home</AnimatedButton>
     </Animated.View>
   );
 };

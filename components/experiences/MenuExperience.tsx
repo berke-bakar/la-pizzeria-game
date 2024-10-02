@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Chef from "../models/Chef";
 import Menu from "../Menu";
 import Button3D from "../Button3D";
@@ -27,21 +27,30 @@ const MenuExperience = ({
   const setOverlayText = useSetAtom(overlayTextAtom);
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
 
-  function handleStartClick(evt: ThreeEvent<PointerEvent>) {
-    evt.stopPropagation();
-    setCurrentScene({ currentScene: "game", transitionNeeded: true });
-    resetCameraStateIndex();
-  }
+  const handleStartClick = useCallback(
+    (evt: ThreeEvent<PointerEvent>) => {
+      evt.stopPropagation();
+      setCurrentScene({ currentScene: "game", transitionNeeded: true });
+      resetCameraStateIndex();
+    },
+    [setCurrentScene, resetCameraStateIndex]
+  );
 
-  function handleStoreClick(evt: ThreeEvent<PointerEvent>) {
-    evt.stopPropagation();
-    setOverlayText({ OverlayItem: Store, show: true, closeable: true });
-  }
+  const handleStoreClick = useCallback(
+    (evt: ThreeEvent<PointerEvent>) => {
+      evt.stopPropagation();
+      setOverlayText({ OverlayItem: Store, show: true, closeable: true });
+    },
+    [setOverlayText]
+  );
 
-  function handleHowToClick(evt: ThreeEvent<PointerEvent>) {
-    evt.stopPropagation();
-    setOverlayText({ OverlayItem: HowToPlay, show: true, closeable: true });
-  }
+  const handleHowToClick = useCallback(
+    (evt: ThreeEvent<PointerEvent>) => {
+      evt.stopPropagation();
+      setOverlayText({ OverlayItem: HowToPlay, show: true, closeable: true });
+    },
+    [setOverlayText]
+  );
 
   useEffect(() => {
     if (visible) {

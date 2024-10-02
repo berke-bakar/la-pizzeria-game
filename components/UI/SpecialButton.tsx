@@ -33,7 +33,7 @@ const SpecialButton = (props: Props) => {
     } else if (currentGamePhase.specialButtonText == "Take out") {
       updateGamePhase("advancePhase");
     }
-  }, [currentGamePhase, updateGamePhase, clearToppings]);
+  }, [currentGamePhase, updateGamePhase, clearToppings, spawnPizzaBase]);
 
   return text ? (
     <AnimatedButton onPress={handleClick}>{text!}</AnimatedButton>

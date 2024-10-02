@@ -2,12 +2,13 @@ import {
   Animated,
   Easing,
   Platform,
+  PointerEvent,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
 import {
@@ -19,13 +20,13 @@ import AnimatedButton from "./AnimatedButton";
 import PizzaCoin from "./PizzaCoin";
 import useGameStore from "@/hooks/useGameStore";
 import StoreCard from "../StoreCard";
-import { horizontalScale, moderateScale } from "../Scaling";
+import { moderateScale } from "../Scaling";
 type Props = {};
 
 const Store = (props: Props) => {
   const setOverlayText = useSetAtom(overlayTextAtom);
   const { wallet, boughtToppings } = useGameStore();
-  const animRef = useRef(new Animated.Value(0.5)).current;
+  const animRef = useMemo(() => new Animated.Value(0.5), []);
 
   useEffect(() => {
     Animated.timing(animRef, {
@@ -36,12 +37,18 @@ const Store = (props: Props) => {
     return () => {};
   }, [animRef]);
 
+  const handlePointerDown = useCallback((e: PointerEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handleCloseButton = useCallback(() => {
+    setOverlayText((prev) => ({ ...prev, show: false }));
+  }, [setOverlayText]);
+
   return (
     <Animated.View
       style={{ ...styles.container, transform: [{ scale: animRef }] }}
-      onPointerDown={(e) => {
-        e.stopPropagation();
-      }}
+      onPointerDown={handlePointerDown}
     >
       <CustomText style={styles.header}>Store</CustomText>
       <SafeAreaView style={styles.pizzaCoinContainer}>
@@ -84,13 +91,7 @@ const Store = (props: Props) => {
           alignSelf: "flex-end",
         }}
       >
-        <AnimatedButton
-          onPress={() => {
-            setOverlayText((prev) => ({ ...prev, show: false }));
-          }}
-        >
-          Close
-        </AnimatedButton>
+        <AnimatedButton onPress={handleCloseButton}>Close</AnimatedButton>
       </View>
     </Animated.View>
   );

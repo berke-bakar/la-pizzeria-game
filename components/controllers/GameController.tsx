@@ -23,7 +23,7 @@ import {
   Quaternion,
   Vector3,
 } from "three";
-import { useFrame } from "@react-three/fiber/native";
+import { useFrame, useThree } from "@react-three/fiber/native";
 import { damp3, dampE, linear } from "maath/easing";
 import { WorldContext } from "@/context/PhysicsProvider";
 import { PizzaMakerRefProps } from "../PizzaMaker";
@@ -34,7 +34,6 @@ import { SHAPE_TYPES } from "cannon-es";
 import EndOfDay from "../UI/EndOfDay";
 import useGameStore from "@/hooks/useGameStore";
 import { DoorRefProps } from "../models/Door";
-import { Platform } from "react-native";
 
 type GameControllerProps = {
   pizzaMakerRef: RefObject<PizzaMakerRefProps>;
@@ -91,7 +90,7 @@ const GameController = ({
   const currentCustomerRating = useRef(0);
 
   const isDoorOpened = useRef(false);
-  const walkRotationQuaternion = useRef(new Quaternion());
+  const walkRotationQuaternion = useMemo(() => new Quaternion(), []);
 
   const forwardDir = useMemo(() => new Vector3(0, 0, 1), []);
   const customerPaths = useMemo(
@@ -501,9 +500,19 @@ const GameController = ({
     }
   }, [currentGamePhase, gameSceneVisible]);
 
-  useFrame((state, delta) => {
-    // console.log(state.gl.info);
+  // TODO: Delete this part
+  const { gl } = useThree();
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log(gl.info.render);
+    }, 5000);
 
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [gl]);
+
+  useFrame((state, delta) => {
     if (currentCustomerPath && customerRef.current?.group.current) {
       currentCustomerAnimTime.current = Math.min(
         currentCustomerAnimTime.current + delta * 0.3,
@@ -525,9 +534,9 @@ const GameController = ({
       );
 
       if (tangent) {
-        walkRotationQuaternion.current.setFromUnitVectors(forwardDir, tangent);
+        walkRotationQuaternion.setFromUnitVectors(forwardDir, tangent);
         customerRef.current?.group.current.setRotationFromQuaternion(
-          walkRotationQuaternion.current
+          walkRotationQuaternion
         );
       }
 

@@ -2,7 +2,7 @@ import React, {
   forwardRef,
   Ref,
   RefObject,
-  useContext,
+  useCallback,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -10,11 +10,10 @@ import React, {
 } from "react";
 import { PizzaBaseInstances, PizzaBaseModel } from "./models/PizzaBase";
 import { Group, Object3DEventMap } from "three";
-import { WorldContext } from "@/context/PhysicsProvider";
 import { useToppings } from "@/hooks/useToppings";
 import { ThreeEvent } from "@react-three/fiber/native";
 import { useAtomValue } from "jotai";
-import { gamePhaseControllerAtom, IngredientType } from "@/constants/constants";
+import { gamePhaseControllerAtom } from "@/constants/constants";
 import { selectedToppingAtom } from "../constants/constants";
 import { generateRandomPos } from "@/utils/utils";
 import { Toppings } from "./models/Toppings";
@@ -29,13 +28,11 @@ type PizzaMakerProps = Omit<JSX.IntrinsicElements["group"], "ref">;
 
 const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
   function PizzaMaker(props, ref) {
-    const [toppings, addTopping, isPizzaBaseSpawned] = useToppings((state) => [
-      state.toppings,
+    const [addTopping, isPizzaBaseSpawned] = useToppings((state) => [
       state.addTopping,
       state.isPizzaBaseSpawned,
     ]);
     const selectedTopping = useAtomValue(selectedToppingAtom);
-    const world = useContext(WorldContext);
     const currentGamePhase = useAtomValue(gamePhaseControllerAtom);
     const group = useRef<Group>();
     const [frustumCulled, setFrustumCulled] = useState(false);
@@ -49,9 +46,9 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
       [group, setFrustumCulled]
     );
 
-    const handleToppingAdd = useMemo(() => {
-      if (currentGamePhase.specialButtonText === "Ready") {
-        return (e: ThreeEvent<PointerEvent>) => {
+    const handleToppingAdd = useCallback(
+      (e: ThreeEvent<PointerEvent>) => {
+        if (currentGamePhase.specialButtonText === "Ready") {
           addTopping(
             selectedTopping,
             generateRandomPos(0.855, 2, [2.5, 2.5, -3.2]),
@@ -61,10 +58,10 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
               ? 2
               : 1
           );
-        };
-      }
-      return undefined;
-    }, [currentGamePhase, selectedTopping]);
+        }
+      },
+      [currentGamePhase, selectedTopping]
+    );
 
     return (
       <group ref={group} dispose={null}>

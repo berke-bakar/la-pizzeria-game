@@ -1,5 +1,12 @@
-import { Animated, Easing, Platform, StyleSheet, View } from "react-native";
-import React, { useCallback, useEffect, useRef } from "react";
+import {
+  Animated,
+  Easing,
+  Platform,
+  PointerEvent,
+  StyleSheet,
+  View,
+} from "react-native";
+import React, { useCallback, useEffect, useMemo } from "react";
 import CustomText from "../CustomText";
 import { useSetAtom } from "jotai";
 import {
@@ -18,7 +25,7 @@ const BackToHome = (props: Props) => {
   const setCurrentSceneInfo = useSetAtom(currentSceneAtom);
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
   const updateGamePhase = useSetAtom(gamePhaseControllerAtom);
-  const animRef = useRef(new Animated.Value(0.5)).current;
+  const animRef = useMemo(() => new Animated.Value(0.5), []);
   const closeOverlay = useCallback(() => {
     return setOverlayText((prev) => ({ ...prev, show: false }));
   }, [setOverlayText]);
@@ -32,12 +39,29 @@ const BackToHome = (props: Props) => {
     return () => {};
   }, [animRef]);
 
+  const handlePointerDown = useCallback((e: PointerEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handleOnPress = useCallback(() => {
+    setCurrentSceneInfo({
+      currentScene: "menu",
+      transitionNeeded: false,
+    });
+    resetCameraStateIndex();
+    updateGamePhase("reset");
+    closeOverlay();
+  }, [
+    setCurrentSceneInfo,
+    resetCameraStateIndex,
+    updateGamePhase,
+    closeOverlay,
+  ]);
+
   return (
     <Animated.View
       style={{ ...styles.container, transform: [{ scale: animRef }] }}
-      onPointerDown={(e) => {
-        e.stopPropagation();
-      }}
+      onPointerDown={handlePointerDown}
     >
       <CustomText style={styles.title}>Are you sure?</CustomText>
       <CustomText style={styles.subtitle}>
@@ -45,19 +69,7 @@ const BackToHome = (props: Props) => {
       </CustomText>
       <View style={styles.buttonContainer}>
         <AnimatedButton onPress={closeOverlay}>Cancel</AnimatedButton>
-        <AnimatedButton
-          onPress={() => {
-            setCurrentSceneInfo({
-              currentScene: "menu",
-              transitionNeeded: false,
-            });
-            resetCameraStateIndex();
-            updateGamePhase("reset");
-            closeOverlay();
-          }}
-        >
-          Return Home
-        </AnimatedButton>
+        <AnimatedButton onPress={handleOnPress}>Return Home</AnimatedButton>
       </View>
     </Animated.View>
   );
