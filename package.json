@@ -55,7 +55,8 @@
     "three": "^0.168.0",
     "three-custom-shader-material": "^6.0.10",
     "three-stdlib": "^2.32.2",
-    "zustand": "^4.5.5"
+    "zustand": "^4.5.5",
+    "expo-dev-client": "~4.0.27"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
