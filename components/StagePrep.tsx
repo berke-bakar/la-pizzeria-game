@@ -17,7 +17,7 @@ const StagePrep = ({ debug = false }: Props) => {
           <axesHelper />
         </>
       )}
-      {Platform.OS === "web" && <ContactShadows />}
+      {/* {Platform.OS === "web" && <ContactShadows />} */}
     </>
   );
 };

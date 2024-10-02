@@ -1,290 +1,238 @@
+import CustomShaderMaterial from "three-custom-shader-material";
 import * as THREE from "three";
-import React, {
-  useRef,
-  useMemo,
-  useContext,
-  createContext,
-  RefObject,
-} from "react";
-import { useGLTF, Merged } from "@react-three/drei";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
 import { Asset } from "expo-asset";
 import * as CANNON from "cannon-es";
-import { useCannon } from "@/hooks/useCannon";
+import vertexShader from "../../shaders/toppings/vertex";
+import fragmentShader from "../../shaders/toppings/fragment";
+import { IngredientType } from "@/constants/constants";
+import { useFrame } from "@react-three/fiber";
+import { WorldContext } from "@/context/PhysicsProvider";
+import { useToppings } from "@/hooks/useToppings";
 import { CollisionEvent } from "@/constants/types";
+import { Platform } from "react-native";
 
 type GLTFResult = GLTF & {
   nodes: {
-    Sausage: THREE.Mesh;
-    Anchovies: THREE.Mesh;
-    Bacon: THREE.Mesh;
-    Chicken: THREE.Mesh;
-    Ham: THREE.Mesh;
-    Mushroom: THREE.Mesh;
-    Olive_Slice_0: THREE.Mesh;
-    Olive_Slice_1: THREE.Mesh;
-    Onion: THREE.Mesh;
-    Pepper_Slice_0: THREE.Mesh;
-    Pepper_Slice_1: THREE.Mesh;
-    Pepper_Slice_2: THREE.Mesh;
-    Pickle: THREE.Mesh;
-    Pineapple: THREE.Mesh;
-    Salami: THREE.Mesh;
-    Shrimp: THREE.Mesh;
-    Tomato: THREE.Mesh;
+    combined: THREE.Mesh;
   };
   materials: {
-    Sausage: THREE.MeshBasicMaterial;
-    Fish: THREE.MeshBasicMaterial;
-    Bacon: THREE.MeshBasicMaterial;
-    Chicken: THREE.MeshBasicMaterial;
-    material_14: THREE.MeshBasicMaterial;
-    Mushroom: THREE.MeshBasicMaterial;
-    Oilives: THREE.MeshBasicMaterial;
-    Onion: THREE.MeshBasicMaterial;
-    Pepper: THREE.MeshBasicMaterial;
-    Pickles: THREE.MeshBasicMaterial;
-    Pineapple: THREE.MeshBasicMaterial;
-    Salami: THREE.MeshBasicMaterial;
-    Shrimp: THREE.MeshBasicMaterial;
-    Tomato: THREE.MeshBasicMaterial;
+    toppingAtlas: THREE.MeshStandardMaterial;
   };
 };
+const toppingsIndexMap: Record<IngredientType, number> = {
+  peppers: 0,
+  shrimp: 1,
+  mushroom: 2,
+  pickle: 3,
+  onion: 4,
+  salami: 5,
+  tomato: 6,
+  chicken: 7,
+  ham: 8,
+  bacon: 9,
+  anchovies: 10,
+  sausage: 11,
+  olives: 12,
+  pineapple: 13,
+};
 
-type ToppingModelTypes =
-  | "Sausage"
-  | "Anchovies"
-  | "Bacon"
-  | "Chicken"
-  | "Ham"
-  | "Mushroom"
-  | "OliveSlice"
-  | "OliveSlice1"
-  | "Onion"
-  | "PepperSlice"
-  | "PepperSlice1"
-  | "PepperSlice2"
-  | "Pickle"
-  | "Pineapple"
-  | "Salami"
-  | "Shrimp"
-  | "Tomato";
+// const MAX_TOPPINGS = Platform.select({
+//   native: 100,
+//   default: 1000,
+// });
+const MAX_TOPPINGS = 1000;
 
-type ToppingTypes =
-  | Omit<
-      ToppingModelTypes,
-      | "OliveSlice"
-      | "OliveSlice1"
-      | "PepperSlice"
-      | "PepperSlice1"
-      | "PepperSlice2"
-    >
-  | "Peppers"
-  | "Olives";
-
-type ContextType = Record<
-  ToppingModelTypes,
-  React.ForwardRefExoticComponent<JSX.IntrinsicElements["mesh"]>
->;
-
-const context = createContext({} as ContextType);
-
-export function ToppingInstances({
-  children,
-  ...props
-}: JSX.IntrinsicElements["group"]) {
-  const { nodes } = useGLTF(
-    Asset.fromModule(require("../../assets/models/toppings.glb")).uri
+export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
+  const world = useContext(WorldContext);
+  const toppingRef =
+    useRef<
+      THREE.InstancedMesh<
+        THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+        THREE.Material | THREE.Material[],
+        THREE.InstancedMeshEventMap
+      >
+    >(null);
+  const { nodes, materials } = useGLTF(
+    Asset.fromModule(require("../../assets/models/toppingsCombined.glb")).uri
   ) as GLTFResult;
-  const instances = useMemo(
+
+  const [toppingsList, lastAddedTopping] = useToppings((state) => [
+    state.toppings,
+    state.lastAddedTopping,
+  ]);
+
+  // const SCALE_VECTOR = useMemo(() => new THREE.Vector3(1, 1, 1), []);
+  const SCALE_VECTOR = useMemo(() => new THREE.Vector3(0.01, 0.01, 0.01), []);
+  const calcVector = useMemo(() => new THREE.Vector3(), []);
+  const calcQuaternion = useMemo(() => new THREE.Quaternion(), []);
+  const calcMatrix = useMemo(() => new THREE.Matrix4(), []);
+  const torqueVector = useMemo(() => new CANNON.Vec3(), []);
+
+  const positionMatrix = useMemo(() => new THREE.Matrix4(), []);
+  const uniforms = useMemo(
     () => ({
-      Sausage: nodes.Sausage,
-      Anchovies: nodes.Anchovies,
-      Bacon: nodes.Bacon,
-      Chicken: nodes.Chicken,
-      Ham: nodes.Ham,
-      Mushroom: nodes.Mushroom,
-      OliveSlice: nodes.Olive_Slice_0,
-      OliveSlice1: nodes.Olive_Slice_1,
-      Onion: nodes.Onion,
-      PepperSlice: nodes.Pepper_Slice_0,
-      PepperSlice1: nodes.Pepper_Slice_1,
-      PepperSlice2: nodes.Pepper_Slice_2,
-      Pickle: nodes.Pickle,
-      Pineapple: nodes.Pineapple,
-      Salami: nodes.Salami,
-      Shrimp: nodes.Shrimp,
-      Tomato: nodes.Tomato,
-    }),
-    [nodes]
-  );
-
-  return (
-    <Merged meshes={instances} {...props}>
-      {(instances: ContextType) => (
-        <context.Provider value={instances} children={children} />
-      )}
-    </Merged>
-  );
-}
-
-export function ToppingModel({
-  toppingType,
-  bodyId,
-  ...props
-}: JSX.IntrinsicElements["group"] & {
-  toppingType: ToppingTypes;
-  bodyId: number[];
-}) {
-  const instances = useContext<ContextType>(context);
-  const bodyRefs = useRef<
-    RefObject<
-      | THREE.Mesh<
-          THREE.BufferGeometry<THREE.NormalBufferAttributes>,
-          THREE.Material | THREE.Material[],
-          THREE.Object3DEventMap
-        >
-      | THREE.Group<THREE.Object3DEventMap>
-    >[]
-  >([]);
-
-  bodyId.forEach((bodyIdVal, ind) => {
-    // TODO: useMemo, it renders this multiple times
-
-    bodyRefs.current[ind] = useCannon(
-      { mass: 100 },
-      (body, setBodyAvailable) => {
-        body.addShape(new CANNON.Box(new CANNON.Vec3(0.02, 0.02, 0.02)));
-        body.sleepSpeedLimit = 5;
-        body.type = CANNON.BODY_TYPES.DYNAMIC;
-        body.position.set(
-          (props.position as THREE.Vector3).x,
-          (props.position as THREE.Vector3).y,
-          (props.position as THREE.Vector3).z
-        );
-        body.angularDamping = 0.1;
-        body.applyTorque(
-          new CANNON.Vec3(
-            Math.random() * 50,
-            Math.random() * 50,
-            Math.random() * 50
-          )
-        );
-        body.id = bodyIdVal;
-        const timeoutId = setTimeout(() => {
-          body.sleep();
-          body.type = CANNON.BODY_TYPES.STATIC;
-          setBodyAvailable(false);
-        }, 5000);
-        const handleCollide = (event: CollisionEvent) => {
-          if (
-            event.body.type === CANNON.BODY_TYPES.STATIC &&
-            event.body.shapes[0].type === CANNON.SHAPE_TYPES.CYLINDER
-          ) {
-            event.target.collisionResponse = false;
-            body.removeEventListener("collide", handleCollide);
-            clearTimeout(timeoutId);
-            event.target.sleep();
-            event.target.type = CANNON.BODY_TYPES.STATIC;
-            setBodyAvailable(false);
-          } else if (
-            event.body.type === CANNON.BODY_TYPES.STATIC &&
-            event.body.shapes[0].type === CANNON.SHAPE_TYPES.PLANE
-          ) {
-            //TODO: Remove the toppings outside of the base
-          }
-        };
-        body.addEventListener("collide", handleCollide);
-
-        return () => {
-          body.removeEventListener("collide", handleCollide);
-        };
+      uTextureAtlas: {
+        value: materials.toppingAtlas.map,
       },
-      []
+    }),
+    [materials]
+  );
+
+  const shaderRef = useRef<any>(null);
+  const physicsBodies = useRef<
+    Map<number, { body: CANNON.Body; instanceId: number }>
+  >(new Map());
+
+  const typeArray = useMemo<Float32Array>(() => {
+    const arr = new Float32Array(MAX_TOPPINGS);
+    arr.fill(15);
+    nodes.combined.geometry.setAttribute(
+      "aToppingType",
+      new THREE.InstancedBufferAttribute(arr, 1, false)
     );
+    return arr;
+  }, []);
+
+  const handleCollide = (event: CollisionEvent) => {
+    if (
+      event.body.type === CANNON.BODY_TYPES.STATIC &&
+      event.body.shapes[0].type === CANNON.SHAPE_TYPES.CYLINDER
+    ) {
+      event.target.collisionResponse = false;
+
+      event.target.sleep();
+      event.target.type = CANNON.BODY_TYPES.STATIC;
+      event.target.removeEventListener("collide", handleCollide);
+    }
+  };
+
+  useEffect(() => {
+    toppingRef.current?.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  }, []);
+
+  useEffect(() => {
+    if (toppingsList.length === 0 || lastAddedTopping === null) {
+      physicsBodies.current.clear();
+      typeArray.fill(15);
+      if (toppingRef.current) toppingRef.current.count = 0;
+      return;
+    }
+
+    if (toppingsList.length > MAX_TOPPINGS) {
+      console.error("Exceeded the max topping limit!");
+      return;
+    }
+
+    if (toppingRef.current && lastAddedTopping !== null) {
+      const currentIndex = toppingsList.length - 1;
+
+      toppingRef.current!.getMatrixAt(currentIndex, positionMatrix);
+      calcQuaternion.identity();
+      positionMatrix.compose(
+        lastAddedTopping.initialPos,
+        calcQuaternion,
+        SCALE_VECTOR
+      );
+      toppingRef.current!.setMatrixAt(currentIndex, positionMatrix);
+
+      typeArray[currentIndex] = toppingsIndexMap[lastAddedTopping.type];
+
+      // Create the physics body for the new instance
+      const body = new CANNON.Body({
+        mass: 100,
+        position: new CANNON.Vec3(
+          lastAddedTopping.initialPos.x,
+          lastAddedTopping.initialPos.y,
+          lastAddedTopping.initialPos.z
+        ),
+        shape: new CANNON.Box(new CANNON.Vec3(0.02, 0.02, 0.02)),
+      });
+      body.sleepSpeedLimit = 5;
+      body.type = CANNON.BODY_TYPES.DYNAMIC;
+
+      body.angularDamping = 0.1;
+      torqueVector.set(
+        Math.random() * 50,
+        Math.random() * 50,
+        Math.random() * 50
+      );
+      body.applyTorque(torqueVector);
+      // TODO: Handle multiple bodies
+      body.id = lastAddedTopping.id[0];
+      physicsBodies.current.set(lastAddedTopping.id[0], {
+        body: body,
+        instanceId: currentIndex,
+      });
+      world?.addBody(body);
+
+      // TODO: Handle colliding
+      const timeoutId = setTimeout(() => {
+        body.sleep();
+        body.type = CANNON.BODY_TYPES.STATIC;
+        world?.removeBody(body);
+        physicsBodies.current.delete(lastAddedTopping.id[0]);
+      }, 5000);
+
+      body.addEventListener("collide", handleCollide);
+
+      toppingRef.current.geometry.setAttribute(
+        "aToppingType",
+        new THREE.InstancedBufferAttribute(typeArray, 1, false, 1)
+      );
+
+      toppingRef.current.count = toppingsList.length;
+      toppingRef.current.instanceMatrix.needsUpdate = true;
+    }
+  }, [toppingsList]);
+
+  const toBeDeleted = useRef<[number, CANNON.Body][]>([]);
+  useFrame(() => {
+    // Synchronize positions and physics updates
+    if (toppingRef.current) {
+      physicsBodies.current.forEach(({ instanceId, body }, index) => {
+        if (body.sleepState === CANNON.BODY_SLEEP_STATES.AWAKE) {
+          toppingRef.current?.getMatrixAt(instanceId, calcMatrix);
+
+          calcVector.set(body.position.x, body.position.y, body.position.z);
+          calcQuaternion.set(...body.quaternion.toArray());
+
+          calcMatrix.compose(calcVector, calcQuaternion, SCALE_VECTOR);
+
+          toppingRef.current!.setMatrixAt(instanceId, calcMatrix);
+        } else if (body.sleepState === CANNON.BODY_SLEEP_STATES.SLEEPING) {
+          toBeDeleted.current.push([index, body]);
+        }
+      });
+      toppingRef.current.instanceMatrix.needsUpdate = true;
+      toBeDeleted.current.forEach((val) => {
+        world?.removeBody(val[1]);
+        physicsBodies.current.delete(val[0]);
+      });
+      toBeDeleted.current.length = 0;
+    }
   });
 
-  if (toppingType === "Peppers") {
-    return (
-      <>
-        <group
-          ref={
-            bodyRefs.current[0] as React.Ref<
-              THREE.Group<THREE.Object3DEventMap>
-            >
-          }
-          {...props}
-          dispose={null}
-          scale={0.01}
-        >
-          <instances.PepperSlice position={[0.03877, 0.00415, -0.09876]} />
-        </group>
-        <group
-          ref={
-            bodyRefs.current[1] as React.Ref<
-              THREE.Group<THREE.Object3DEventMap>
-            >
-          }
-          {...props}
-          dispose={null}
-          scale={0.01}
-        >
-          <instances.PepperSlice1 position={[-0.08624, 0.0043, 0.01997]} />
-        </group>
-        <group
-          ref={
-            bodyRefs.current[2] as React.Ref<
-              THREE.Group<THREE.Object3DEventMap>
-            >
-          }
-          {...props}
-          dispose={null}
-          scale={0.01}
-        >
-          <instances.PepperSlice2 position={[0.06813, 0.00428, 0.06279]} />
-        </group>
-      </>
-    );
-  } else if (toppingType === "Olives") {
-    return (
-      <>
-        <group
-          ref={
-            bodyRefs.current[0] as React.Ref<
-              THREE.Group<THREE.Object3DEventMap>
-            >
-          }
-          dispose={null}
-        >
-          <instances.OliveSlice scale={0.01} />
-        </group>
-        <group
-          ref={
-            bodyRefs.current[1] as React.Ref<
-              THREE.Group<THREE.Object3DEventMap>
-            >
-          }
-          dispose={null}
-        >
-          <instances.OliveSlice1 scale={0.01} />
-        </group>
-      </>
-    );
-  } else {
-    const InstanceModel = instances[toppingType as ToppingModelTypes];
-    return (
-      <group
-        ref={
-          bodyRefs.current[0] as React.Ref<THREE.Group<THREE.Object3DEventMap>>
-        }
-        {...props}
-        dispose={null}
-      >
-        <InstanceModel scale={0.01} />
-      </group>
-    );
-  }
+  return (
+    <instancedMesh
+      ref={toppingRef}
+      args={[nodes.combined.geometry, undefined, MAX_TOPPINGS]}
+      {...props}
+    >
+      <CustomShaderMaterial
+        ref={shaderRef}
+        uniforms={uniforms}
+        attach="material"
+        baseMaterial={THREE.MeshStandardMaterial}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+      />
+    </instancedMesh>
+  );
 }
+
 useGLTF.preload(
-  Asset.fromModule(require("../../assets/models/toppings.glb")).uri
+  Asset.fromModule(require("../../assets/models/toppingsCombined.glb")).uri
 );

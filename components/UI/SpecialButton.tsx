@@ -1,19 +1,18 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useCallback, useMemo } from "react";
 import AnimatedButton from "./AnimatedButton";
-import { useAtom, useSetAtom } from "jotai";
-import {
-  currentCameraStateAtom,
-  gamePhaseControllerAtom,
-} from "@/constants/constants";
+import { useAtom } from "jotai";
+import { gamePhaseControllerAtom } from "@/constants/constants";
 import { useToppings } from "@/hooks/useToppings";
-import { Vector3 } from "three";
 
 type Props = {};
 
 const SpecialButton = (props: Props) => {
   const [currentGamePhase, updateGamePhase] = useAtom(gamePhaseControllerAtom);
-  const { addTopping, clearToppings } = useToppings();
+  const [spawnPizzaBase, clearToppings] = useToppings((state) => [
+    state.spawnPizzaBase,
+    state.clearToppings,
+  ]);
 
   const text = useMemo(() => {
     if (currentGamePhase.subphase === "specialButtonActive") {
@@ -27,8 +26,7 @@ const SpecialButton = (props: Props) => {
       updateGamePhase("advancePhase");
     } else if (currentGamePhase.specialButtonText === "Spawn Pizza") {
       clearToppings();
-      addTopping("pizzaBase", new Vector3(2.5, 4, -3.2));
-
+      spawnPizzaBase();
       updateGamePhase("advancePhase");
     } else if (currentGamePhase.specialButtonText == "Ready") {
       updateGamePhase("advancePhase");
