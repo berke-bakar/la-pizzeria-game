@@ -29,7 +29,7 @@ const MenuExperience = ({
 
   function handleStartClick(evt: ThreeEvent<PointerEvent>) {
     evt.stopPropagation();
-    setCurrentScene({ currentScene: "game", transitionNeeded: false });
+    setCurrentScene({ currentScene: "game", transitionNeeded: true });
     resetCameraStateIndex();
   }
 

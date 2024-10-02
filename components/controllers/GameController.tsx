@@ -244,19 +244,17 @@ const GameController = ({
       currentCustomerAnimation.current =
         customerRef.current?.actions["Ordering3"];
     } else if (phaseIndex.subphase === "reaction") {
-      let requestedToppingCount = 0;
-      Object.entries(toppings).forEach(([key, val], ind) => {
-        if (key === "pizzaBase") return;
-        if (
-          customerOrderInfo.order.includes(key as IngredientType) &&
-          val.length > 0
-        ) {
-          requestedToppingCount++;
+      const requestedToppingSet = new Set();
+      toppings.forEach((val) => {
+        if (requestedToppingSet.has(val.type)) return;
+        if (customerOrderInfo.order.includes(val.type)) {
+          requestedToppingSet.add(val.type);
         }
       });
       const pizzaRating = Math.ceil(
-        (requestedToppingCount / customerOrderInfo.order.length) * 100
+        (requestedToppingSet.size / customerOrderInfo.order.length) * 100
       );
+
       updateTodaysRatings((prev) => [...prev, pizzaRating]);
       currentCustomerRating.current = Math.floor(pizzaRating / 25);
       switch (currentCustomerRating.current) {
@@ -313,7 +311,6 @@ const GameController = ({
   useEffect(() => {
     if (gameSceneVisible) {
       todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
-      // todaysCustomerCount.current = 1;
       currentCustomerIndex.current = 0;
       setShowFooter(false);
     } else {

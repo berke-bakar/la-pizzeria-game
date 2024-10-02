@@ -6,8 +6,7 @@ import { useAtomValue } from "jotai";
 type Props = {};
 
 const LoadingText = (props: Props) => {
-  const progress = useAtomValue(progressAtom);
-  const currentSceneInfo = useAtomValue(currentSceneAtom);
+  const { progress, active } = useAtomValue(progressAtom);
   // Initial value for opacity: 0
   const fadeAnim = useRef(new Animated.Value(0)).current;
   // Initial value for width: 0
@@ -49,7 +48,7 @@ const LoadingText = (props: Props) => {
       prevAnim.stop();
     };
   }, [progress]);
-  if (!currentSceneInfo.transitionNeeded) return null;
+  if (!active) return null;
 
   return (
     <View style={{ ...styles.loadingContainer }}>
@@ -119,7 +118,8 @@ const styles = StyleSheet.create({
   loadingProgressIndicator: {
     backgroundColor: "white",
     height: "100%",
-    width: "0%",
+    width: "100%",
+    transformOrigin: "0% 50%",
   },
 });
 

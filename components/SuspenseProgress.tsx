@@ -11,7 +11,7 @@ import { useResetAtom } from "jotai/utils";
 type Props = {};
 
 const SuspenseProgress = (props: Props) => {
-  const { progress } = useProgress();
+  const { progress, active } = useProgress();
   const setProgress = useSetAtom(progressAtom);
   const setCurrentScene = useSetAtom(currentSceneAtom);
   const resetCameraStateIndex = useResetAtom(cameraStateIndexAtom);
@@ -23,9 +23,9 @@ const SuspenseProgress = (props: Props) => {
           transitionNeeded: false,
         }));
         resetCameraStateIndex();
-        setProgress(0);
+        setProgress({ progress: 0, active: false });
       } else {
-        setProgress(progress);
+        setProgress({ progress, active });
       }
     }
   }, [progress]);

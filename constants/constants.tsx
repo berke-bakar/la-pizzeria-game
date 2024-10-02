@@ -171,8 +171,8 @@ export const CAMERA_STATES: Record<string, Array<State>> = {
 export const currentSceneAtom = atom<{
   currentScene: "game" | "menu";
   transitionNeeded: boolean;
-}>({ currentScene: "menu", transitionNeeded: false }); // TODO: Change here
-export const progressAtom = atom(0);
+}>({ currentScene: "menu", transitionNeeded: true });
+export const progressAtom = atom({ progress: 0, active: false });
 export const overlayTextAtom = atom<{
   show: boolean;
   OverlayItem: ((props: any) => JSX.Element) | null;
