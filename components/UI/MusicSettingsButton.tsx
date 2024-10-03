@@ -1,15 +1,15 @@
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import React, { useCallback } from "react";
-import { GiSoundOff, GiSoundOn } from "react-icons/gi";
-import { useAtomValue, useSetAtom } from "jotai";
-import { overlayTextAtom, playbackSettingsAtom } from "@/constants/constants";
+import { useSetAtom } from "jotai";
+import { overlayTextAtom } from "@/constants/constants";
 import MusicSettings from "./MusicSettings";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import useGameStore from "@/hooks/useGameStore";
 
 type Props = {};
 
 const MusicSettingsButton = (props: Props) => {
-  const playbackSettings = useAtomValue(playbackSettingsAtom);
+  const playbackSettings = useGameStore((state) => state.playbackSettings);
   const setOverlayText = useSetAtom(overlayTextAtom);
   const soundIcon =
     playbackSettings.backgroundVolume === 0 ||

@@ -364,19 +364,6 @@ export const customerOrderAtom = atom<{
   show: false,
 });
 
-type PlaybackSettingsType = {
-  backgroundEnabled: boolean;
-  soundEffectsEnabled: boolean;
-  backgroundVolume: number;
-  soundEffectsVolume: number;
-};
-
 export const typingFinishedAtom = atom(false);
 export const todaysCustomerRatings = atomWithReset<number[]>([]);
 export const selectedToppingAtom = atom<IngredientType>("bacon");
-export const playbackSettingsAtom = atom<PlaybackSettingsType>({
-  soundEffectsEnabled: true,
-  backgroundEnabled: true,
-  soundEffectsVolume: 0,
-  backgroundVolume: 1,
-});

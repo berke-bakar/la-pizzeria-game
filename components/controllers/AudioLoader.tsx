@@ -1,12 +1,11 @@
 import useAudioPermission from "@/hooks/useAudioPermission";
 import { Asset } from "expo-asset";
-import { useAtomValue } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 import AudioManager from "./AudioManager";
-import { playbackSettingsAtom } from "@/constants/constants";
+import useGameStore from "@/hooks/useGameStore";
 
 export default function AudioLoader() {
-  const playbackSettings = useAtomValue(playbackSettingsAtom);
+  const playbackSettings = useGameStore((state) => state.playbackSettings);
   const audioManager = useMemo(() => AudioManager.getInstance(), []);
   const isAudioEnabled = useAudioPermission();
   const [audioLoaded, setAudioLoaded] = useState(false);
@@ -25,7 +24,6 @@ export default function AudioLoader() {
       ]).then((val) => {
         if (val[0] && val[1]) {
           setAudioLoaded(true);
-          console.log("audio loaded");
         }
       });
     }
@@ -56,7 +54,7 @@ export default function AudioLoader() {
       if (bgSound) {
         if (playbackSettings.backgroundEnabled) {
           bgSound.setIsLoopingAsync(true);
-          bgSound.playAsync();
+          bgSound.playFromPositionAsync(0);
         } else {
           bgSound.stopAsync();
         }

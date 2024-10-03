@@ -2,14 +2,19 @@ import { IngredientType } from "@/constants/constants";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PlaybackSettingsType } from "@/constants/types";
 
 interface GameState {
   wallet: number;
   dayCount: number;
   boughtToppings: Record<IngredientType, boolean>;
+  playbackSettings: PlaybackSettingsType;
   addMoney: (amount: number) => void;
   incrementDay: () => void;
   buyTopping: (topping: IngredientType, price: number) => void;
+  setPlaybackSettings: (
+    fn: (prev: PlaybackSettingsType) => Partial<PlaybackSettingsType>
+  ) => void;
 }
 
 const useGameStore = create<GameState>()(
@@ -33,6 +38,12 @@ const useGameStore = create<GameState>()(
         shrimp: false,
         tomato: true,
       },
+      playbackSettings: {
+        soundEffectsEnabled: true,
+        backgroundEnabled: true,
+        soundEffectsVolume: 0,
+        backgroundVolume: 1,
+      },
       addMoney: (amount) => set((state) => ({ wallet: state.wallet + amount })),
       incrementDay: () => set((state) => ({ dayCount: state.dayCount + 1 })),
       buyTopping: (topping, price) => {
@@ -44,6 +55,13 @@ const useGameStore = create<GameState>()(
             wallet: state.wallet - price,
           }));
         }
+      },
+      setPlaybackSettings: (fn) => {
+        const prev = get().playbackSettings;
+        const partial = fn(prev);
+        set((state) => ({
+          playbackSettings: { ...prev, ...partial },
+        }));
       },
     }),
     {

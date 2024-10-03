@@ -12,10 +12,11 @@ import {
 import React, { useCallback, useEffect, useMemo } from "react";
 import CustomText from "../CustomText";
 import { useAtom, useSetAtom } from "jotai";
-import { overlayTextAtom, playbackSettingsAtom } from "@/constants/constants";
+import { overlayTextAtom } from "@/constants/constants";
 import AnimatedButton from "./AnimatedButton";
 import { moderateScale } from "../Scaling";
 import { Slider } from "@miblanchard/react-native-slider";
+import useGameStore from "@/hooks/useGameStore";
 
 type Props = {};
 
@@ -65,12 +66,10 @@ const CustomCheckbox = ({
 
 const MusicSettings = (props: Props) => {
   const setOverlayText = useSetAtom(overlayTextAtom);
-  const [playbackSettings, setPlaybackSettings] = useAtom<{
-    backgroundEnabled: boolean;
-    soundEffectsEnabled: boolean;
-    backgroundVolume: number;
-    soundEffectsVolume: number;
-  }>(playbackSettingsAtom);
+  const [playbackSettings, setPlaybackSettings] = useGameStore((state) => [
+    state.playbackSettings,
+    state.setPlaybackSettings,
+  ]);
   const animRef = useMemo(() => new Animated.Value(0.5), []);
 
   useEffect(() => {

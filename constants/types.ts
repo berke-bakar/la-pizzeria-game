@@ -20,4 +20,11 @@ export type GamePhase = {
   nextButtonText?: string;
 };
 
+export type PlaybackSettingsType = {
+  backgroundEnabled: boolean;
+  soundEffectsEnabled: boolean;
+  backgroundVolume: number;
+  soundEffectsVolume: number;
+};
+
 export type ToppingType = { id: number[]; initialPos: Vector3 };
