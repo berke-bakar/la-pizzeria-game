@@ -10,6 +10,7 @@ import BackToHome from "./BackToHome";
 import SpecialButton from "./SpecialButton";
 import NextButton from "./NextButton";
 import { horizontalScale, moderateScale } from "../Scaling";
+import MusicSettingsButton from "./MusicSettingsButton";
 
 const HUD = () => {
   const currentSceneInfo = useAtomValue(currentSceneAtom);
@@ -26,7 +27,11 @@ const HUD = () => {
   }, [setOverLayText]);
 
   if (currentSceneInfo.currentScene != "game") {
-    return null;
+    return (
+      <>
+        <MusicSettingsButton />
+      </>
+    );
   }
 
   return (

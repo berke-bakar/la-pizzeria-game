@@ -5,6 +5,7 @@ import SuspenseProgress from "../SuspenseProgress";
 import MenuExperience from "../experiences/MenuExperience";
 import { Color } from "three";
 import GameExperience from "../experiences/GameExperience";
+import AudioLoader from "./AudioLoader";
 
 type Props = {
   debug: boolean;
@@ -24,7 +25,6 @@ const SceneLoader = ({ debug }: Props) => {
     <>
       <Suspense fallback={<SuspenseProgress />}>
         <color attach="background" args={[currentColor]} />
-
         <MenuExperience
           visible={currentSceneInfo.currentScene === "menu"}
           debug={debug}
@@ -33,6 +33,7 @@ const SceneLoader = ({ debug }: Props) => {
           visible={currentSceneInfo.currentScene === "game"}
           debug={debug}
         />
+        <AudioLoader />
       </Suspense>
     </>
   );

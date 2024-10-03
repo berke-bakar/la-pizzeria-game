@@ -29,7 +29,9 @@
     },
     "plugins": [
       "expo-router",
-      "expo-asset",
+      ["expo-asset", {
+        "assets" : ["/assets/sounds/ShakeAndBake.mp3"]
+      }],
       [
         "expo-font",
         {

@@ -18,6 +18,7 @@
     "@babel/preset-react": "^7.24.7",
     "@expo-google-fonts/bungee": "^0.2.3",
     "@expo/vector-icons": "^14.0.3",
+    "@miblanchard/react-native-slider": "^2.6.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/native": "^6.0.2",
     "@react-spring/three": "^9.7.4",
@@ -31,6 +32,7 @@
     "expo-av": "~14.0.7",
     "expo-constants": "~16.0.2",
     "expo-crypto": "~13.0.2",
+    "expo-dev-client": "~4.0.27",
     "expo-font": "~12.0.10",
     "expo-gl": "~14.0.2",
     "expo-linking": "~6.3.1",
@@ -45,6 +47,7 @@
     "r3f-native-orbitcontrols": "^1.0.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^5.3.0",
     "react-native": "0.74.5",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-reanimated": "~3.10.1",
@@ -55,8 +58,7 @@
     "three": "^0.168.0",
     "three-custom-shader-material": "^6.0.10",
     "three-stdlib": "^2.32.2",
-    "zustand": "^4.5.5",
-    "expo-dev-client": "~4.0.27"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
