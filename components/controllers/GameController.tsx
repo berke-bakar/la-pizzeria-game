@@ -1,5 +1,12 @@
-import { RefObject, useContext, useEffect, useMemo, useRef } from "react";
-import AudioManager from "./AudioManager";
+import {
+  RefObject,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+import AudioManager, { MediaEvent } from "./AudioManager";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   customerOrderAtom,
@@ -174,6 +181,43 @@ const GameController = ({
     return null;
   }, [currentGamePhase]);
 
+  const onAudioEnds = useCallback(
+    (evt: MediaEvent) => {
+      if (gameSceneVisible) updateGamePhase("advancePhase");
+    },
+    [updateGamePhase, gameSceneVisible]
+  );
+
+  const onAnimFinish = useCallback(
+    (e: { action: AnimationAction; direction: number }) => {
+      const clipName = e.action.getClip().name;
+      if (clipName === "LidClose.001" && pizzaMakerRef.current) {
+        pizzaMakerRef.current.setFrustumCulled(true);
+      }
+      if (clipName === "DoorOpen" && doorRef.current) {
+        isDoorOpened.current = true;
+      }
+      updateGamePhase("advancePhase");
+    },
+    [updateGamePhase]
+  );
+
+  const onCustomerAnimFinish = useCallback(
+    (e: any) => {
+      const clipName = e.action.getClip().name;
+
+      if (
+        clipName === "Surprised" ||
+        clipName === "Terrified" ||
+        clipName === "Angry" ||
+        clipName === "Unhappy"
+      ) {
+        updateGamePhase("advancePhase");
+      }
+    },
+    [updateGamePhase]
+  );
+
   const generateOrder = () => {
     const boughtItems: IngredientType[] = [];
     Object.entries(boughtToppings).forEach(([key, val], ind) => {
@@ -221,6 +265,90 @@ const GameController = ({
       return currentCustomerType.current;
     });
   };
+
+  function handleAudio(phaseIndex: GamePhase) {
+    if (phaseIndex.subphase === "doorOpens" && !isDoorOpened.current) {
+      // Door open
+      audioManager.playSection("soundEffects", 18.407, 0.606);
+    } else if (phaseIndex.subphase === "takeOrderDialogue") {
+      // Ordering
+      const randomSelection = Math.round(Math.random());
+      audioManager.playSection(
+        "soundEffects",
+        randomSelection === 0 ? 4.764 : 6.794,
+        randomSelection === 0 ? 2.03 : 1.935
+      );
+    } else if (phaseIndex.specialButtonText === "Ready") {
+      // Pizza Spawn
+      setTimeout(() => {
+        audioManager.playSection("soundEffects", 8.728, 0.1);
+      }, 320);
+    } else if (phaseIndex.subphase === "waiting") {
+      // Oven
+      audioManager.playSection("soundEffects", 0, 3.577, onAudioEnds);
+    } else if (phaseIndex.subphase === "packaging") {
+      // Pizza box close
+      setTimeout(() => {
+        audioManager.playSection("soundEffects", 3.577, 0.423);
+      }, 300);
+    } else if (
+      phaseIndex.subphase === "reaction" &&
+      currentCustomerRating.current !== null
+    ) {
+      const randomSelection = Math.round(Math.random());
+      let startTime = undefined;
+      let duration = undefined;
+      switch (currentCustomerRating.current) {
+        case 0: // Terrified
+          // "Leave me alone" sound
+          startTime = 13.461;
+          duration = 2.411;
+          // audioManager.playSection("soundEffects", 13.461, 2.411);
+          break;
+        case 1: // Angry
+          // Who did this
+          startTime = 10.614;
+          duration = 1.016;
+          // audioManager.playSection("soundEffects", 10.614, 1.016);
+          break;
+        case 2: // Unhappy
+          // Fiddle Faddle
+          // Gee Whiz
+          startTime = randomSelection === 0 ? 8.829 : 17.478;
+          duration = randomSelection === 0 ? 0.821 : 0.928;
+          // audioManager.playSection(
+          //   "soundEffects",
+          //   randomSelection === 0 ? 8.829 : 17.478,
+          //   randomSelection === 0 ? 0.821 : 0.928
+          // );
+          break;
+        case 3: // A bit surprised
+          // You did great
+          startTime = 9.65;
+          duration = 0.964;
+          // audioManager.playSection("soundEffects", 9.65, 0.964);
+          break;
+        case 4: // Surprised
+          // i cant believe it
+          // you dont see that everyday
+          startTime = randomSelection === 0 ? 15.872 : 11.63;
+          duration = randomSelection === 0 ? 1.607 : 1.831;
+          // audioManager.playSection(
+          //   "soundEffects",
+          //   randomSelection === 0 ? 15.872 : 11.63,
+          //   randomSelection === 0 ? 1.607 : 1.831
+          // );
+          break;
+        default:
+          // Shouldn't happen
+          break;
+      }
+      if (startTime !== undefined && duration !== undefined)
+        setTimeout(() => {
+          audioManager.playSection("soundEffects", startTime, duration);
+        }, 100);
+    }
+  }
 
   const changeAnimation = (phaseIndex: GamePhase) => {
     const prevAnim = currentCustomerAnimation.current;
@@ -283,6 +411,7 @@ const GameController = ({
             customerRef.current?.actions["Idle"];
           break;
       }
+
       currentCustomerAnimation.current!.clampWhenFinished = true;
     }
     // Change animation, only when needed
@@ -311,6 +440,7 @@ const GameController = ({
     if (gameSceneVisible) {
       todaysCustomerCount.current = Math.floor(Math.random() * 4 + 1);
       currentCustomerIndex.current = 0;
+
       setShowFooter(false);
     } else {
       setShowFooter(true);
@@ -318,33 +448,6 @@ const GameController = ({
   }, [gameSceneVisible]);
 
   useEffect(() => {
-    const onAnimFinish = (e: {
-      action: AnimationAction;
-      direction: number;
-    }) => {
-      const clipName = e.action.getClip().name;
-      if (clipName === "LidClose.001" && pizzaMakerRef.current) {
-        pizzaMakerRef.current.setFrustumCulled(true);
-      }
-      if (clipName === "DoorOpen" && doorRef.current) {
-        isDoorOpened.current = true;
-      }
-      updateGamePhase("advancePhase");
-    };
-
-    const onCustomerAnimFinish = (e: any) => {
-      const clipName = e.action.getClip().name;
-
-      if (
-        clipName === "Surprised" ||
-        clipName === "Terrified" ||
-        clipName === "Angry" ||
-        clipName === "Unhappy"
-      ) {
-        updateGamePhase("advancePhase");
-      }
-    };
-
     if (customerRef.current)
       customerRef.current.mixer.addEventListener(
         "finished",
@@ -418,10 +521,6 @@ const GameController = ({
           action.clampWhenFinished = true;
           action.reset().setLoop(LoopOnce, 1).play();
         }
-      } else if (currentGamePhase.subphase === "waiting") {
-        setTimeout(() => {
-          updateGamePhase("advancePhase");
-        }, 3000);
       } else if (currentGamePhase.subphase === "ovenOpen") {
         const action = ovenRef.current?.actions["OvenOpen"];
         if (action) {
@@ -495,8 +594,8 @@ const GameController = ({
           updateGamePhase("advancePhase");
         }
       }
-
       changeAnimation(currentGamePhase);
+      handleAudio(currentGamePhase);
     }
   }, [currentGamePhase, gameSceneVisible]);
 

@@ -1,6 +1,6 @@
 import { Audio } from "expo-av";
 
-type MediaEvent = {
+export type MediaEvent = {
   trackName: string;
   start: number;
   duration: number;
