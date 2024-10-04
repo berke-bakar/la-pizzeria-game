@@ -20,7 +20,7 @@ Physics is a key part of the game, powered by  **Cannon-ES** . Each topping adde
 
 ## Challenges & Optimization Strategies
 
-One of the major focuses of this project was optimizing for performance, especially for mobile devices, where resources are limited. Even though React Native is amazing, it is still missing a multit-threaded physics engine, which kinda blocks developing more complex games on it. Keeping the main thread as idle as possible is something always desirable, especially if the physics engine is also running on it and you might be drawing up to 2 million triangles on the screen. 
+One of the major focuses of this project was optimizing for performance, especially for mobile devices, where resources are limited. Even though React Native is amazing, it is still missing a multit-threaded physics engine, which kinda blocks developing more complex games on it. Keeping the main thread as idle as possible is something always desirable, especially if the physics engine is also running on it and you might be drawing up to 2 million triangles on the screen.
 
 ### **1. Merging Toppings into a Single Mesh**
 
@@ -40,7 +40,7 @@ The toppings use a **custom shader** to access a **4x4 texture atlas**. This sha
 
 The game is prepared to handle up to **2000 toppings** efficiently. Yes, it's a bit much but test devices still maintained 60 FPS, so go for it and let me know by creating an issue 😁. We pre-allocate the memory for these instances and manage physics bodies dynamically. We handle additions and removals of toppings without constantly reallocating or copying entire arrays of data.
 
-## Installation (or see live demo)
+## Installation (or see [live demo](https://lapizzeriagame.vercel.app/))
 
 1. Clone the repository:
 
@@ -79,7 +79,6 @@ The game is prepared to handle up to **2000 toppings** efficiently. Yes, it's a 
 ![1728077803558](image/README/1728077803558.png)
 
 ![1728077857978](image/README/1728077857978.png)
-
 
 ## Attributions
 
