@@ -1,7 +1,6 @@
 import { Platform, StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Canvas } from "@react-three/fiber/native";
-import { Leva } from "leva";
 import StagePrep from "@/components/StagePrep";
 import SceneLoader from "@/components/controllers/SceneLoader";
 import LoadingText from "@/components/LoadingText";
@@ -39,7 +38,6 @@ export default function Index() {
 
   return (
     <View style={{ ...styles.container }}>
-      {Platform.OS === "web" && location.pathname === "#debug" && <Leva />}
       <Canvas
         camera={{
           position: [0, 2, 10],
