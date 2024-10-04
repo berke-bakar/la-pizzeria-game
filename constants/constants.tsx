@@ -49,72 +49,72 @@ export const INGREDIENTS: Record<
   anchovies: {
     icon: AnchoviesIcon,
     price: 120,
-    unitPrice: 2,
+    unitPrice: 1,
   },
   bacon: {
     icon: BaconIcon,
     price: 100,
-    unitPrice: 1.5,
+    unitPrice: 0.75,
   },
   chicken: {
     icon: ChickenIcon,
     price: 110,
-    unitPrice: 1.2,
+    unitPrice: 0.6,
   },
   ham: {
     icon: HamIcon,
     price: 120,
-    unitPrice: 1.4,
+    unitPrice: 0.7,
   },
   mushroom: {
     icon: MushroomIcon,
     price: 150,
-    unitPrice: 1.5,
+    unitPrice: 0.13,
   },
   olives: {
     icon: OlivesIcon,
     price: 140,
-    unitPrice: 1.4,
+    unitPrice: 0.12,
   },
   onion: {
     icon: OnionIcon,
     price: 110,
-    unitPrice: 1.4,
+    unitPrice: 0.14,
   },
   peppers: {
     icon: PeppersIcon,
     price: 160,
-    unitPrice: 2.4,
+    unitPrice: 0.1,
   },
   pickle: {
     icon: PickleIcon,
     price: 180,
-    unitPrice: 1,
+    unitPrice: 0.125,
   },
   pineapple: {
     icon: PineappleIcon,
     price: 150,
-    unitPrice: 2,
+    unitPrice: 0.15,
   },
   salami: {
     icon: SalamiIcon,
     price: 120,
-    unitPrice: 1.3,
+    unitPrice: 0.1,
   },
   sausage: {
     icon: SausageIcon,
     price: 150,
-    unitPrice: 1.3,
+    unitPrice: 0.15,
   },
   shrimp: {
     icon: ShrimpIcon,
     price: 180,
-    unitPrice: 2.3,
+    unitPrice: 0.15,
   },
   tomato: {
     icon: TomatoIcon,
     price: 160,
-    unitPrice: 1.2,
+    unitPrice: 0.16,
   },
 };
 /**

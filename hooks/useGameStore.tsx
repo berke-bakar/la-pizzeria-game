@@ -33,10 +33,10 @@ const useGameStore = create<GameState>()(
         peppers: true,
         pickle: false,
         pineapple: false,
-        salami: true,
+        salami: false,
         sausage: false,
         shrimp: false,
-        tomato: true,
+        tomato: false,
       },
       playbackSettings: {
         soundEffectsEnabled: true,
