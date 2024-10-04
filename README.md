@@ -8,11 +8,11 @@ Welcome to the **La** **Pizzeria Game**! This is an **interactive 3D mobile/web 
 
 ### 1. **Interactive Toppings Selection**
 
-A pizza wouldn't be pizza without toppings (except margarita and quattro formaggi). We have 14 toppings in the store, you start with 5 classic toppings: bacon, mushroom, olive, onion and pepper. The rest is up to you. You can extend your topping selection by buying new toppings from store with your earnings at the end of day.
+A pizza wouldn't be a pizza without toppings (except margarita and quattro formaggi). We have 14 toppings in the store, you start with 5 classic toppings: bacon, mushroom, olive, onion and pepper. The rest is up to you. You can extend your topping selection by buying new toppings from store with your earnings at the end of day.
 
 ### 2. **Customer Orders**
 
-Customer orders are randomly generated with respect to your available toppings selection. This part of the game also serves as a simple short term memory exercis. You can customize your pizza as your heart desires or as the customer desires, the choice is yours. However, beware that sad customers will lower your daily rating.
+Customer orders are randomly generated with respect to your available toppings selection. This part of the game also serves as a simple short term memory exercise. You can customize your pizza as your heart desires or as the customer desires, the choice is yours. However, beware that sad customers will lower your daily rating.
 
 ### 3. **Physics**
 
