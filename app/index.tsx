@@ -15,6 +15,7 @@ import HUD from "@/components/UI/HUD";
 import Footer from "@/components/Footer";
 import SelectedToppingPresenter from "@/components/controllers/SelectedToppingPresenter";
 import ConversationBox from "@/components/UI/ConversationBox";
+import PerfOverlay from "@/components/debug/PerfOverlay";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,6 +35,7 @@ export default function Index() {
   }
 
   const debug = Platform.OS === "web" && location.hash === "#debug";
+  const isPerfEnabled = location.hash === "#perf"; // && Platform.OS === 'web';
 
   return (
     <View style={{ ...styles.container }}>
@@ -58,7 +60,7 @@ export default function Index() {
         }}
       >
         <StagePrep debug={debug} />
-        <SceneLoader debug={debug} />
+        <SceneLoader debug={debug} perf={isPerfEnabled} />
         <CameraController debug={debug} />
       </Canvas>
       <StatusBar style="auto" hidden />
@@ -68,6 +70,7 @@ export default function Index() {
       <SelectedToppingPresenter />
       <ConversationBox />
       <HUD />
+      <PerfOverlay perf={isPerfEnabled} />
     </View>
   );
 }

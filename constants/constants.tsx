@@ -367,3 +367,10 @@ export const customerOrderAtom = atom<{
 export const typingFinishedAtom = atom(false);
 export const todaysCustomerRatings = atomWithReset<number[]>([]);
 export const selectedToppingAtom = atom<IngredientType>("bacon");
+export const perfMonitorAtom = atom({
+  frame: 0,
+  calls: 0,
+  triangles: 0,
+  geometries: 0,
+  textures: 0,
+});

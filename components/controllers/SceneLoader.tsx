@@ -6,12 +6,14 @@ import MenuExperience from "../experiences/MenuExperience";
 import { Color } from "three";
 import GameExperience from "../experiences/GameExperience";
 import AudioLoader from "./AudioLoader";
+import SimplePerfMonitor from "../debug/SimplePerfMonitor";
 
 type Props = {
-  debug: boolean;
+  debug?: boolean;
+  perf?: boolean;
 };
 
-const SceneLoader = ({ debug }: Props) => {
+const SceneLoader = ({ debug = false, perf = false }: Props) => {
   const currentSceneInfo = useAtomValue(currentSceneAtom);
   const currentColor = useMemo(
     () =>
@@ -34,6 +36,7 @@ const SceneLoader = ({ debug }: Props) => {
           debug={debug}
         />
         <AudioLoader />
+        <SimplePerfMonitor perf={perf} />
       </Suspense>
     </>
   );
