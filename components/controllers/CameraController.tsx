@@ -32,6 +32,4 @@ const CameraController = ({ debug }: CameraControllerProps) => {
   return null;
 };
 
-// CameraController.whyDidYouRender = Platform.OS === "web" ? true : undefined;
-
 export default CameraController;

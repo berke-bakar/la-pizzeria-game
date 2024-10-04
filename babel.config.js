@@ -3,10 +3,7 @@ module.exports = function (api) {
   return {
     presets: [
       [
-        "babel-preset-expo",
-        {
-          "jsxImportSource": "@welldone-software/why-did-you-render"
-        }
+        "babel-preset-expo"
       ]
     ],
   };

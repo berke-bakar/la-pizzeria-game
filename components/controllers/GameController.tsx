@@ -688,5 +688,4 @@ const GameController = ({
 
   return null;
 };
-// GameController.whyDidYouRender = Platform.OS === "web" ? true : undefined;
 export default GameController;

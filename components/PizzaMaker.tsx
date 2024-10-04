@@ -82,5 +82,4 @@ const PizzaMaker = forwardRef<PizzaMakerRefProps, PizzaMakerProps>(
     );
   }
 );
-// PizzaMaker.whyDidYouRender = Platform.OS === "web" ? true : undefined;
 export default PizzaMaker;
