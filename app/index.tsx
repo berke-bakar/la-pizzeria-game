@@ -15,6 +15,7 @@ import Footer from "@/components/Footer";
 import SelectedToppingPresenter from "@/components/controllers/SelectedToppingPresenter";
 import ConversationBox from "@/components/UI/ConversationBox";
 import PerfOverlay from "@/components/debug/PerfOverlay";
+import { inject } from "@vercel/analytics";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,6 +36,8 @@ export default function Index() {
 
   const debug = Platform.OS === "web" && location.hash === "#debug";
   const isPerfEnabled = Platform.OS === "web" && location.hash === "#perf";
+
+  if (Platform.OS === "web") inject();
 
   return (
     <View style={{ ...styles.container }}>
