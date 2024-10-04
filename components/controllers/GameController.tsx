@@ -270,6 +270,17 @@ const GameController = ({
     if (phaseIndex.subphase === "doorOpens" && !isDoorOpened.current) {
       // Door open
       audioManager.playSection("soundEffects", 18.407, 0.606);
+    } else if (phaseIndex.subphase === "customerWalk") {
+      if (
+        phaseIndex.phase === "delivery" &&
+        currentCustomerRating.current < 2
+      ) {
+        // Screaming sound
+        audioManager.playSection("soundEffects", 24.03, 2.691);
+      } else {
+        // Walking sound
+        audioManager.playSection("soundEffects", 19.013, 4.5);
+      }
     } else if (phaseIndex.subphase === "takeOrderDialogue") {
       // Ordering
       const randomSelection = Math.round(Math.random());
@@ -303,41 +314,28 @@ const GameController = ({
           // "Leave me alone" sound
           startTime = 13.461;
           duration = 2.411;
-          // audioManager.playSection("soundEffects", 13.461, 2.411);
           break;
         case 1: // Angry
-          // Who did this
+          // "Who did this" sound
           startTime = 10.614;
           duration = 1.016;
-          // audioManager.playSection("soundEffects", 10.614, 1.016);
           break;
         case 2: // Unhappy
-          // Fiddle Faddle
-          // Gee Whiz
+          // "Fiddle Faddle" sound or
+          // "Gee Whiz" sound
           startTime = randomSelection === 0 ? 8.829 : 17.478;
           duration = randomSelection === 0 ? 0.821 : 0.928;
-          // audioManager.playSection(
-          //   "soundEffects",
-          //   randomSelection === 0 ? 8.829 : 17.478,
-          //   randomSelection === 0 ? 0.821 : 0.928
-          // );
           break;
         case 3: // A bit surprised
-          // You did great
+          // "You did great" sound
           startTime = 9.65;
           duration = 0.964;
-          // audioManager.playSection("soundEffects", 9.65, 0.964);
           break;
         case 4: // Surprised
-          // i cant believe it
-          // you dont see that everyday
+          // "i cant believe it" sound or,
+          // "you dont see that everyday" sound
           startTime = randomSelection === 0 ? 15.872 : 11.63;
           duration = randomSelection === 0 ? 1.607 : 1.831;
-          // audioManager.playSection(
-          //   "soundEffects",
-          //   randomSelection === 0 ? 15.872 : 11.63,
-          //   randomSelection === 0 ? 1.607 : 1.831
-          // );
           break;
         default:
           // Shouldn't happen
@@ -346,7 +344,7 @@ const GameController = ({
       if (startTime !== undefined && duration !== undefined)
         setTimeout(() => {
           audioManager.playSection("soundEffects", startTime, duration);
-        }, 100);
+        }, 300);
     }
   }
 
@@ -598,18 +596,6 @@ const GameController = ({
       handleAudio(currentGamePhase);
     }
   }, [currentGamePhase, gameSceneVisible]);
-
-  // TODO: Delete this part
-  const { gl } = useThree();
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      console.log(gl.info.render);
-    }, 5000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [gl]);
 
   useFrame((state, delta) => {
     if (currentCustomerPath && customerRef.current?.group.current) {

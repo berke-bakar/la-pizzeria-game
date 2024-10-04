@@ -44,11 +44,7 @@ const toppingsIndexMap: Record<IngredientType, number> = {
   pineapple: 13,
 };
 
-// const MAX_TOPPINGS = Platform.select({
-//   native: 100,
-//   default: 1000,
-// });
-const MAX_TOPPINGS = 1000;
+const MAX_TOPPINGS = 2500;
 
 export function Toppings({ ...props }: JSX.IntrinsicElements["instancedMesh"]) {
   const world = useContext(WorldContext);
