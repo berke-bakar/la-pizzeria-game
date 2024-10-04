@@ -6,10 +6,12 @@ import { Asset } from "expo-asset";
 
 type GLTFResult = GLTF & {
   nodes: {
-    backWall001: THREE.Mesh;
+    restraunt001?: THREE.Mesh;
+    backWall001?: THREE.Mesh;
   };
   materials: {
-    PaletteMaterial001: THREE.MeshStandardMaterial;
+    ["PaletteMaterial001.001"]: THREE.MeshStandardMaterial;
+    PaletteMaterial001?: THREE.MeshStandardMaterial;
   };
 };
 
@@ -17,9 +19,11 @@ export function Restraunt(
   props: JSX.IntrinsicElements["group"] & { debug: boolean }
 ) {
   const { nodes, materials } = useGLTF(
-    Asset.fromModule(require("../../assets/models/restraunt.glb")).uri
+    props.debug
+      ? Asset.fromModule(require("../../assets/models/restraunt_debug.glb")).uri
+      : Asset.fromModule(require("../../assets/models/restraunt.glb")).uri
   ) as GLTFResult;
-  return (
+  return props.debug ? (
     <group {...props} dispose={null}>
       {!props.debug && (
         <mesh
@@ -32,14 +36,23 @@ export function Restraunt(
         </mesh>
       )}
       <mesh
-        geometry={nodes.backWall001.geometry}
+        geometry={nodes.backWall001!.geometry}
         material={materials.PaletteMaterial001}
+        position={[1.506, 3.955, 6.427]}
+      />
+    </group>
+  ) : (
+    <group {...props} dispose={null}>
+      <mesh
+        geometry={nodes.restraunt001!.geometry}
+        material={materials["PaletteMaterial001.001"]}
         position={[1.506, 3.955, 6.427]}
       />
     </group>
   );
 }
 
-useGLTF.preload(
-  Asset.fromModule(require("../../assets/models/restraunt.glb")).uri
-);
+useGLTF.preload([
+  Asset.fromModule(require("../../assets/models/restraunt.glb")).uri,
+  Asset.fromModule(require("../../assets/models/restraunt_debug.glb")).uri,
+]);

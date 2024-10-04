@@ -35,7 +35,7 @@ export default function Index() {
   }
 
   const debug = Platform.OS === "web" && location.hash === "#debug";
-  const isPerfEnabled = location.hash === "#perf"; // && Platform.OS === 'web';
+  const isPerfEnabled = Platform.OS === "web" && location.hash === "#perf";
 
   return (
     <View style={{ ...styles.container }}>
