@@ -91,6 +91,8 @@ The game is prepared to handle up to **2000 toppings** efficiently. Yes, it's a 
 * Pepperoni pizza by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/9IWGn64Fnqo)
 * Suit by Quaternius [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/sOUciDsoVV)
 * Worker by Quaternius [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/E8079Ahx7k)
+* "CHEF CHARACTER" (https://skfb.ly/oLrOD) by andredesra16 is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+* Trainer by jeremy [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza (https://poly.pizza/m/cs7k_ENAZjQ)
 
 **Sounds**
 
