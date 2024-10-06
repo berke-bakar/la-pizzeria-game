@@ -1,4 +1,4 @@
-# La Pizzeria Game
+# 🍕 La Pizzeria Game 🍕
 
 Welcome to the **La** **Pizzeria Game**! This is an **interactive 3D mobile/web game** built using **[React Native](https://reactnative.dev/)** and **[React Three Fiber (R3F)](https://github.com/pmndrs/react-three-fiber)** with physics powered by **[Cannon-ES](https://github.com/pmndrs/cannon-es)**. In this game, players create custom pizzas with a variety of toppings according to (or in spite of) the customer's order. Depending on the customer's rating of your unique creation.
 
